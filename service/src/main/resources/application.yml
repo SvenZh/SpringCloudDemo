@@ -1,0 +1,15 @@
+spring:
+   datasource:
+      dynamic:
+         primary: master 
+         datasource:
+            master:
+               driver-class-name: ${business-server.datasource.master.driver-class-name}
+               url: ${business-server.datasource.master.url}
+               username: ${business-server.datasource.master.username}
+               password: ${business-server.datasource.master.password}
+#            slave: 
+#               driver-class-name: ${business-server.datasource.slave.driver-class-name}
+#               url: ${business-server.datasource.slave.url}
+#               username: ${business-server.datasource.slave.username}
+#               password: ${business-server.datasource.slave.password              

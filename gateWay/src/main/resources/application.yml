@@ -1,0 +1,21 @@
+spring:  
+  cloud:
+     loadbalancer: 
+       ribbon: 
+         enabled: false
+     gateway:
+        loadbalancer:
+            retry:
+              enabled: true
+        discovery:
+          locator:
+            enabled: true
+        routes:
+          - id: business-server
+            uri: lb://business-server
+            predicates: 
+              - Path=/demo/**       
+          - id: scheduler-server
+            uri: lb://scheduler-server
+            predicates: 
+              - Path=/quartz/**       

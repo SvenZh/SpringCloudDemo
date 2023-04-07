@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: ${scheduler-server.datasource.driver-class-name}
+    url: ${scheduler-server.datasource.url}
+    username: ${scheduler-server.datasource.username}
+    password: ${scheduler-server.datasource.password}
