@@ -1,21 +1,30 @@
-spring:  
-  cloud:
-     loadbalancer: 
-       ribbon: 
-         enabled: false
-     gateway:
-        loadbalancer:
+server:
+  port: 10010
+  
+spring:
+   application:
+      name: gateway
+   cloud:
+      loadbalancer: 
+         ribbon: 
+            enabled: false
+      gateway:
+         loadbalancer:
             retry:
-              enabled: true
-        discovery:
-          locator:
-            enabled: true
-        routes:
-          - id: business-server
-            uri: lb://business-server
-            predicates: 
-              - Path=/demo/**       
-          - id: scheduler-server
-            uri: lb://scheduler-server
-            predicates: 
+                enabled: true
+         discovery:
+            locator:
+                enabled: true
+         routes:
+            - id: demo-test
+              uri: lb://business-server
+              predicates: 
+              - Path=/demo/**
+            - id: feign-test
+              uri: lb://business-server
+              predicates: 
+              - Path=/demo2/**                       
+            - id: quartz-test
+              uri: lb://scheduler-server
+              predicates: 
               - Path=/quartz/**       

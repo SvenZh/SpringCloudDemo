@@ -1,0 +1,19 @@
+server:
+   port: 10050
+spring:
+   application:
+      name: system-server
+   datasource:
+      dynamic:
+         primary: master 
+         datasource:
+            master:
+               driver-class-name: ${system-server.datasource.master.driver-class-name}
+               url: ${system-server.datasource.master.url}
+               username: ${system-server.datasource.master.username}
+               password: ${system-server.datasource.master.password}
+#            slave: 
+#               driver-class-name: ${system-server.datasource.slave.driver-class-name}
+#               url: ${system-server.datasource.slave.url}
+#               username: ${system-server.datasource.slave.username}
+#               password: ${system-server.datasource.slave.password              

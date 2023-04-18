@@ -25,6 +25,11 @@ public class ResponseMessage<T> implements IBaseResponseMessage<T> {
         this.error = error;
     }
 
+    public ResponseMessage(ErrorDetails error) {
+        this.code = error.getErrorCode();
+        this.error = error;
+    }
+
     @Override
     public T data() {
         return data;

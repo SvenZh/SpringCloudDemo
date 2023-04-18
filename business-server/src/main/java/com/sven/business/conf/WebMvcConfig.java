@@ -1,4 +1,4 @@
-package com.sven.service.conf;
+package com.sven.business.conf;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

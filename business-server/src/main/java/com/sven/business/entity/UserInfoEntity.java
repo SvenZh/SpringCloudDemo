@@ -1,4 +1,4 @@
-package com.sven.service.entity;
+package com.sven.business.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

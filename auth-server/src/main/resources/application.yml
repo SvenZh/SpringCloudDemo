@@ -1,3 +1,5 @@
+server:   
+  port: 10030
 spring:
   datasource:
     driver-class-name: ${auth-server.datasource.driver-class-name}

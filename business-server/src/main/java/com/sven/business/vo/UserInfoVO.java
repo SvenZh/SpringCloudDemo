@@ -1,4 +1,4 @@
-package com.sven.service.vo;
+package com.sven.business.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

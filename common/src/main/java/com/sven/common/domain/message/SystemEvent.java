@@ -3,6 +3,7 @@ package com.sven.common.domain.message;
 public enum SystemEvent {
 
     sys_default_event(10000, "default event"),
+    valid_exception_event(10001, "校验失败"),
     
     quartz_addjob_exception_event(20000, "创建定时任务失败[SchedulerException]"),
     quartz_addjob_classnotfoundexception_event(20001, "创建定时任务失败[ClassNotFoundException]"),

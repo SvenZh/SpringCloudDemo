@@ -5,7 +5,7 @@
 		<artifactId>SpringCloudDemo</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>business-server</artifactId>
+	<artifactId>system-server</artifactId>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -16,7 +16,7 @@
 			<groupId>com.sven</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
-		</dependency>	
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -44,8 +44,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
-		</dependency>				
+			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -68,18 +68,14 @@
 			<artifactId>druid-spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
-		  <groupId>com.baomidou</groupId>
-		  <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-		  <version>3.6.1</version>
+			<groupId>com.baomidou</groupId>
+			<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+			<version>3.6.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>							
 	</dependencies>
 
 	<build>
