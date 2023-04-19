@@ -6,21 +6,20 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import com.sven.common.app.AppConstant;
+
 @Configuration
 public class TokenConfig {
 
-    private static final String SIGNING_KEY = "spring cloud";
-
     @Bean
-    public TokenStore tokenStore() {
+    public TokenStore jwtTokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey(SIGNING_KEY);
+        converter.setSigningKey(AppConstant.SIGNING_KEY);
         return converter;
     }
-
 }

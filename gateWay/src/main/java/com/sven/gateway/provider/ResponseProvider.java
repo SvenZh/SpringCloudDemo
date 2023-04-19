@@ -12,9 +12,9 @@ public class ResponseProvider {
     public static Map<String, Object> fail(String message) {
         return response(400, message);
     }
-
-    public static Map<String, Object> unAuth(String message) {
-        return response(401, message);
+    
+    public static Map<String, Object> unAuth(Integer code, String message) {
+        return response(code, message);
     }
     
     public static Map<String, Object> forbidden(String message) {

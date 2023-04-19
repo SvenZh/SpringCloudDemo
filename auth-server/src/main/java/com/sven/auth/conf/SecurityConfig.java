@@ -9,13 +9,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-        AuthenticationManager manager = super.authenticationManagerBean();
-        return manager;
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -32,11 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .formLogin()
             .and()
             .authorizeRequests()
-            .antMatchers("/auth/**", "/login/**", "/logout/**")
-            .permitAll()
+            .antMatchers("/auth/**", "/login/**", "/logout/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .headers().cacheControl().disable()
             ;
+        
     }
 }

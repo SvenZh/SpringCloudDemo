@@ -27,4 +27,12 @@ spring:
             - id: quartz-test
               uri: lb://scheduler-server
               predicates: 
-              - Path=/quartz/**       
+              - Path=/quartz/**
+            - id: auth-test
+              uri: lb://auth-server
+              predicates: 
+              - Path=/oauth/**              
+              
+              
+              
+                     

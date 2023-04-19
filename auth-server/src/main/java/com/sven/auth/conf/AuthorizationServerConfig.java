@@ -1,7 +1,9 @@
 package com.sven.auth.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -9,6 +11,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
@@ -33,24 +37,46 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserService userService;
     
+    @Autowired
+    @Qualifier("tokenServices")
+    private AuthorizationServerTokenServices authorizationServerTokenServices;
+    
+    @Autowired
+    @Qualifier("authorizationCodeServers")
+    private AuthorizationCodeServices authorizationCodeServers;
+    
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        // TODO Auto-generated method stub
-        super.configure(security);
+        security
+            .tokenKeyAccess("permitAll()")
+            .checkTokenAccess("permitAll()")
+            .allowFormAuthenticationForClients()
+            ;
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // TODO Auto-generated method stub
-        super.configure(clients);
+        clients
+            .inMemory()
+            .withClient("myClient")
+            .secret(passwordEncoder.encode("123456"))
+            .authorizedGrantTypes("authorization_code", "password", "client_credentials", "implicit", "refresh_token")
+            .scopes("all")
+            .autoApprove(true)
+            .redirectUris("http://www.baidu.com");
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager).userDetailsService(userService)
-        //配置存储令牌策略
-        .tokenStore(jwtTokenStore)
-        .accessTokenConverter(jwtAccessTokenConverter);
+        endpoints
+            .authorizationCodeServices(authorizationCodeServers)
+            .authenticationManager(authenticationManager)
+            .tokenServices(authorizationServerTokenServices)
+            .userDetailsService(userService)
+            .tokenStore(jwtTokenStore)
+            .accessTokenConverter(jwtAccessTokenConverter)
+            .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
+            ;
     }
 
 }
