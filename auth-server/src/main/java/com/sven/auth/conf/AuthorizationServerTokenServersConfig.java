@@ -7,12 +7,17 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 @Configuration
 public class AuthorizationServerTokenServersConfig {
+    
     @Autowired
     private TokenStore jwtTokenStore;
 
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
+    
     @Autowired
     private ClientDetailsService clientDetailsService;
 
@@ -23,6 +28,7 @@ public class AuthorizationServerTokenServersConfig {
         services.setClientDetailsService(clientDetailsService);
         services.setSupportRefreshToken(true);
         services.setTokenStore(jwtTokenStore);
+        services.setTokenEnhancer(jwtAccessTokenConverter);
         services.setAccessTokenValiditySeconds(60 * 60 * 2);
         services.setRefreshTokenValiditySeconds(60 * 60 * 24 * 3);
 
