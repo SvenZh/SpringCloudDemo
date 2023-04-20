@@ -22,3 +22,20 @@ CREATE TABLE `oauth_code` (
   `authentication` blob COMMENT '存储将AuthorizationRequestHolder.java对象序列化后的二进制数据.',
   KEY `code_index` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `oauth_access_token`  (
+  `token_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `token` blob NULL,
+  `authentication_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `client_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `authentication` blob NULL,
+  `refresh_token` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `oauth_refresh_token`  (
+  `token_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `token` blob NULL,
+  `authentication` blob NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

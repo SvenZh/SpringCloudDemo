@@ -67,7 +67,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             .authorizationCodeServices(authorizationCodeServers)            
             .authenticationManager(authenticationManager)                   
             .tokenServices(authorizationServerTokenServices)                
-            .userDetailsService(userService)                                
+            .userDetailsService(userService)    
             .tokenStore(jwtTokenStore)
             .accessTokenConverter(jwtAccessTokenConverter)
             .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
