@@ -1,8 +1,9 @@
 server:   
   port: 10030
+
 spring:
   datasource:
-    driver-class-name: ${auth-server.datasource.driver-class-name}
-    url: ${auth-server.datasource.url}
-    username: ${auth-server.datasource.username}
-    password: ${auth-server.datasource.password}
+    driver-class-name: ${auth-server.datasource.master.driver-class-name}
+    url: ${auth-server.datasource.master.url}
+    username: ${auth-server.datasource.master.username}
+    password: ${auth-server.datasource.master.password}

@@ -1,6 +1,7 @@
 package com.sven.auth.conf;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
@@ -19,13 +20,14 @@ public class AuthorizationServerTokenServersConfig {
     private JwtAccessTokenConverter jwtAccessTokenConverter;
     
     @Autowired
-    private ClientDetailsService clientDetailsService;
+    @Qualifier("jdbcClientDetailsService")
+    private ClientDetailsService jdbcClientDetailsService;
 
     @Bean
     public AuthorizationServerTokenServices tokenServices() {
         DefaultTokenServices services = new DefaultTokenServices();
 
-        services.setClientDetailsService(clientDetailsService);
+        services.setClientDetailsService(jdbcClientDetailsService);
         services.setSupportRefreshToken(true);
         services.setTokenStore(jwtTokenStore);
         services.setTokenEnhancer(jwtAccessTokenConverter);

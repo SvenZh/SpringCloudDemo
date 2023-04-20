@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    driver-class-name: ${scheduler-server.datasource.driver-class-name}
-    url: ${scheduler-server.datasource.url}
-    username: ${scheduler-server.datasource.username}
-    password: ${scheduler-server.datasource.password}
+    driver-class-name: ${scheduler-server.datasource.master.driver-class-name}
+    url: ${scheduler-server.datasource.master.url}
+    username: ${scheduler-server.datasource.master.username}
+    password: ${scheduler-server.datasource.master.password}
