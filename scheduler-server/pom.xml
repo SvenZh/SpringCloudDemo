@@ -49,6 +49,11 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
-		</dependency>		
+		</dependency>
+		<dependency>
+		  <groupId>com.baomidou</groupId>
+		  <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+		  <version>3.6.1</version>
+		</dependency>				
 	</dependencies>
 </project>

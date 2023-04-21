@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 
 @Configuration
-public class AuthorizationClientDetailsServiceConfig {
+public class AuthorizationClientDetailsServicesConfig {
     @Autowired
     private PasswordEncoder passwordEncoder;
 

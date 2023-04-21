@@ -1,12 +1,24 @@
 server:   
   port: 10030
-
+      
 spring:
    jackson:
       date-format: yyyy-MM-dd HH:mm:ss
       time-zone: GMT+8
+   application:
+      name: auth-server
    datasource:
-      driver-class-name: ${auth-server.datasource.master.driver-class-name}
-      url: ${auth-server.datasource.master.url}
-      username: ${auth-server.datasource.master.username}
-      password: ${auth-server.datasource.master.password}
+      dynamic:
+         primary: master 
+         datasource:
+            master:
+               driver-class-name: ${auth-server.datasource.master.driver-class-name}
+               url: ${auth-server.datasource.master.url}
+               username: ${auth-server.datasource.master.username}
+               password: ${auth-server.datasource.master.password}
+#            slave: 
+#               driver-class-name: ${auth-server.datasource.slave.driver-class-name}
+#               url: ${auth-server.datasource.slave.url}
+#               username: ${auth-server.datasource.slave.username}
+#               password: ${auth-server.datasource.slave.password       
+      

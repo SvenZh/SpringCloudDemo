@@ -5,8 +5,19 @@ spring:
    jackson:
       date-format: yyyy-MM-dd HH:mm:ss
       time-zone: GMT+8
+   application:
+      name: scheduler-server
    datasource:
-      driver-class-name: ${scheduler-server.datasource.master.driver-class-name}
-      url: ${scheduler-server.datasource.master.url}
-      username: ${scheduler-server.datasource.master.username}
-      password: ${scheduler-server.datasource.master.password}
+      dynamic:
+         primary: master 
+         datasource:
+            master:
+               driver-class-name: ${scheduler-server.datasource.master.driver-class-name}
+               url: ${scheduler-server.datasource.master.url}
+               username: ${scheduler-server.datasource.master.username}
+               password: ${scheduler-server.datasource.master.password}
+#            slave: 
+#               driver-class-name: ${scheduler-server.datasource.slave.driver-class-name}
+#               url: ${scheduler-server.datasource.slave.url}
+#               username: ${scheduler-server.datasource.slave.username}
+#               password: ${scheduler-server.datasource.slave.password        
