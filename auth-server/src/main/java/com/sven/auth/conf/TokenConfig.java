@@ -17,7 +17,7 @@ public class TokenConfig {
     private DataSource dataSource;
     
     @Bean
-    public TokenStore jwtTokenStore() {
+    public TokenStore jdbcTokenStore() {
         return new JdbcTokenStore(dataSource);
     }
 

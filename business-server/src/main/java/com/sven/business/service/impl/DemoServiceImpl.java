@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -13,6 +14,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.business.dto.DemoDTO;
+import com.sven.business.dto.UserInfoDTO;
 import com.sven.business.entity.UserInfoEntity;
 import com.sven.business.feign.client.SystemServerFeignClient;
 import com.sven.business.mapper.DemoServiceMapper;
@@ -44,7 +46,23 @@ public class DemoServiceImpl extends ServiceImpl<DemoServiceMapper, UserInfoEnti
 
         return new ResponseMessage<>(page, 200);
     }
+    
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseMessage<Boolean> insertUser(List<UserInfoDTO> body) {
 
+        List<UserInfoEntity> userInfoEntities = body.stream().map(dto -> {
+            UserInfoEntity userInfoEntity = new UserInfoEntity();
+            BeanUtils.copyProperties(dto, userInfoEntity);
+            
+            return userInfoEntity;
+        }).collect(Collectors.toList());
+
+        boolean response = this.saveBatch(userInfoEntities, DEFAULT_BATCH_SIZE);
+
+        return new ResponseMessage<Boolean>(response, 200);
+    }
+    
     @Override
     public ResponseMessage<String> getResponseFromAnotherSystem() {
 

@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 public class AuthorizationTokenServersConfig {
     
     @Autowired
-    private TokenStore jwtTokenStore;
+    private TokenStore jdbcTokenStore;
 
     @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
@@ -29,10 +29,9 @@ public class AuthorizationTokenServersConfig {
 
         services.setClientDetailsService(jdbcClientDetailsService);
         services.setSupportRefreshToken(true);
-        services.setTokenStore(jwtTokenStore);
+        services.setReuseRefreshToken(false);
+        services.setTokenStore(jdbcTokenStore);
         services.setTokenEnhancer(jwtAccessTokenConverter);
-        services.setAccessTokenValiditySeconds(60 * 60 * 2);
-        services.setRefreshTokenValiditySeconds(60 * 60 * 24 * 3);
 
         return services;
     }

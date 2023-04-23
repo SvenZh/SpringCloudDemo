@@ -1,6 +1,5 @@
 package com.sven.auth.conf;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +13,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import com.sven.auth.service.UserService;
 
@@ -25,12 +22,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private TokenStore jwtTokenStore;
-    
-    @Autowired
-    private JwtAccessTokenConverter jwtAccessTokenConverter;
     
     @Autowired
     private UserService userService;
@@ -50,8 +41,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
-            .tokenKeyAccess("permitAll()")          
-            .checkTokenAccess("permitAll()")        
+            .tokenKeyAccess("isAuthenticated()")          
+            .checkTokenAccess("isAuthenticated()")        
             .allowFormAuthenticationForClients()
             ;
     }
@@ -68,8 +59,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
             .authenticationManager(authenticationManager)                   
             .tokenServices(authorizationServerTokenServices)                
             .userDetailsService(userService)    
-            .tokenStore(jwtTokenStore)
-            .accessTokenConverter(jwtAccessTokenConverter)
             .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
             ;
     }
