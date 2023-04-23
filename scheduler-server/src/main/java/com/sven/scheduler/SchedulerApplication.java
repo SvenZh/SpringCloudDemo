@@ -3,7 +3,7 @@ package com.sven.scheduler;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-import com.sven.common.app.ApplicationBuilder;
+import com.sven.common.constant.ApplicationBuilder;
 
 @SpringBootApplication
 @EnableDiscoveryClient

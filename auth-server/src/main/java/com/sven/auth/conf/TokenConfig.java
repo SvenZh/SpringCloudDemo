@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
-import com.sven.common.app.AppConstant;
+import com.sven.common.constant.AppConstant;
 
 @Configuration
 public class TokenConfig {

@@ -1,4 +1,4 @@
-package com.sven.common.app;
+package com.sven.common.constant;
 
 import java.util.ArrayList;
 import java.util.Arrays;

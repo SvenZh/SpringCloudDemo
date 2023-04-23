@@ -4,11 +4,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-import com.sven.common.app.ApplicationBuilder;
+import com.sven.common.constant.ApplicationBuilder;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients
+@EnableFeignClients(basePackages = { "com.sven.common.feign.client" })
 public class BusinessServiceApplication {
     public static void main(String[] args) {
         ApplicationBuilder.run(BusinessServiceApplication.class, args);

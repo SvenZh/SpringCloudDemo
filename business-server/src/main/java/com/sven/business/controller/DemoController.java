@@ -37,7 +37,7 @@ public class DemoController {
     }
     
     @GetMapping("/demo3")
-    public IBaseResponseMessage<?> demo2() {
+    public IBaseResponseMessage<?> demo() {
         ResponseMessage<String> response = demoService.getResponseFromAnotherSystem();
         
         return response;

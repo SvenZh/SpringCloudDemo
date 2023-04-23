@@ -23,7 +23,7 @@ spring:
             - id: feign-test
               uri: lb://business-server
               predicates: 
-              - Path=/demo2/**                       
+              - Path=/demo3/**                       
             - id: quartz-test
               uri: lb://scheduler-server
               predicates: 

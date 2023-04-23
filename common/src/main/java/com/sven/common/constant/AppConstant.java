@@ -1,4 +1,4 @@
-package com.sven.common.app;
+package com.sven.common.constant;
 
 public interface AppConstant {
 

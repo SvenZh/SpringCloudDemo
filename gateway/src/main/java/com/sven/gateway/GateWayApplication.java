@@ -2,7 +2,7 @@ package com.sven.gateway;
 
 import org.springframework.cloud.client.SpringCloudApplication;
 
-import com.sven.common.app.ApplicationBuilder;
+import com.sven.common.constant.ApplicationBuilder;
 
 @SpringCloudApplication
 public class GateWayApplication {

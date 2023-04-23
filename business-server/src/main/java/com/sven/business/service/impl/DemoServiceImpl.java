@@ -16,17 +16,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.business.dto.DemoDTO;
 import com.sven.business.dto.UserInfoDTO;
 import com.sven.business.entity.UserInfoEntity;
-import com.sven.business.feign.client.SystemServerFeignClient;
 import com.sven.business.mapper.DemoServiceMapper;
 import com.sven.business.service.IDemoService;
 import com.sven.business.vo.UserInfoVO;
 import com.sven.common.domain.message.ErrorDetails;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.domain.message.SystemEvent;
+import com.sven.common.feign.client.SystemServerFeignClient;
 
 @Service
 @DS("master")
 public class DemoServiceImpl extends ServiceImpl<DemoServiceMapper, UserInfoEntity> implements IDemoService {
+    
     @Autowired
     private SystemServerFeignClient systemServerFeignClient;
 
