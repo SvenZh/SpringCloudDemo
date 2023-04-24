@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>QuartzDemo</title>
+	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.0.5/lib/theme-chalk/index.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+	<script src="http://cdn.bootcss.com/vue-resource/1.3.4/vue-resource.js"></script>
+	<script src="https://unpkg.com/element-ui@2.0.5/lib/index.js"></script>
+	
+	<style>      
+      #top {
+	      background:#20A0FF;
+	      padding:5px;
+	      overflow:hidden
+      }
+	</style>
+	
+</head>
+<body>
+    <div id="test">		        
+
+		<div id="top">			
+				<el-button type="text" @click="search" style="color:white">查询</el-button>	
+				<el-button type="text" @click="handleadd" style="color:white">添加</el-button>	
+			</span>						
+		</div>	
+		<div id="top">			
+				<input type="text" v-model="value" placeholder="请输入任务名称" />
+				<input type="text" v-model="value" placeholder="请输入任务所在组" />	
+			</span>						
+		</div>	
+				
+		<br/>
+
+        <div style="margin-top:15px">	
+
+		  <el-table
+		    ref="testTable"		  
+		    :data="tableData"
+		    style="width:100%"
+		    border
+		    >
+		    <el-table-column
+		      prop="jobName"
+		      label="任务名称"
+		      sortable
+		      show-overflow-tooltip>
+		    </el-table-column>
+		    
+		    <el-table-column
+		      prop="jobGroup"
+		      label="任务所在组"
+		      sortable>
+		    </el-table-column>
+		    
+   		    <el-table-column
+		      prop="jobClassPath"
+		      label="任务类名"
+		      sortable>
+		    </el-table-column>
+		    
+   		    <el-table-column
+		      prop="jobTriggerName"
+		      label="触发器名称"
+		      sortable>
+		    </el-table-column>
+		    
+		    <el-table-column
+		      prop="jobTriggerGroup"
+		      label="触发器所在组"
+		      sortable>
+		    </el-table-column>
+		    
+		    <el-table-column
+		      prop="jobCron"
+		      label="表达式"
+		      sortable>
+		    </el-table-column>
+		    
+		    <el-table-column
+		      prop="jobTimeZone"
+		      label="时区"
+		      sortable>
+		    </el-table-column>
+		    
+	        <el-table-column label="操作" width="300">
+		      <template scope="scope">
+		      	<el-button
+		          size="small"
+		          type="warning"
+		          @click="handlePause(scope.$index, scope.row)">暂停</el-button>
+		          
+		        <el-button
+		          size="small"
+		          type="info"
+		          @click="handleResume(scope.$index, scope.row)">恢复</el-button>
+		          
+		        <el-button
+		          size="small"
+		          type="danger"
+		          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+		          
+		        <el-button
+		          size="small"
+		          type="success"
+		          @click="handleUpdate(scope.$index, scope.row)">修改</el-button>
+		      </template>
+		    </el-table-column>
+		  </el-table>
+		  
+		  <div align="center">
+			  <el-pagination
+			      @size-change="handleSizeChange"
+			      @current-change="handleCurrentChange"
+			      :current-page="currentPage"
+			      :page-sizes="[10, 20, 30, 40]"
+			      :page-size="pagesize"
+			      layout="total, sizes, prev, pager, next, jumper"
+			      :total="totalCount">
+			  </el-pagination>
+		  </div>
+		</div> 
+		
+		<el-dialog title="添加任务" :visible.sync="dialogFormVisible">
+		  <el-form :model="form">
+		    <el-form-item label="任务名称" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobName" auto-complete="off"></el-input>
+		    </el-form-item>	    
+		    <el-form-item label="任务所在组" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobGroup" auto-complete="off"></el-input>
+		    </el-form-item>
+		    <el-form-item label="触发器名称" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobTriggerName" auto-complete="off"></el-input>
+		    </el-form-item>
+		    <el-form-item label="触发器所在组" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobTriggerGroup" auto-complete="off"></el-input>
+		    </el-form-item>
+		    <el-form-item label="表达式" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobCron" auto-complete="off"></el-input>
+		    </el-form-item>
+		    <el-form-item label="任务类" label-width="120px" style="width:35%">
+		      <el-input v-model="form.jobClassPath" auto-complete="off"></el-input>
+		    </el-form-item>
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="dialogFormVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="add">确 定</el-button>
+		  </div>
+		</el-dialog>
+		
+		<el-dialog title="修改任务" :visible.sync="updateFormVisible">
+		  <el-form :model="updateform">
+		    <el-form-item label="表达式" label-width="120px" style="width:35%">
+		      <el-input v-model="updateform.jobCron" auto-complete="off"></el-input>
+		    </el-form-item>
+		  </el-form>
+		  <div slot="footer" class="dialog-footer">
+		    <el-button @click="updateFormVisible = false">取 消</el-button>
+		    <el-button type="primary" @click="update">确 定</el-button>
+		  </div>
+		</el-dialog>
+		
+    </div>
+	
+    <footer align="center">
+        <p>&copy; Quartz 任务管理</p>
+    </footer>
+
+	<script>
+	var vue = new Vue({			
+			el:"#test",
+		    data: {		  
+		    	//表格当前页数据
+		    	tableData: [],
+		        
+		        //请求的URL
+		        url:'quartz/list',
+		        
+		        //默认每页数据量
+		        pageSize: 10,		        
+		        
+		        //当前页码
+		        pageNo: 1,
+		        
+		        //查询的页码
+		        start: 1,
+		        
+		        //默认数据总数
+		        totalCount: 1000,
+		        
+		        //添加对话框默认可见性
+		        dialogFormVisible: false,
+		        
+		        //修改对话框默认可见性
+		        updateFormVisible: false,
+		        
+		        //提交的表单
+		        form: {
+		        	jobName: '',
+		        	jobGroup: '',
+		        	jobTriggerName:'',
+		        	jobTriggerGroup:'',
+		        	jobCron:'',
+		        	jobClassPath:''
+		          },
+		          
+		        updateform: {
+		        	jobName: '',
+		        	jobGroup: '',
+		        	jobTriggerName:'',
+		        	jobTriggerGroup:'',
+		        	jobCron:'',
+		        },
+		    },
+
+		    methods: {
+		        //从服务器读取数据
+				loadData: function(pageNo, pageSize){					
+					this.$http.post('quartz/list', {"pageSize":pageSize, "pageNo":pageNo}).then(function(res){
+						console.log(res)
+                		this.tableData = res.body.data.records;
+                		this.totalCount = res.body.data.total;
+                	},function(){
+                  		console.log('failed');
+                	});					
+				},			    		        
+				      
+		        //单行删除
+			    handleDelete: function(index, row) {
+					this.$http.post('quartz/deleteJob',{"jobName":row.jobName,"jobGroup":row.jobGroup,"jobTriggerName":row.jobTriggerName,"jobTriggerGroup":row.jobTriggerGroup},{headers:{'Content-Type': 'application/json'}}).then(function(res){
+						this.loadData( this.pageNo, this.pageSize);
+		            },function(){
+		                console.log('failed');
+		            });
+		        },
+		        
+		        //暂停任务
+		        handlePause: function(index, row){
+		        	this.$http.post('quartz/pauseJob',{"jobName":row.jobName,"jobGroup":row.jobGroup},{headers:{'Content-Type': 'application/json'}}).then(function(res){
+						this.loadData( this.pageNo, this.pageSize);
+		            },function(){
+		                console.log('failed');
+		            });
+		        },
+		        
+		        //恢复任务
+		        handleResume: function(index, row){
+		        	this.$http.post('quartz/resumeJob',{"jobName":row.jobName,"jobGroup":row.jobGroup},{headers:{'Content-Type': 'application/json'}}).then(function(res){
+						this.loadData( this.pageNo, this.pageSize);
+		            },function(){
+		                console.log('failed');
+		            });
+		        },
+		        
+		        //搜索
+		        search: function(){
+		        	this.loadData(this.pageNo, this.pageSize);
+		        },
+		        
+		        //弹出对话框
+		        handleadd: function(){		                
+		            this.dialogFormVisible = true;	              
+		        },
+		        
+		        //添加
+		        add: function(){
+		        	this.$http.post('quartz/addJob',{"jobName":this.form.jobName,"jobGroup":this.form.jobGroup, "jobTriggerName":this.form.jobTriggerName,"jobTriggerGroup":this.form.jobTriggerGroup, "jobCron":this.form.jobCron, "jobClassPath": this.form.jobClassPath},{headers:{'Content-Type': 'application/json'}}).then(function(res){
+        				this.loadData(this.pageNo, this.pageSize);
+        				this.dialogFormVisible = false;
+                    },function(){
+                        console.log('failed');
+                    });
+		        },
+		        
+		        //更新
+		        handleUpdate: function(index, row){
+		        	console.log(row)
+		        	this.updateFormVisible = true;
+		        	this.updateform.jobTriggerName = row.jobTriggerName;
+		        	this.updateform.jobTriggerGroup = row.jobTriggerGroup;
+		        },
+		        
+		        //更新任务
+		        update: function(){
+		        	this.$http.put
+		        	('quartz/rescheduleJob',
+		        			{"jobTriggerName":this.updateform.jobTriggerName,
+		        			 "jobTriggerGroup":this.updateform.jobTriggerGroup,
+		        			 "jobCron":this.updateform.jobCron
+		        			 },{headers:{'Content-Type': 'application/json'}}
+		        	).then(function(res){
+		        		this.loadData(this.pageNo, this.pageSize);
+        				this.updateFormVisible = false;
+		        	},function(){
+                        console.log('failed');
+                    });
+		    
+		        },
+		      
+		        //每页显示数据量变更
+		        handleSizeChange: function(val) {
+		            this.pageSize = val;
+		            this.loadData(this.pageNo, this.pageSize);
+		        },
+		        
+		        //页码变更
+		        handleCurrentChange: function(val) {
+		            this.pageNo = val;
+		            this.loadData(this.pageNo, this.pageSize);
+		        },	      
+		        		        
+		    },	    
+		    
+		    
+		  });
+	
+		  //载入数据
+    	  vue.loadData(vue.pageNo, vue.pageSize);
+	</script>  
+	
+</body>
+</html>

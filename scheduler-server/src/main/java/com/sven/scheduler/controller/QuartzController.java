@@ -1,7 +1,6 @@
 package com.sven.scheduler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,7 +76,7 @@ public class QuartzController {
         return response;
     }
     
-    @DeleteMapping("/deleteJob")
+    @PostMapping("/deleteJob")
     public IBaseResponseMessage<?> deleteJob(@RequestBody QuartzSchedulerDTO req) {
         ResponseMessage<String> response = quartzService.deleteJob(req);
         

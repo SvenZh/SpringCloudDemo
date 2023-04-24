@@ -17,7 +17,7 @@ public class QuartzSchedulerDTO extends PageMessage{
     private String jobClassPath;
     private String jobName;
     private String jobGroup;
-    private String triggerName;
-    private String triggerGroup;
+    private String jobTriggerName;
+    private String jobTriggerGroup;
     private String jobCron;
 }
