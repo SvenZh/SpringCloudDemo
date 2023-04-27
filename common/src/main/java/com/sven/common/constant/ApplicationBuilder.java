@@ -27,11 +27,14 @@ public class ApplicationBuilder {
         ConfigurableEnvironment environment = new StandardEnvironment();
         MutablePropertySources propertySources = environment.getPropertySources();
         propertySources.addFirst(new SimpleCommandLinePropertySource(args));
-        propertySources.addLast(new MapPropertySource(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, environment.getSystemProperties()));
-        propertySources.addLast(new SystemEnvironmentPropertySource(StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, environment.getSystemEnvironment()));
+        propertySources.addLast(new MapPropertySource(StandardEnvironment.SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME,
+                environment.getSystemProperties()));
+        propertySources.addLast(new SystemEnvironmentPropertySource(
+                StandardEnvironment.SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, environment.getSystemEnvironment()));
         String[] activeProfiles = environment.getActiveProfiles();
         List<String> profiles = Arrays.asList(activeProfiles);
-        List<String> presetProfiles = new ArrayList<>(Arrays.asList(AppConstant.DEV_CODE, AppConstant.TEST_CODE, AppConstant.PROD_CODE));
+        List<String> presetProfiles = new ArrayList<>(
+                Arrays.asList(AppConstant.DEV_CODE, AppConstant.TEST_CODE, AppConstant.PROD_CODE));
         presetProfiles.retainAll(profiles);
         List<String> activeProfileList = new ArrayList<>(profiles);
         Function<Object[], String> joinFun = StringUtils::arrayToCommaDelimitedString;

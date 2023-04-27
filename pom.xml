@@ -12,6 +12,7 @@
 		<spring.cloud.version>Hoxton.SR8</spring.cloud.version>
 		<spring.cloud.alibaba>2021.1</spring.cloud.alibaba>
 		<mybatisPlus.version>3.5.3.1</mybatisPlus.version>
+		<maven-checkstyle-plugin.version>3.2.2</maven-checkstyle-plugin.version>
 	</properties>
 
 	<modules>
@@ -121,23 +122,38 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${maven-checkstyle-plugin.version}</version>
+					<configuration>
+						<configLocation>checkStyle.xml</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<consoleOutput>true</consoleOutput>
+						<failsOnError>true</failsOnError>
+						<excludes></excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>validate</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>checkstyle</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-					<encoding>UTF-8</encoding>
-					<compilerArgs>
-						<arg>-parameters</arg>
-					</compilerArgs>
-				</configuration>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
@@ -149,11 +165,6 @@
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
-		<repository>
-			<id>biz-release</id>
-			<name>Release Repository</name>
-			<url>http://nexus.bizx.vip/repository/maven-releases/</url>
 		</repository>
 	</repositories>
 
@@ -167,4 +178,20 @@
 		</pluginRepository>
 	</pluginRepositories>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>${maven-checkstyle-plugin.version}</artifactId>
+				<version>3.2.2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

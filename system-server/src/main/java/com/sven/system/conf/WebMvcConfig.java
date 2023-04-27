@@ -1,4 +1,4 @@
-package com.sven.business.conf;
+package com.sven.system.conf;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
