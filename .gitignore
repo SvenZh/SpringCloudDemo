@@ -1,0 +1,8 @@
+system-server/.settings/
+scheduler-server/.settings/
+gateway/.settings/
+common/.settings/
+business-server/.settings/
+auth-server/.settings/
+.settings/
+target/

@@ -8,5 +8,6 @@ import lombok.Setter;
 public class PageMessage {
 
     private int pageSize;
+    
     private int pageNo;
 }

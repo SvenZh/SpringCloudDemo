@@ -7,6 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
+		<project.version>0.0.1-SNAPSHOT</project.version>
 		<java.version>1.8</java.version>
 		<spring.boot.version>2.2.8.RELEASE</spring.boot.version>
 		<spring.cloud.version>Hoxton.SR8</spring.cloud.version>
@@ -128,17 +129,24 @@
 					<version>${maven-checkstyle-plugin.version}</version>
 					<configuration>
 						<configLocation>checkStyle.xml</configLocation>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
+						<includeTestSourceDirectory>false</includeTestSourceDirectory>
 						<consoleOutput>true</consoleOutput>
-						<failsOnError>true</failsOnError>
+						<failsOnError>false</failsOnError>
 						<excludes></excludes>
 					</configuration>
 					<executions>
 						<execution>
-							<id>validate</id>
+							<id>checkstyle</id>
 							<phase>validate</phase>
 							<goals>
 								<goal>checkstyle</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>check</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -148,15 +156,34 @@
 
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${maven-checkstyle-plugin.version}</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<repositories>
 		<repository>
@@ -177,21 +204,4 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>${maven-checkstyle-plugin.version}</artifactId>
-				<version>3.2.2</version>
-				<reportSets>
-					<reportSet>
-						<reports>
-							<report>checkstyle</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
 </project>

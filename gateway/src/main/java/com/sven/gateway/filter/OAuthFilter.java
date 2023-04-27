@@ -66,12 +66,23 @@ public class OAuthFilter implements GlobalFilter, Ordered {
     }
 
     private boolean isSkip(String path) {
-        OAuthProperties oAuthProperties = new OAuthProperties();
-
-        return OAuthProvider.getDefaultSkipUrl().stream().map(url -> url.replace(OAuthProvider.TARGET, OAuthProvider.REPLACEMENT)).anyMatch(path::startsWith)
-            || oAuthProperties.getSkipUrl().stream().map(url -> url.replace(OAuthProvider.TARGET, OAuthProvider.REPLACEMENT)).anyMatch(path::startsWith);
+        return ifExistOAuthProvider(path) || ifExistOAuthProperties(path);
     }
 
+    private boolean ifExistOAuthProvider(String path) {
+        return OAuthProvider.getDefaultSkipUrl().stream()
+                .map(url -> url.replace(OAuthProvider.TARGET, OAuthProvider.REPLACEMENT))
+                .anyMatch(path::startsWith);
+    }
+    
+    private boolean ifExistOAuthProperties(String path) {
+        OAuthProperties oAuthProperties = new OAuthProperties();
+        
+        return oAuthProperties.getSkipUrl().stream()
+                .map(url -> url.replace(OAuthProvider.TARGET, OAuthProvider.REPLACEMENT))
+                .anyMatch(path::startsWith);
+    }
+    
     private Mono<Void> unAuth(ServerHttpResponse resp, String msg, HttpStatus httpStatus) {
         resp.setStatusCode(httpStatus);
         resp.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
@@ -82,9 +93,9 @@ public class OAuthFilter implements GlobalFilter, Ordered {
             log.error(e.getMessage(), e);
         }
         DataBuffer buffer = resp.bufferFactory().wrap(result.getBytes(StandardCharsets.UTF_8));
+        
         return resp.writeWith(Flux.just(buffer));
     }
-
 
     @Override
     public int getOrder() {

@@ -22,6 +22,11 @@
 		<module name="SuppressionCommentFilter" />
 		<module name="SuppressWarningsHolder" />
 
+		<module name="ParameterNumber">
+			<property name="max" value="5" />
+			<property name="tokens" value="METHOD_DEF" />
+		</module>
+
 		<!-- Name Checker -->
 		<module name="OuterTypeFilename" />
 		<module name="PackageName">
@@ -44,7 +49,7 @@
 		<module name="AbbreviationAsWordInName">
 			<property name="ignoreFinal" value="false" />
 			<property name="allowedAbbreviationLength" value="1" />
-			<property name="allowedAbbreviations" value="VO" />
+			<property name="allowedAbbreviations" value="VO,DTO" />
 		</module>
 
 		<!-- Import Checker -->
@@ -85,7 +90,12 @@
 			<property name="tagOrder"
 				value="@param, @return, @throws, @deprecated" />
 		</module>
-
+		<module name="SimplifyBooleanReturn"/>
+		<module name="StringLiteralEquality" />
+		<module name="NestedIfDepth">
+			<property name="max" value="3" />
+		</module>
+		
 		<!-- Miscellaneous Checker -->
 		<module name="AvoidEscapedUnicodeCharacters">
 			<property name="allowEscapesForControlCharacters"
@@ -97,13 +107,9 @@
 			<property name="arrayInitIndent" value="8" />
 			<property name="lineWrappingIndentation" value="8" />
 		</module>
-		<module name="CommentsIndentation">
-			<property name="tokens"
-				value="SINGLE_LINE_COMMENT, BLOCK_COMMENT_BEGIN" />
-		</module>
 		<module name="ArrayTypeStyle" />
 		<module name="UpperEll" />
-
+		
 		<!-- Design Checker -->
 		<module name="OneTopLevelClass" />
 

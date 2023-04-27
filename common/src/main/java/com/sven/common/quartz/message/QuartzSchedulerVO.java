@@ -9,11 +9,18 @@ import lombok.Setter;
 @Setter
 public class QuartzSchedulerVO {
     private String jobName;
+    
     private String jobGroup;
+    
     private String jobClassPath;
+    
     private String jobCron;
+    
     private String jobTriggerName;
+    
     private String jobTriggerGroup;
+    
     private String jobStatus;
+    
     private TimeZone jobTimeZone;
 }

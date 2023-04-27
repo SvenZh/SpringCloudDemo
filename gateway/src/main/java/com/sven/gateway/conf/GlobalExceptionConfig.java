@@ -56,17 +56,4 @@ public class GlobalExceptionConfig {
         exceptionHandler.setMessageReaders(this.serverCodecConfigurer.getReaders());
         return exceptionHandler;
     }
-
-//    @Bean
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
-//        return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
-//    }
-//
-//    @Bean
-//    @Order(-1)
-//    public GlobalFilter sentinelGatewayFilter() {
-//        return new SentinelGatewayFilter();
-//    }
-
 }

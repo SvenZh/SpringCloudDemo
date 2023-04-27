@@ -16,8 +16,7 @@ public enum SystemEvent {
     quartz_pauseAllJobs_exception_event(20008, "暂停所有定时任务失败"),
     quartz_resumeAllJobs_exception_event(20009, "恢复所有定时任务失败"),
     quartz_runOnce_exception_event(20010, "运行一次定时任务失败"),
-    quartz_jobList_exception_event(20011, "查询定时任务列表失败")
-    ;
+    quartz_jobList_exception_event(20011, "查询定时任务列表失败");
 
     SystemEvent(int errorCode, String errorMessage) {
         this.errorCode = errorCode;

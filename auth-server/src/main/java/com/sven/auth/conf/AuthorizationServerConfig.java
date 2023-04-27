@@ -41,10 +41,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
-            .tokenKeyAccess("isAuthenticated()")          
-            .checkTokenAccess("isAuthenticated()")        
-            .allowFormAuthenticationForClients()
-            ;
+                .tokenKeyAccess("isAuthenticated()")
+                .checkTokenAccess("isAuthenticated()")
+                .allowFormAuthenticationForClients();
     }
 
     @Override
@@ -55,11 +54,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-            .authorizationCodeServices(authorizationCodeServers)            
-            .authenticationManager(authenticationManager)                   
-            .tokenServices(authorizationServerTokenServices)                
-            .userDetailsService(userService)    
-            .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET)
-            ;
+                .authorizationCodeServices(authorizationCodeServers)            
+                .authenticationManager(authenticationManager)                   
+                .tokenServices(authorizationServerTokenServices)                
+                .userDetailsService(userService)
+                .allowedTokenEndpointRequestMethods(HttpMethod.POST, HttpMethod.GET);
     }
 }

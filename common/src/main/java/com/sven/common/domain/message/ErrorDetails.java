@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ErrorDetails {
     private int errorCode;
+    
     private String errorMessage;
 
     public ErrorDetails(SystemEvent systemEvent) {

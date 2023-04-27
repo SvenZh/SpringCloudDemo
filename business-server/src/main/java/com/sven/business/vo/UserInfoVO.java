@@ -11,7 +11,10 @@ import lombok.Setter;
 public class UserInfoVO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
+    
     private String name;
+    
     private String address;
+    
     private String email;
 }

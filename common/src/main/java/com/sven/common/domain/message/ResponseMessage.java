@@ -12,7 +12,9 @@ import lombok.Setter;
 public class ResponseMessage<T> implements IBaseResponseMessage<T> {
 
     private T data;
+    
     private int code;
+    
     private ErrorDetails error;
 
     public ResponseMessage(T data, int code) {
