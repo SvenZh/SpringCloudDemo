@@ -69,9 +69,9 @@ public class DemoServiceImpl extends ServiceImpl<DemoServiceMapper, UserInfoEnti
 
         ResponseMessage<String> result = systemServerFeignClient.ping();
         if (!result.isSuccess()) {
-            return new ResponseMessage<>(new ErrorDetails(SystemEvent.sys_default_event),
-                    SystemEvent.sys_default_event.getErrorCode());
+            return new ResponseMessage<>(new ErrorDetails(SystemEvent.sys_default_event));
         }
+
         return new ResponseMessage<>(result.getData(), 200);
     }
 }
