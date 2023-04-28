@@ -25,4 +25,12 @@ spring:
 #               driver-class-name: ${business-server.datasource.slave.driver-class-name}
 #               url: ${business-server.datasource.slave.url}
 #               username: ${business-server.datasource.slave.username}
-#               password: ${business-server.datasource.slave.password              
+#               password: ${business-server.datasource.slave.password
+
+mybatis-plus: 
+  mapper-locations: classpath:*/mapper/*Mapper.xml
+  configuration:
+    cache-enabled: true
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    

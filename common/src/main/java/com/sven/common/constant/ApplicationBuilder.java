@@ -61,7 +61,8 @@ public class ApplicationBuilder {
         props.setProperty("spring.cloud.nacos.config.ext-config[0].data-id", "common");
         props.setProperty("spring.cloud.nacos.config.ext-config[0].refresh", "true");
         props.setProperty("spring.cloud.nacos.config.ext-config[0].group", profile);
-
+        props.setProperty("nacos.logging.default.config.enabled", "false");
+        
         props.setProperty("spring.cloud.sentinel.eager", "true");
         props.setProperty("spring.cloud.sentinel.transport.dashboard", "localhost:8858");
         props.setProperty("spring.cloud.sentinel.datasource.ds1.nacos.namespace", "SpringCloudDemo");
