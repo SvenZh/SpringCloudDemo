@@ -9,10 +9,6 @@
 	<artifactId>system-server</artifactId>
 	<packaging>jar</packaging>
 
-	<properties>
-		<spring.boot.version>2.2.8.RELEASE</spring.boot.version>
-	</properties>
-	
 	<dependencies>
 		<dependency>
 			<groupId>com.sven</groupId>

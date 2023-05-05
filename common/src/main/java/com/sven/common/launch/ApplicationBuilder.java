@@ -1,4 +1,4 @@
-package com.sven.common.constant;
+package com.sven.common.launch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,8 @@ import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.util.StringUtils;
+
+import com.sven.common.constant.AppConstant;
 
 public class ApplicationBuilder {
     public static ConfigurableApplicationContext run(Class<?> source, String... args) {

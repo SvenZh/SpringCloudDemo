@@ -1,8 +1,6 @@
 package com.sven.business.dto;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotEmpty;
 
 import com.sven.common.domain.message.PageMessage;
 
@@ -13,7 +11,6 @@ import lombok.Setter;
 @Setter
 public class DemoDTO extends PageMessage {
 
-    @NotNull(message = "不能为空")
-    @Length(max = 1, message = "超过最大长度")
+    @NotEmpty(message = "不能为空")
     public String testValid;
 }

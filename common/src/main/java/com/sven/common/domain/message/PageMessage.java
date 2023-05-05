@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PageMessage {
 
-    private int pageSize;
+    private int pageSize = 10;
     
-    private int pageNo;
+    private int pageNo = 1;
 }

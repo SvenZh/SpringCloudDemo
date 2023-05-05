@@ -1,4 +1,4 @@
-package com.sven.business.conf;
+package com.sven.common.config;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
