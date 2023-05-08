@@ -6,3 +6,6 @@ business-server/.settings/
 auth-server/.settings/
 .settings/
 target/
+.lh/
+.vscode/
+.gitignore
