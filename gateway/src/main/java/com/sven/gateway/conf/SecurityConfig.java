@@ -11,12 +11,11 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
         return http
-                .csrf()
-                .disable()
-                .authorizeExchange()
-                .pathMatchers("/**").permitAll()
-                .anyExchange().authenticated()
-                .and()
+                .csrf(csrf -> csrf.disable())
+                .authorizeExchange(authorizeExchange -> {
+                    authorizeExchange.pathMatchers("/**").permitAll();
+                    authorizeExchange.anyExchange().authenticated();
+                })
                 .build();
     }
 }

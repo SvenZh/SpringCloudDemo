@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -24,16 +25,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http
-            .csrf().disable()
-            .httpBasic()
-            .and()
-            .formLogin()
-            .and()
-            .authorizeRequests()
-            .antMatchers("/auth/**", "/login/**", "/logout/**").permitAll()
-            .anyRequest().authenticated()
-            .and()
-            .headers().cacheControl().disable();
+        http.csrf(csrf -> csrf.disable())
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults())
+                .authorizeRequests(authorizeRequests -> {
+                    authorizeRequests.antMatchers("/auth/**", "/login/**", "/logout/**").permitAll();
+                    authorizeRequests.anyRequest().authenticated();
+                })
+                .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()));
     }
 }
