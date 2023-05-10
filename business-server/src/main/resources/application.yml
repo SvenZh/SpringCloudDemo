@@ -1,5 +1,5 @@
 server:
-  port: 10020
+   port: 10020
 
 spring:
    jackson:
@@ -26,7 +26,9 @@ spring:
 #               url: ${business-server.datasource.slave.url}
 #               username: ${business-server.datasource.slave.username}
 #               password: ${business-server.datasource.slave.password
-
+logging:
+   config: classpath:logback-custom.xml
+  
 mybatis-plus: 
   mapper-locations: classpath:*/mapper/*Mapper.xml
   configuration:

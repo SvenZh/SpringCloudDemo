@@ -1,5 +1,5 @@
 server:
-  port: 10040
+   port: 10040
 
 spring:
    jackson:
@@ -21,4 +21,7 @@ spring:
 #               driver-class-name: ${scheduler-server.datasource.slave.driver-class-name}
 #               url: ${scheduler-server.datasource.slave.url}
 #               username: ${scheduler-server.datasource.slave.username}
-#               password: ${scheduler-server.datasource.slave.password        
+#               password: ${scheduler-server.datasource.slave.password
+
+logging:
+   config: classpath:logback-custom.xml

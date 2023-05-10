@@ -4,7 +4,6 @@
 	<contextName>logback</contextName>
 	
 	<property name="LOG_PATH" value="/logs" />
-	<!-- <property name="LOG_APP_NAME" value="business-server" /> -->
 	<springProperty scope="context" name="LOG_APP_NAME" source="spring.application.name"/>
 	<property name="CONSOLE_LOG_PATTERN"
 		value="%yellow(%date{yyyy-MM-dd HH:mm:ss}) |%highlight(%-5level) |%blue(%thread) |%blue(%file:%line) |%green(%logger) |%cyan(%msg%n)" />
