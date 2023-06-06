@@ -12,5 +12,5 @@ import lombok.Setter;
 public class DemoDTO extends PageMessage {
 
     @NotEmpty(message = "不能为空")
-    public String testValid;
+    public String name;
 }

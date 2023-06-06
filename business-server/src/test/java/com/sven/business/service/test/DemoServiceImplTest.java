@@ -103,7 +103,7 @@ public class DemoServiceImplTest {
 
     private DemoDTO mockGetUserInfoListReqeust() {
         DemoDTO dto = new DemoDTO();
-        dto.setTestValid("test");
+        dto.setName("test");
         dto.setPageSize(10);
         dto.setPageNo(1);
 

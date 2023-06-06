@@ -65,7 +65,7 @@ public class DemoControllerTest {
 
     private DemoDTO mockDemoRequest() {
         DemoDTO dto = new DemoDTO();
-        dto.setTestValid("testValid");
+        dto.setName("testValid");
 
         return dto;
     }
