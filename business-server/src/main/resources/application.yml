@@ -25,7 +25,7 @@ spring:
 #               driver-class-name: ${business-server.datasource.slave.driver-class-name}
 #               url: ${business-server.datasource.slave.url}
 #               username: ${business-server.datasource.slave.username}
-#               password: ${business-server.datasource.slave.password
+#               password: ${business-server.datasource.slave.password}
 logging:
    config: classpath:logback-custom.xml
   

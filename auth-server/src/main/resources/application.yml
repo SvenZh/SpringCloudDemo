@@ -17,11 +17,11 @@ spring:
                url: ${auth-server.datasource.master.url}
                username: ${auth-server.datasource.master.username}
                password: ${auth-server.datasource.master.password}
-#            slave: 
-#               driver-class-name: ${auth-server.datasource.slave.driver-class-name}
-#               url: ${auth-server.datasource.slave.url}
-#               username: ${auth-server.datasource.slave.username}
-#               password: ${auth-server.datasource.slave.password
+            slave: 
+               driver-class-name: ${auth-server.datasource.slave.driver-class-name}
+               url: ${auth-server.datasource.slave.url}
+               username: ${auth-server.datasource.slave.username}
+               password: ${auth-server.datasource.slave.password}
 
 logging:
    config: classpath:logback-custom.xml
