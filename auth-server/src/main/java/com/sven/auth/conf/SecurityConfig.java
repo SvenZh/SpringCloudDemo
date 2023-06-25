@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults())
                 .authorizeRequests(authorizeRequests -> {
-                    authorizeRequests.antMatchers("/auth/**", "/login/**", "/logout/**").permitAll();
+                    authorizeRequests.antMatchers("/oauth/**", "/login/**", "/logout/**").permitAll();
                     authorizeRequests.anyRequest().authenticated();
                 })
                 .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()));

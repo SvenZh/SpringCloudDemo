@@ -9,3 +9,10 @@ target/
 .lh/
 .vscode/
 .gitignore
+.project
+auth-server/.classpath
+business-server/.classpath
+common/.classpath
+gateway/.classpath
+scheduler-server/.classpath
+system-server/.classpath

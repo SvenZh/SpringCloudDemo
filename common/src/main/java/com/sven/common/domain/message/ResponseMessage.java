@@ -32,6 +32,10 @@ public class ResponseMessage<T> implements IBaseResponseMessage<T> {
         this.error = error;
     }
 
+    public static <T> ResponseMessage<T> ok(T data) {
+        return new ResponseMessage<>(data, 200);
+    }
+    
     @Override
     public T data() {
         return data;
