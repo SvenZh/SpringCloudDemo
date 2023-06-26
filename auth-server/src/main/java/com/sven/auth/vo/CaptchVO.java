@@ -13,5 +13,5 @@ import lombok.Setter;
 @Builder
 public class CaptchVO {
     private String image;
-    private String key;
+    private String uuId;
 }

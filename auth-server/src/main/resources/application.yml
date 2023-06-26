@@ -22,6 +22,10 @@ spring:
                url: ${auth-server.datasource.slave.url}
                username: ${auth-server.datasource.slave.username}
                password: ${auth-server.datasource.slave.password}
+   redis:
+      port: ${auth-server.redis.port}
+      host: ${auth-server.redis.host}
+      password: ${auth-server.redis.password}                   
 
 logging:
    config: classpath:logback-custom.xml

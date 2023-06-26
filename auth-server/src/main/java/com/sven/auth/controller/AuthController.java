@@ -20,7 +20,7 @@ public class AuthController {
     @GetMapping(value = "/captcha")
     public IBaseResponseMessage<CaptchVO> getCaptcha() {
         CaptchVO response = authService.getCaptcha();
-
+        
         return ResponseMessage.ok(response);
     }
 }
