@@ -16,7 +16,7 @@ public class OAuthProvider {
     static {
         defaultSkipUrl.add("/oauth/login");
         defaultSkipUrl.add("/oauth/logout");
-        defaultSkipUrl.add("/oauth/token/**");
+        defaultSkipUrl.add("/oauth/**");
     }
 
     /**

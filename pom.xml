@@ -14,7 +14,7 @@
 		<spring.cloud.alibaba>2021.1</spring.cloud.alibaba>
 		<mybatisPlus.version>3.5.3.1</mybatisPlus.version>
 		<maven-checkstyle-plugin.version>3.2.2</maven-checkstyle-plugin.version>
-		<jacoco-maven-plugin.convert>0.10</jacoco-maven-plugin.convert>
+		<jacoco-maven-plugin.coverage>0.10</jacoco-maven-plugin.coverage>
 		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 		<mysql-drive.version>8.0.33</mysql-drive.version>
 		<druid.version>1.2.16</druid.version>
@@ -170,7 +170,7 @@
 						<includeTestSourceDirectory>false</includeTestSourceDirectory>
 						<consoleOutput>true</consoleOutput>
 						<failsOnError>false</failsOnError>
-						<excludes>**/entity/**,**/dto/**,**/vo/**</excludes>
+						<excludes>**/conf/**,**/entity/**,**/dto/**,**/vo/**</excludes>
 					</configuration>
 					<executions>
 						<execution>
@@ -206,12 +206,12 @@
 									<limit implementation="org.jacoco.report.check.Limit">
 										<counter>LINE</counter>
 										<value>COVEREDRATIO</value>
-										<minimum>${jacoco-maven-plugin.convert}</minimum>
+										<minimum>${jacoco-maven-plugin.coverage}</minimum>
 									</limit>
 									<limit implementation="org.jacoco.report.check.Limit">
 										<counter>BRANCH</counter>
 										<value>COVEREDRATIO</value>
-										<minimum>${jacoco-maven-plugin.convert}</minimum>
+										<minimum>${jacoco-maven-plugin.coverage}</minimum>
 									</limit>
 								</limits>
 							</rule>

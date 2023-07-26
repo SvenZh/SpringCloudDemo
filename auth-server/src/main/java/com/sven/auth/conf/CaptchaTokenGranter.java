@@ -54,7 +54,7 @@ public class CaptchaTokenGranter extends AbstractTokenGranter{
         String correctValidationCode = redisTemplate.opsForValue().get(validateCodeKey);
         
         if(!validationCode.equals(correctValidationCode)) {
-            throw new RuntimeException("验证码错误!");
+            throw new InvalidGrantException("验证码错误!");
         } else {
             redisTemplate.delete(validateCodeKey);
         }

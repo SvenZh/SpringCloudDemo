@@ -23,19 +23,23 @@ spring:
               uri: lb://business-server
               predicates: 
               - Path=/demo/**
-            - id: insert-test
-              uri: lb://business-server
+            - id: role
+              uri: lb://system-server
               predicates: 
-              - Path=/demo2/**
-            - id: feign-test
-              uri: lb://business-server
+              - Path=/role/**
+            - id: user
+              uri: lb://system-server
               predicates: 
-              - Path=/demo3/**                       
-            - id: quartz-test
+              - Path=/user/**                       
+            - id: user-role
+              uri: lb://system-server
+              predicates: 
+              - Path=/userRole/**                       
+            - id: quartz
               uri: lb://scheduler-server
               predicates: 
               - Path=/quartz/**
-            - id: auth-test
+            - id: auth
               uri: lb://auth-server
               predicates: 
               - Path=/oauth/**
