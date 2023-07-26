@@ -19,10 +19,14 @@ spring:
             locator:
                 enabled: true
          routes:
-            - id: demo-test
-              uri: lb://business-server
+            - id: perimission
+              uri: lb://system-server
               predicates: 
-              - Path=/demo/**
+              - Path=/perimission/**
+            - id: role-perimission
+              uri: lb://system-server
+              predicates: 
+              - Path=/rolePerimission/**
             - id: role
               uri: lb://system-server
               predicates: 

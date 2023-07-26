@@ -13,7 +13,9 @@ public interface IUserService extends IService<UserInfoEntity> {
 
     ResponseMessage<UserInfoVO> retrieveUserInfoByName(String userName);
 
-    ResponseMessage<Boolean> creation(List<UserInfoDTO> dto);
+    ResponseMessage<Boolean> createUser(List<UserInfoDTO> dto);
 
-    ResponseMessage<IPage<UserInfoVO>> userPage(UserInfoDTO dto);
+    ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(UserInfoDTO dto);
+
+    ResponseMessage<List<UserInfoVO>> retrieveUserList(UserInfoDTO dto);
 }

@@ -35,11 +35,11 @@ public class UserControllerTest {
     @Test
     public void demoHappyPath() {
 
-        Mockito.when(mockUserService.userPage(Mockito.any(UserInfoDTO.class)))
+        Mockito.when(mockUserService.retrieveUserPage(Mockito.any(UserInfoDTO.class)))
                 .thenReturn(mockUserPageHappyPathResponse());
 
         ResponseMessage<IPage<UserInfoVO>> response = (ResponseMessage<IPage<UserInfoVO>>) mockUserController
-                .userPage(mockUserPageRequest());
+                .retrieveUserPage(mockUserPageRequest());
 
         List<UserInfoVO> vo = response.getData().getRecords();
 
@@ -53,11 +53,11 @@ public class UserControllerTest {
     @Test
     public void demoUnHappyPath() {
 
-        Mockito.when(mockUserService.userPage(Mockito.any(UserInfoDTO.class)))
+        Mockito.when(mockUserService.retrieveUserPage(Mockito.any(UserInfoDTO.class)))
                 .thenReturn(mockUserPageUnHappyPathResponse());
 
         ResponseMessage<IPage<UserInfoVO>> response = (ResponseMessage<IPage<UserInfoVO>>) mockUserController
-                .userPage(mockUserPageRequest());
+                .retrieveUserPage(mockUserPageRequest());
 
         Assert.assertEquals(500, response.getError().getErrorCode());
         Assert.assertEquals("error 500", response.getError().getErrorMessage());

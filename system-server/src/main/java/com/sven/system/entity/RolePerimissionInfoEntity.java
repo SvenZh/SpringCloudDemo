@@ -17,17 +17,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_user")
-public class UserInfoEntity {
+@TableName("sys_role_permission")
+public class RolePerimissionInfoEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     
-    private String name;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long roleId;
     
-    private String address;
-    
-    private String email;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long permissionId;
     
     private Integer deleted;
     

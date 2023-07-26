@@ -11,11 +11,11 @@ import com.sven.system.entity.RoleInfoEntity;
 
 public interface IRoleService extends IService<RoleInfoEntity> {
 
-    ResponseMessage<List<RoleInfoVO>> retrieveRoleList();
+    ResponseMessage<List<RoleInfoVO>> retrieveRoleList(RoleInfoDTO dto);
 
     ResponseMessage<IPage<RoleInfoVO>> rolePage(RoleInfoDTO dto);
 
-    ResponseMessage<Boolean> creationRole(RoleInfoDTO dto);
+    ResponseMessage<Boolean> createRole(RoleInfoDTO dto);
 
     ResponseMessage<RoleInfoVO> retrieveRoleInfoById(Long roleId);
 }

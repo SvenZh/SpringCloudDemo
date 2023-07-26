@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +23,9 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
     
-    @GetMapping("/list")
-    public IBaseResponseMessage<List<RoleInfoVO>> retrieveRoleList() {
-        ResponseMessage<List<RoleInfoVO>> response = roleService.retrieveRoleList();
+    @PostMapping("/list")
+    public IBaseResponseMessage<List<RoleInfoVO>> retrieveRoleList(@RequestBody RoleInfoDTO dto) {
+        ResponseMessage<List<RoleInfoVO>> response = roleService.retrieveRoleList(dto);
 
         return response;
     }
@@ -39,8 +38,8 @@ public class RoleController {
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> creationRole(@RequestBody @Validated RoleInfoDTO dto) {
-        ResponseMessage<Boolean> response = roleService.creationRole(dto);
+    public IBaseResponseMessage<Boolean> createRole(@RequestBody @Validated RoleInfoDTO dto) {
+        ResponseMessage<Boolean> response = roleService.createRole(dto);
         
         return response;
     }

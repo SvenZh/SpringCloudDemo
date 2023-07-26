@@ -41,7 +41,7 @@ public class UserServiceImplTest {
     public void getUserInfoListHappyPath() {
         when(mockUserServiceMapper.selectList(Mockito.any())).thenReturn(mockSelectList());
 
-        ResponseMessage<IPage<UserInfoVO>> response = mockUserServiceImpl.userPage(mockGetUserInfoListReqeust());
+        ResponseMessage<IPage<UserInfoVO>> response = mockUserServiceImpl.retrieveUserPage(mockGetUserInfoListReqeust());
         List<UserInfoVO> records = response.getData().getRecords();
         
         assertEquals(1, records.size());

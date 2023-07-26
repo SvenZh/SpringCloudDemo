@@ -3,6 +3,7 @@ package com.sven.system.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,10 +26,27 @@ import com.sven.system.service.IUserService;
 @Service
 @DS("master")
 public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEntity> implements IUserService {
-    
+
     @Autowired
     private IUserRoleService userRoleService;
-    
+
+    @Override
+    public ResponseMessage<List<UserInfoVO>> retrieveUserList(UserInfoDTO dto) {
+        LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), UserInfoEntity::getName, dto.getName());
+
+        List<UserInfoEntity> userInfoEntities = this.baseMapper.selectList(queryWrapper);
+
+        List<UserInfoVO> response = userInfoEntities.stream().map(entity -> {
+            UserInfoVO vo = new UserInfoVO();
+            BeanUtils.copyProperties(entity, vo);
+
+            return vo;
+        }).collect(Collectors.toList());
+
+        return ResponseMessage.ok(response);
+    }
+
     @Override
     public ResponseMessage<UserInfoVO> retrieveUserInfoByName(String userName) {
 
@@ -42,30 +60,30 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
         BeanUtils.copyProperties(userInfoEntity, response);
 
         ResponseMessage<List<RoleInfoVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
-        
+
         if (roleInfo.isSuccess()) {
             response.setUserRole(roleInfo.getData());
         }
-        
+
         return ResponseMessage.ok(response);
     }
 
     @Override
-    public ResponseMessage<Boolean> creation(List<UserInfoDTO> dto) {
+    public ResponseMessage<Boolean> createUser(List<UserInfoDTO> dto) {
         List<UserInfoEntity> userInfoEntities = dto.stream().map(item -> {
             UserInfoEntity userInfoEntity = new UserInfoEntity();
             BeanUtils.copyProperties(item, userInfoEntity);
-            
+
             return userInfoEntity;
         }).collect(Collectors.toList());
 
         boolean response = this.saveBatch(userInfoEntities, DEFAULT_BATCH_SIZE);
 
-        return new ResponseMessage<Boolean>(response, 200);
+        return ResponseMessage.ok(response);
     }
 
     @Override
-    public ResponseMessage<IPage<UserInfoVO>> userPage(UserInfoDTO dto) {
+    public ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(UserInfoDTO dto) {
         List<UserInfoEntity> result = this.getBaseMapper().selectList(new QueryWrapper<>());
 
         List<UserInfoVO> response = result.stream().map(entity -> {
@@ -79,5 +97,4 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
 
         return ResponseMessage.ok(page);
     }
-
 }

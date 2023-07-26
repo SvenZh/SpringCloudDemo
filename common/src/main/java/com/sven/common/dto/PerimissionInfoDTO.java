@@ -9,10 +9,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RoleInfoDTO extends PageMessage {
+public class PerimissionInfoDTO extends PageMessage {
 
     @NotEmpty(message = "不能为空")
     private String name;
+
+    private Integer type = 1;
 
     private Integer sort = 1;
 

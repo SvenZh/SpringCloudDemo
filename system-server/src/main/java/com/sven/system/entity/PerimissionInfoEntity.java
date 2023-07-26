@@ -17,17 +17,22 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_user")
-public class UserInfoEntity {
+@TableName("sys_permission")
+public class PerimissionInfoEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     
     private String name;
     
-    private String address;
+    private Integer type;
     
-    private String email;
+    private String method;
+    
+    private String permission;
+    
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long menuId;
     
     private Integer deleted;
     

@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class UserInfoDTO extends PageMessage {
 
+    private String name;
 }

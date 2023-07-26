@@ -25,17 +25,24 @@ public class UserController {
     @Autowired
     private IUserService userService;
     
-    @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> creation(@RequestBody @Validated List<UserInfoDTO> dto) {
-        ResponseMessage<Boolean> response = userService.creation(dto);
+    @PostMapping("/list")
+    public IBaseResponseMessage<List<UserInfoVO>> retrieveRoleList(@RequestBody UserInfoDTO dto) {
+        ResponseMessage<List<UserInfoVO>> response = userService.retrieveUserList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<UserInfoVO>> userPage(@RequestBody @Validated UserInfoDTO dto) {
-        ResponseMessage<IPage<UserInfoVO>> response = userService.userPage(dto);
+    public IBaseResponseMessage<IPage<UserInfoVO>> retrieveUserPage(@RequestBody @Validated UserInfoDTO dto) {
+        ResponseMessage<IPage<UserInfoVO>> response = userService.retrieveUserPage(dto);
         
+        return response;
+    }
+    
+    @PostMapping("/creation")
+    public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated List<UserInfoDTO> dto) {
+        ResponseMessage<Boolean> response = userService.createUser(dto);
+
         return response;
     }
     

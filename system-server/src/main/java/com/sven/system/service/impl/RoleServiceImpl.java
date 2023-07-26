@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,11 @@ import com.sven.system.service.IRoleService;
 public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEntity> implements IRoleService {
 
     @Override
-    public ResponseMessage<List<RoleInfoVO>> retrieveRoleList() {
+    public ResponseMessage<List<RoleInfoVO>> retrieveRoleList(RoleInfoDTO dto) {
 
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), RoleInfoEntity::getName, dto.getName());
+        
         List<RoleInfoEntity> roleInfoEntities = this.baseMapper.selectList(queryWrapper);
 
         List<RoleInfoVO> response = roleInfoEntities.stream().map(entity -> {
@@ -57,7 +60,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<Boolean> creationRole(RoleInfoDTO dto) {
+    public ResponseMessage<Boolean> createRole(RoleInfoDTO dto) {
         RoleInfoEntity entity = new RoleInfoEntity();
         entity.setCreateAt(new Date());
         entity.setCreateBy(1665943054155702273L);
