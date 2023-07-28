@@ -30,9 +30,14 @@ spring:
 logging:
    config: classpath:logback-custom.xml
 
-mybatis-plus: 
-  mapper-locations: classpath:*/mapper/*Mapper.xml
-  configuration:
-    cache-enabled: true
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl   
+mybatis-plus:
+   global-config: 
+      db-config:
+         logic-delete-field: deleted
+         logic-delete-value: 1
+         logic-not-delete-value: 0
+   mapper-locations: classpath:*/mapper/*Mapper.xml
+   configuration:
+       cache-enabled: true
+       map-underscore-to-camel-case: true
+       log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl

@@ -15,7 +15,13 @@ public class PerimissionInfoDTO extends PageMessage {
     private String name;
 
     private Integer type = 1;
-
+    
+    @NotEmpty(message = "不能为空")
+    private String method;
+    
+    @NotEmpty(message = "不能为空")
+    private String permission;
+    
     private Integer sort = 1;
 
     private Integer deleted = 0;

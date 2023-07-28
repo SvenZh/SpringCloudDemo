@@ -28,16 +28,4 @@ public class RolePerimissionInfoEntity {
     
     @JsonSerialize(using = ToStringSerializer.class)
     private Long permissionId;
-    
-    private Integer deleted;
-    
-    private Date createAt;
-    
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long createBy;
-    
-    private Date updateAt;
-    
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long updateBy;
 }

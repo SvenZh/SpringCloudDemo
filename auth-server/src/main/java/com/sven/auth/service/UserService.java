@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sven.auth.vo.UserInfo;
@@ -21,9 +20,6 @@ import com.sven.common.vo.UserInfoVO;
 
 @Service
 public class UserService implements UserDetailsService {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private SystemServerFeignClient systemServerFeignClient;
@@ -39,12 +35,12 @@ public class UserService implements UserDetailsService {
         UserInfoVO userInfoVO = remoteResponse.getData();
 
         Long userId = userInfoVO.getId();
+        String password = userInfoVO.getPassword();
         List<RoleInfoVO> userRole = userInfoVO.getUserRole();
-
         List<String> role = userRole.stream().map(RoleInfoVO::getName).collect(Collectors.toList());
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 
-        return new UserInfo(userId, username, passwordEncoder.encode("123456"), authorities);
+        return new UserInfo(userId, username, password, authorities);
     }
 }

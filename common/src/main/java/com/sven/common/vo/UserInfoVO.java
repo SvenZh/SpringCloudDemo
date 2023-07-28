@@ -18,6 +18,8 @@ public class UserInfoVO extends VoMessage {
 
     private String email;
 
+    private String password;
+    
     private List<RoleInfoVO> userRole;
 
     private Date createAt;

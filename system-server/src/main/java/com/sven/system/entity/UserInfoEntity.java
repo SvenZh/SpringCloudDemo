@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -25,10 +26,13 @@ public class UserInfoEntity {
     
     private String name;
     
+    private String password;
+    
     private String address;
     
     private String email;
     
+    @TableLogic
     private Integer deleted;
     
     private Date createAt;

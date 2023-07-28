@@ -31,7 +31,6 @@
 		</rollingPolicy>
 	</appender>
 	
-	<logger name="com.sven.business.mapper" level="INFO" />
 	<logger name="com.ibatis" level="DEBUG"/>
 	<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG"/>
 	<logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG"/>
