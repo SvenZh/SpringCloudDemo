@@ -21,6 +21,9 @@ public class AuthService {
     @Value("${auth-server.captcha.length}")
     private int captchaLen;
     
+    @Value("${auth-server.captcha.expire}")
+    private long expire;
+    
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     
@@ -32,7 +35,7 @@ public class AuthService {
         String image = captcha.toBase64();
         
         stringRedisTemplate.opsForValue().setIfAbsent(AppConstant.VALIDATION_CODE_PREFIX + uuId,
-                captcha.text().toLowerCase(), 1800L, TimeUnit.SECONDS);
+                captcha.text().toLowerCase(), expire, TimeUnit.SECONDS);
         
         return new CaptchVO(image, uuId);
     }

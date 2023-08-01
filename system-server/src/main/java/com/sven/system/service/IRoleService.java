@@ -17,5 +17,7 @@ public interface IRoleService extends IService<RoleInfoEntity> {
 
     ResponseMessage<Boolean> createRole(RoleInfoDTO dto);
 
-    ResponseMessage<RoleInfoVO> retrieveRoleInfoById(Long roleId);
+    ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(Long roleId);
+
+    ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(String roleName);
 }

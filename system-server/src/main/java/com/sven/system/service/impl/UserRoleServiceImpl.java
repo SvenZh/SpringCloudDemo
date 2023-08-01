@@ -32,7 +32,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleServiceMapper, User
         List<UserRoleInfoEntity> userRoleInfoEntities = this.baseMapper.selectList(queryWrapper);
 
         List<RoleInfoVO> response = userRoleInfoEntities.stream().map(entity -> {
-            ResponseMessage<RoleInfoVO> result = roleService.retrieveRoleInfoById(entity.getRoleId());
+            ResponseMessage<RoleInfoVO> result = roleService.retrieveRoleInfoByRoleId(entity.getRoleId());
             if (result.isSuccess()) {
                 return result.getData();
             }

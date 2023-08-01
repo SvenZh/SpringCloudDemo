@@ -1,6 +1,7 @@
 package com.sven.system.service;
 
 import java.util.List;
+import java.util.Set;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sven.common.domain.message.ResponseMessage;
@@ -13,5 +14,7 @@ public interface IRolePerimissionService extends IService<RolePerimissionInfoEnt
     ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(Long roleId);
 
     ResponseMessage<Boolean> createRolePerimission(RolePerimissionDTO dto);
+
+    ResponseMessage<Boolean> hasPerimission(Set<String> authority, String requestPath);
 
 }

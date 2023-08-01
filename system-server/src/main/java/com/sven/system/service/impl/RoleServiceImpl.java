@@ -27,7 +27,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
 
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), RoleInfoEntity::getName, dto.getName());
-        
+
         List<RoleInfoEntity> roleInfoEntities = this.baseMapper.selectList(queryWrapper);
 
         List<RoleInfoVO> response = roleInfoEntities.stream().map(entity -> {
@@ -74,7 +74,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<RoleInfoVO> retrieveRoleInfoById(Long roleId) {
+    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(Long roleId) {
         RoleInfoVO response = new RoleInfoVO();
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleInfoEntity::getId, roleId);
@@ -86,4 +86,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
         return ResponseMessage.ok(response);
     }
 
+    @Override
+    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(String roleName) {
+        RoleInfoVO response = new RoleInfoVO();
+        LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(RoleInfoEntity::getName, roleName);
+
+        RoleInfoEntity roleInfoEntity = this.baseMapper.selectOne(queryWrapper);
+
+        BeanUtils.copyProperties(roleInfoEntity, response);
+
+        return ResponseMessage.ok(response);
+    }
 }

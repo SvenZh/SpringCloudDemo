@@ -1,6 +1,7 @@
 package com.sven.system.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +37,14 @@ public class RolePerimissionController {
     @PostMapping("/creation")
     public IBaseResponseMessage<Boolean> createRolePerimission(@RequestBody @Validated RolePerimissionDTO dto) {
         ResponseMessage<Boolean> response = rolePerimissionService.createRolePerimission(dto);
+
+        return response;
+    }
+    
+    @GetMapping("/hasPerimission")
+    public IBaseResponseMessage<Boolean> hasPerimission(@RequestParam("authority") Set<String> authority,
+            @RequestParam("requestPath") String requestPath) {
+        ResponseMessage<Boolean> response = rolePerimissionService.hasPerimission(authority, requestPath);
 
         return response;
     }

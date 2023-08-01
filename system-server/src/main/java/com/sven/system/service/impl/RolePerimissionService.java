@@ -1,6 +1,7 @@
 package com.sven.system.service.impl;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.RolePerimissionDTO;
 import com.sven.common.vo.PerimissionInfoVO;
+import com.sven.common.vo.RoleInfoVO;
 import com.sven.system.entity.RolePerimissionInfoEntity;
 import com.sven.system.mapper.RolePerimissionServiceMapper;
 import com.sven.system.service.IPerimissionService;
 import com.sven.system.service.IRolePerimissionService;
+import com.sven.system.service.IRoleService;
 
 @Service
 public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMapper, RolePerimissionInfoEntity>
@@ -22,6 +25,9 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
 
     @Autowired
     private IPerimissionService perimissionService;
+
+    @Autowired
+    private IRoleService roleService;
 
     @Override
     public ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(Long roleId) {
@@ -46,16 +52,43 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
 
     @Override
     public ResponseMessage<Boolean> createRolePerimission(RolePerimissionDTO dto) {
-        dto.getRoleIds().parallelStream().forEach(roleId -> {
-            dto.getPerimissionIds().stream().forEach(perimissionId -> {
-                RolePerimissionInfoEntity rolePerimissionInfoEntity = new RolePerimissionInfoEntity();
-                rolePerimissionInfoEntity.setPermissionId(perimissionId);
-                rolePerimissionInfoEntity.setRoleId(roleId);
+        dto.getPerimissionIds().stream().forEach(perimissionId -> {
+            RolePerimissionInfoEntity rolePerimissionInfoEntity = new RolePerimissionInfoEntity();
+            rolePerimissionInfoEntity.setPermissionId(perimissionId);
+            rolePerimissionInfoEntity.setRoleId(dto.getRoleId());
 
-                this.baseMapper.insert(rolePerimissionInfoEntity);
-            });
+            this.baseMapper.insert(rolePerimissionInfoEntity);
         });
 
         return ResponseMessage.ok(true);
+    }
+
+    @Override
+    public ResponseMessage<Boolean> hasPerimission(Set<String> authority, String requestPath) {
+        Boolean response = false;
+
+        for (String roleName : authority) {
+            ResponseMessage<RoleInfoVO> remoteRoleInfoResponse = roleService.retrieveRoleInfoByRoleName(roleName);
+            if (!remoteRoleInfoResponse.isSuccess()) {
+                break;
+            }
+
+            ResponseMessage<List<PerimissionInfoVO>> remotePermissionInfoResponse = this
+                    .retrieveRolePerimissionInfoByRoleId(remoteRoleInfoResponse.getData().getId());
+
+            if (!remotePermissionInfoResponse.isSuccess()) {
+                break;
+            }
+
+            List<PerimissionInfoVO> perimissionInfos = remotePermissionInfoResponse.getData();
+
+            if (perimissionInfos.stream()
+                    .anyMatch(permission -> requestPath.equalsIgnoreCase(permission.getPermission()))) {
+                response = true;
+                break;
+            }
+        }
+
+        return ResponseMessage.ok(response);
     }
 }

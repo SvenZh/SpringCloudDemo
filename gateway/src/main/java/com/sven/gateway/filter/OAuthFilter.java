@@ -1,6 +1,9 @@
 package com.sven.gateway.filter;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +14,18 @@ import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sven.common.domain.message.ResponseMessage;
+import com.sven.common.feign.client.SystemServerFeignClient;
 import com.sven.gateway.porp.OAuthProperties;
 import com.sven.gateway.provider.OAuthProvider;
 import com.sven.gateway.provider.RequestProvider;
@@ -35,6 +42,9 @@ public class OAuthFilter implements GlobalFilter, Ordered {
     @Qualifier("jwtTokenStore")
     private TokenStore tokenStore;
 
+    @Autowired
+    private SystemServerFeignClient systemServerFeignClient;
+    
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String originalRequestUrl = RequestProvider.getOriginalRequestUrl(exchange);
@@ -57,6 +67,18 @@ public class OAuthFilter implements GlobalFilter, Ordered {
             if (expired) {
                 return unAuth(resp, "认证令牌已过期", HttpStatus.UNAUTHORIZED);
             }
+            
+            OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(oAuth2AccessToken);
+            Collection<GrantedAuthority> grantedAuthority = oAuth2Authentication.getAuthorities();
+            
+            Set<String> authority = grantedAuthority.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+            
+            ResponseMessage<Boolean> hasPerimission = systemServerFeignClient.hasPerimission(authority, path);
+            
+            if (!hasPerimission.isSuccess() || !hasPerimission.getData()) {
+                return unAuth(resp, "无权访问", HttpStatus.FORBIDDEN);
+            }
+            
         } catch (InvalidTokenException e) {
             log.info("认证令牌无效: {}", token);
             return unAuth(resp, "认证令牌无效", HttpStatus.UNAUTHORIZED);
