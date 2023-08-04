@@ -27,7 +27,7 @@ public class RolePerimissionController {
 
     @GetMapping("/retrieveRolePerimissionInfoByRoleId")
     public IBaseResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(
-            @RequestParam("roleId") Long roleId) {
+            @RequestParam("roleId") final Long roleId) {
         ResponseMessage<List<PerimissionInfoVO>> response = rolePerimissionService
                 .retrieveRolePerimissionInfoByRoleId(roleId);
 
@@ -35,15 +35,15 @@ public class RolePerimissionController {
     }
 
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createRolePerimission(@RequestBody @Validated RolePerimissionDTO dto) {
+    public IBaseResponseMessage<Boolean> createRolePerimission(@RequestBody @Validated final RolePerimissionDTO dto) {
         ResponseMessage<Boolean> response = rolePerimissionService.createRolePerimission(dto);
 
         return response;
     }
     
     @GetMapping("/hasPerimission")
-    public IBaseResponseMessage<Boolean> hasPerimission(@RequestParam("authority") Set<String> authority,
-            @RequestParam("requestPath") String requestPath) {
+    public IBaseResponseMessage<Boolean> hasPerimission(@RequestParam("authority") final Set<String> authority,
+            @RequestParam("requestPath") final String requestPath) {
         ResponseMessage<Boolean> response = rolePerimissionService.hasPerimission(authority, requestPath);
 
         return response;

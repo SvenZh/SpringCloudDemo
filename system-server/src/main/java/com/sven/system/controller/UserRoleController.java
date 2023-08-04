@@ -25,14 +25,14 @@ public class UserRoleController {
     private IUserRoleService userRoleService;
 
     @GetMapping("/retrieveUserRoleInfoByUserId")
-    public IBaseResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(@RequestParam("userId") Long userId) {
+    public IBaseResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(@RequestParam("userId") final Long userId) {
         ResponseMessage<List<RoleInfoVO>> response = userRoleService.retrieveUserRoleInfoByUserId(userId);
 
         return response;
     }
 
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> creationUserRole(@RequestBody @Validated UserRoleCreationDTO dto) {
+    public IBaseResponseMessage<Boolean> creationUserRole(@RequestBody @Validated final UserRoleCreationDTO dto) {
         ResponseMessage<Boolean> response = userRoleService.creationUserRole(dto);
 
         return response;

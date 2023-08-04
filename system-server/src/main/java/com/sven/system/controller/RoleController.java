@@ -26,35 +26,35 @@ public class RoleController {
     private IRoleService roleService;
     
     @GetMapping("/retrieveRoleInfoByRoleId")
-    public IBaseResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(@RequestParam("roleId") Long roleId) {
+    public IBaseResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(@RequestParam("roleId") final Long roleId) {
         ResponseMessage<RoleInfoVO> response = roleService.retrieveRoleInfoByRoleId(roleId);
 
         return response;
     }
     
     @GetMapping("/retrieveRoleInfoByRoleName")
-    public IBaseResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") String roleName) {
+    public IBaseResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") final String roleName) {
         ResponseMessage<RoleInfoVO> response = roleService.retrieveRoleInfoByRoleName(roleName);
 
         return response;
     }
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<RoleInfoVO>> retrieveRoleList(@RequestBody RoleInfoDTO dto) {
+    public IBaseResponseMessage<List<RoleInfoVO>> retrieveRoleList(@RequestBody final RoleInfoDTO dto) {
         ResponseMessage<List<RoleInfoVO>> response = roleService.retrieveRoleList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<RoleInfoVO>> retrieveRolePage(@RequestBody RoleInfoDTO dto) {
+    public IBaseResponseMessage<IPage<RoleInfoVO>> retrieveRolePage(@RequestBody final RoleInfoDTO dto) {
         ResponseMessage<IPage<RoleInfoVO>> response = roleService.rolePage(dto);
         
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createRole(@RequestBody @Validated RoleInfoDTO dto) {
+    public IBaseResponseMessage<Boolean> createRole(@RequestBody @Validated final RoleInfoDTO dto) {
         ResponseMessage<Boolean> response = roleService.createRole(dto);
         
         return response;

@@ -10,7 +10,7 @@ import com.sven.system.entity.UserRoleInfoEntity;
 
 public interface IUserRoleService extends IService<UserRoleInfoEntity> {
 
-    ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(Long userId);
+    ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(final Long userId);
 
-    ResponseMessage<Boolean> creationUserRole(UserRoleCreationDTO dto);
+    ResponseMessage<Boolean> creationUserRole(final UserRoleCreationDTO dto);
 }

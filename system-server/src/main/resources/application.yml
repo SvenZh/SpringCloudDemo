@@ -27,8 +27,34 @@ spring:
 #               username: ${system-server.datasource.slave.username}
 #               password: ${system-server.datasource.slave.password}
 
+management:
+   endpoints:
+      web:
+         exposure:
+            include: "*"
+   endpoint:
+      health:
+         show-details: always
+
 logging:
    config: classpath:logback-custom.xml
+
+feign:
+   compression:
+      request:
+         enabled: true
+         mime-types: text/xml,application/xml,application/json
+         min-request-size: 2048
+      response:
+         enabled: true
+   client:
+      config:
+         default:
+            connectTimeout: 2000
+            readTimeout: 5000
+            loggerLevel: FULL
+   hystrix:
+     enabled: true
 
 mybatis-plus:
    global-config: 

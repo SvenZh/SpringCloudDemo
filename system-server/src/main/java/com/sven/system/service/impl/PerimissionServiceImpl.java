@@ -22,9 +22,9 @@ import com.sven.system.service.IPerimissionService;
 @Service
 public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper, PerimissionInfoEntity>
         implements IPerimissionService {
-
+    
     @Override
-    public ResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(PerimissionInfoDTO dto) {
+    public ResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(final PerimissionInfoDTO dto) {
         LambdaQueryWrapper<PerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), PerimissionInfoEntity::getName, dto.getName());
 
@@ -41,7 +41,7 @@ public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper
     }
 
     @Override
-    public ResponseMessage<IPage<PerimissionInfoVO>> retrievePerimissionPage(PerimissionInfoDTO dto) {
+    public ResponseMessage<IPage<PerimissionInfoVO>> retrievePerimissionPage(final PerimissionInfoDTO dto) {
         LambdaQueryWrapper<PerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         List<PerimissionInfoEntity> perimissionInfoEntities = this.baseMapper.selectList(queryWrapper);
 
@@ -59,7 +59,7 @@ public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper
     }
 
     @Override
-    public ResponseMessage<Boolean> createPerimission(PerimissionInfoDTO dto) {
+    public ResponseMessage<Boolean> createPerimission(final PerimissionInfoDTO dto) {
         PerimissionInfoEntity entity = new PerimissionInfoEntity();
         entity.setCreateAt(new Date());
         entity.setCreateBy(1665943054155702273L);
@@ -73,7 +73,7 @@ public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper
     }
 
     @Override
-    public ResponseMessage<PerimissionInfoVO> retrievePerimissionInfoById(Long perimissionId) {
+    public ResponseMessage<PerimissionInfoVO> retrievePerimissionInfoById(final Long perimissionId) {
         PerimissionInfoVO response = new PerimissionInfoVO();
         PerimissionInfoEntity entity = this.baseMapper.selectById(perimissionId);
 

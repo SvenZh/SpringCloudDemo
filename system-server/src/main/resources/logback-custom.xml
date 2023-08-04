@@ -31,6 +31,7 @@
 		</rollingPolicy>
 	</appender>
 	
+	<logger name="com.sven.business.mapper" level="INFO" />
 	<logger name="com.ibatis" level="DEBUG"/>
 	<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG"/>
 	<logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG"/>
@@ -38,7 +39,8 @@
 	<logger name="java.sql.Connection" level="DEBUG"/>
 	<logger name="java.sql.Statement" level="DEBUG"/>
 	<logger name="java.sql.PreparedStatement" level="DEBUG"/>
-	<logger name="com.sven.system.mapper" level="DEBUG"></logger>
+	<logger name="com.sven.system.mapper" level="DEBUG"></logger>2
+	<logger name="com.sven.common.feign.client" level="DEBUG"></logger>
 	
 	<root level="INFO">
 		<appender-ref ref="CONSOLE" />

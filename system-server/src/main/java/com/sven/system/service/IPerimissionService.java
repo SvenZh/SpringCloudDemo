@@ -11,12 +11,12 @@ import com.sven.system.entity.PerimissionInfoEntity;
 
 public interface IPerimissionService extends IService<PerimissionInfoEntity> {
 
-    ResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(PerimissionInfoDTO dto);
+    ResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(final PerimissionInfoDTO dto);
 
-    ResponseMessage<IPage<PerimissionInfoVO>> retrievePerimissionPage(PerimissionInfoDTO dto);
+    ResponseMessage<IPage<PerimissionInfoVO>> retrievePerimissionPage(final PerimissionInfoDTO dto);
 
-    ResponseMessage<Boolean> createPerimission(PerimissionInfoDTO dto);
+    ResponseMessage<Boolean> createPerimission(final PerimissionInfoDTO dto);
     
-    ResponseMessage<PerimissionInfoVO> retrievePerimissionInfoById(Long perimissionId);
+    ResponseMessage<PerimissionInfoVO> retrievePerimissionInfoById(final Long perimissionId);
 
 }

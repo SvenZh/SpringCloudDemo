@@ -30,7 +30,7 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
     private IRoleService roleService;
 
     @Override
-    public ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(Long roleId) {
+    public ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(final Long roleId) {
 
         LambdaQueryWrapper<RolePerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RolePerimissionInfoEntity::getRoleId, roleId);
@@ -51,7 +51,7 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
     }
 
     @Override
-    public ResponseMessage<Boolean> createRolePerimission(RolePerimissionDTO dto) {
+    public ResponseMessage<Boolean> createRolePerimission(final RolePerimissionDTO dto) {
         dto.getPerimissionIds().stream().forEach(perimissionId -> {
             RolePerimissionInfoEntity rolePerimissionInfoEntity = new RolePerimissionInfoEntity();
             rolePerimissionInfoEntity.setPermissionId(perimissionId);
@@ -64,7 +64,7 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
     }
 
     @Override
-    public ResponseMessage<Boolean> hasPerimission(Set<String> authority, String requestPath) {
+    public ResponseMessage<Boolean> hasPerimission(final Set<String> authority, final String requestPath) {
         Boolean response = false;
 
         for (String roleName : authority) {

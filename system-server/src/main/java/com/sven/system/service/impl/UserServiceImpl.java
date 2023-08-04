@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -31,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
     private IUserRoleService userRoleService;
 
     @Override
-    public ResponseMessage<List<UserInfoVO>> retrieveUserList(UserInfoDTO dto) {
+    public ResponseMessage<List<UserInfoVO>> retrieveUserList(final UserInfoDTO dto) {
         LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), UserInfoEntity::getName, dto.getName());
 
@@ -48,7 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
     }
 
     @Override
-    public ResponseMessage<UserInfoVO> retrieveUserInfoByName(String userName) {
+    public ResponseMessage<UserInfoVO> retrieveUserInfoByName(final String userName) {
 
         UserInfoVO response = new UserInfoVO();
 
@@ -69,7 +70,8 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
     }
 
     @Override
-    public ResponseMessage<Boolean> createUser(List<UserInfoDTO> dto) {
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseMessage<Boolean> createUser(final List<UserInfoDTO> dto) {
         List<UserInfoEntity> userInfoEntities = dto.stream().map(item -> {
             UserInfoEntity userInfoEntity = new UserInfoEntity();
             BeanUtils.copyProperties(item, userInfoEntity);
@@ -83,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
     }
 
     @Override
-    public ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(UserInfoDTO dto) {
+    public ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(final UserInfoDTO dto) {
         List<UserInfoEntity> result = this.getBaseMapper().selectList(new QueryWrapper<>());
 
         List<UserInfoVO> response = result.stream().map(entity -> {

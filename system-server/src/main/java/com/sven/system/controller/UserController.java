@@ -26,28 +26,28 @@ public class UserController {
     private IUserService userService;
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<UserInfoVO>> retrieveRoleList(@RequestBody UserInfoDTO dto) {
+    public IBaseResponseMessage<List<UserInfoVO>> retrieveRoleList(@RequestBody final UserInfoDTO dto) {
         ResponseMessage<List<UserInfoVO>> response = userService.retrieveUserList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<UserInfoVO>> retrieveUserPage(@RequestBody @Validated UserInfoDTO dto) {
+    public IBaseResponseMessage<IPage<UserInfoVO>> retrieveUserPage(@RequestBody @Validated final UserInfoDTO dto) {
         ResponseMessage<IPage<UserInfoVO>> response = userService.retrieveUserPage(dto);
         
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated List<UserInfoDTO> dto) {
+    public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated final List<UserInfoDTO> dto) {
         ResponseMessage<Boolean> response = userService.createUser(dto);
 
         return response;
     }
     
     @GetMapping("/retrieveUserInfoByName")
-    public IBaseResponseMessage<UserInfoVO> retrieveUserInfoByName(@RequestParam("userName") String userName) {
+    public IBaseResponseMessage<UserInfoVO> retrieveUserInfoByName(@RequestParam("userName") final String userName) {
         ResponseMessage<UserInfoVO> response = userService.retrieveUserInfoByName(userName);
 
         return response;

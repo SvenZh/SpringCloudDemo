@@ -23,7 +23,7 @@ import com.sven.system.service.IRoleService;
 public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEntity> implements IRoleService {
 
     @Override
-    public ResponseMessage<List<RoleInfoVO>> retrieveRoleList(RoleInfoDTO dto) {
+    public ResponseMessage<List<RoleInfoVO>> retrieveRoleList(final RoleInfoDTO dto) {
 
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), RoleInfoEntity::getName, dto.getName());
@@ -41,7 +41,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<IPage<RoleInfoVO>> rolePage(RoleInfoDTO dto) {
+    public ResponseMessage<IPage<RoleInfoVO>> rolePage(final RoleInfoDTO dto) {
 
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         List<RoleInfoEntity> roleInfoEntities = this.baseMapper.selectList(queryWrapper);
@@ -60,7 +60,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<Boolean> createRole(RoleInfoDTO dto) {
+    public ResponseMessage<Boolean> createRole(final RoleInfoDTO dto) {
         RoleInfoEntity entity = new RoleInfoEntity();
         entity.setCreateAt(new Date());
         entity.setCreateBy(1665943054155702273L);
@@ -74,7 +74,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(Long roleId) {
+    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleId(final Long roleId) {
         RoleInfoVO response = new RoleInfoVO();
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleInfoEntity::getId, roleId);
@@ -87,7 +87,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleServiceMapper, RoleInfoEnti
     }
 
     @Override
-    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(String roleName) {
+    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(final String roleName) {
         RoleInfoVO response = new RoleInfoVO();
         LambdaQueryWrapper<RoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleInfoEntity::getName, roleName);

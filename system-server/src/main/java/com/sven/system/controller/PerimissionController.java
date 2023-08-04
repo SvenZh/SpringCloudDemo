@@ -24,21 +24,21 @@ public class PerimissionController {
     private IPerimissionService perimissionService;
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(@RequestBody PerimissionInfoDTO dto) {
+    public IBaseResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(@RequestBody final PerimissionInfoDTO dto) {
         ResponseMessage<List<PerimissionInfoVO>> response = perimissionService.retrievePerimissionList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<PerimissionInfoVO>> retrieveRolePage(@RequestBody PerimissionInfoDTO dto) {
+    public IBaseResponseMessage<IPage<PerimissionInfoVO>> retrieveRolePage(@RequestBody final PerimissionInfoDTO dto) {
         ResponseMessage<IPage<PerimissionInfoVO>> response = perimissionService.retrievePerimissionPage(dto);
         
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated PerimissionInfoDTO dto) {
+    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final PerimissionInfoDTO dto) {
         ResponseMessage<Boolean> response = perimissionService.createPerimission(dto);
         
         return response;

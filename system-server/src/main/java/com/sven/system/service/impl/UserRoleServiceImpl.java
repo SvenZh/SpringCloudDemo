@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,7 +25,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleServiceMapper, User
     private IRoleService roleService;
 
     @Override
-    public ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(Long userId) {
+    public ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(final Long userId) {
 
         LambdaQueryWrapper<UserRoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserRoleInfoEntity::getUserId, userId);
@@ -44,7 +45,8 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleServiceMapper, User
     }
 
     @Override
-    public ResponseMessage<Boolean> creationUserRole(UserRoleCreationDTO dto) {
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseMessage<Boolean> creationUserRole(final UserRoleCreationDTO dto) {
         dto.getUserIds().parallelStream().forEach(userId -> {
             dto.getRoleIds().stream().forEach(roleId -> {
                 UserRoleInfoEntity userRoleInfoEntity = new UserRoleInfoEntity();
