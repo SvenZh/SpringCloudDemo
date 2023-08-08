@@ -7,13 +7,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sven.common.config.FeignConfig;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.vo.PerimissionInfoVO;
 import com.sven.common.vo.RoleInfoVO;
 import com.sven.common.vo.UserInfoVO;
 
-@FeignClient(name = "system-server", configuration = FeignConfig.class)
+@FeignClient(name = "system-server")
 public interface SystemServerFeignClient {
 
     @GetMapping("/user/retrieveUserInfoByName")

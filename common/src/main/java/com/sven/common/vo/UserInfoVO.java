@@ -1,17 +1,20 @@
 package com.sven.common.vo;
 
-import java.util.Date;
 import java.util.List;
 
-import com.sven.common.domain.message.VoMessage;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInfoVO extends VoMessage {
+public class UserInfoVO {
 
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long id;
+    
     private String name;
 
     private String address;
@@ -21,6 +24,4 @@ public class UserInfoVO extends VoMessage {
     private String password;
     
     private List<RoleInfoVO> userRole;
-
-    private Date createAt;
 }
