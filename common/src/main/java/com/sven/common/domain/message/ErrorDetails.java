@@ -1,5 +1,7 @@
 package com.sven.common.domain.message;
 
+import com.sven.common.exception.BusinessExceptionEnum;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ErrorDetails {
     private int errorCode;
-    
     private String errorMessage;
 
-    public ErrorDetails(SystemEvent systemEvent) {
-        this.errorCode = systemEvent.getErrorCode();
-        this.errorMessage = systemEvent.getErrorMessage();
+    public ErrorDetails(BusinessExceptionEnum ex) {
+        this.errorCode = ex.getCode();
+        this.errorMessage = ex.getMessage();
     }
 }

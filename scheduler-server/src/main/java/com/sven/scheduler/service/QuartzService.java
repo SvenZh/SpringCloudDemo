@@ -24,7 +24,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sven.common.domain.message.ErrorDetails;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.domain.message.SystemEvent;
+import com.sven.common.exception.BusinessExceptionEnum;
 import com.sven.common.quartz.message.QuartzSchedulerDTO;
 import com.sven.common.quartz.message.QuartzSchedulerVO;
 
@@ -69,8 +69,8 @@ public class QuartzService {
             response = new ResponseMessage<>(page, 200);
         } catch (Exception ex) {
             log.error("查询定时任务列表失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_jobList_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_jobList_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_jobList_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_jobList_exception_event));
         }
         
         return response;
@@ -99,16 +99,16 @@ public class QuartzService {
             response = new ResponseMessage<>("创建定时任务成功", 200);
         } catch (ClassNotFoundException ex) {
             log.error("创建定时任务失败[ClassNotFoundException]" + ex);
-            response.setCode(SystemEvent.quartz_addjob_classnotfoundexception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_addjob_classnotfoundexception_event));
+            response.setCode(BusinessExceptionEnum.quartz_addjob_classnotfoundexception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_addjob_classnotfoundexception_event));
         } catch (SchedulerException ex) {
             log.error("创建定时任务失败[SchedulerException]" + ex);
-            response.setCode(SystemEvent.quartz_addjob_schedulerexception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_addjob_schedulerexception_event));
+            response.setCode(BusinessExceptionEnum.quartz_addjob_schedulerexception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_addjob_schedulerexception_event));
         } catch (Exception ex) {
             log.error("创建定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_addjob_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_addjob_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_addjob_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_addjob_exception_event));
         }
         
         return response;
@@ -121,8 +121,8 @@ public class QuartzService {
             response = new ResponseMessage<>("暂停定时任务成功", 200);
         } catch (Exception ex) {
             log.error("暂停定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_pauseJob_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_pauseJob_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_pauseJob_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_pauseJob_exception_event));
         }
 
         return response;
@@ -135,8 +135,8 @@ public class QuartzService {
             response = new ResponseMessage<>("恢复定时任务成功", 200);
         } catch (Exception ex) {
             log.error("恢复定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_resumeJob_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_resumeJob_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_resumeJob_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_resumeJob_exception_event));
         }
 
         return response;
@@ -153,8 +153,8 @@ public class QuartzService {
             response = new ResponseMessage<>("更新定时任务成功", 200);
         } catch (Exception ex) {
             log.error("更新定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_rescheduleJob_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_rescheduleJob_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_rescheduleJob_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_rescheduleJob_exception_event));
         }
 
         return response;
@@ -169,8 +169,8 @@ public class QuartzService {
             response = new ResponseMessage<>("删除定时任务成功", 200);
         } catch (Exception ex) {
             log.error("删除定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_deleteJob_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_deleteJob_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_deleteJob_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_deleteJob_exception_event));
         }
 
         return response;
@@ -183,8 +183,8 @@ public class QuartzService {
             response = new ResponseMessage<>("运行定时任务成功", 200);
         } catch (Exception ex) {
             log.error("运行定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_runOnce_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_runOnce_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_runOnce_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_runOnce_exception_event));
         }
 
         return response;
@@ -197,8 +197,8 @@ public class QuartzService {
             response = new ResponseMessage<>("运行所有定时任务成功", 200);
         } catch (Exception ex) {
             log.error("运行所有定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_startAllJobs_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_startAllJobs_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_startAllJobs_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_startAllJobs_exception_event));
         }
 
         return response;
@@ -211,8 +211,8 @@ public class QuartzService {
             response = new ResponseMessage<>("暂停所有定时任务成功", 200);
         } catch (Exception ex) {
             log.error("暂停所有定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_pauseAllJobs_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_pauseAllJobs_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_pauseAllJobs_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_pauseAllJobs_exception_event));
         }
 
         return response;
@@ -225,8 +225,8 @@ public class QuartzService {
             response = new ResponseMessage<>("恢复所有定时任务成功", 200);
         } catch (Exception ex) {
             log.error("恢复所有定时任务失败[Exception]" + ex);
-            response.setCode(SystemEvent.quartz_resumeAllJobs_exception_event.getErrorCode());
-            response.setError(new ErrorDetails(SystemEvent.quartz_resumeAllJobs_exception_event));
+            response.setCode(BusinessExceptionEnum.quartz_resumeAllJobs_exception_event.getCode());
+            response.setError(new ErrorDetails(BusinessExceptionEnum.quartz_resumeAllJobs_exception_event));
         }
 
         return response;

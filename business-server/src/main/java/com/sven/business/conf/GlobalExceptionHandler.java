@@ -24,7 +24,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.sven.common.domain.message.ErrorDetails;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.domain.message.SystemEvent;
+import com.sven.common.exception.BaseException;
+import com.sven.common.exception.BusinessExceptionEnum;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -37,12 +38,19 @@ public class GlobalExceptionHandler {
         return response;
     }
 
+    @ExceptionHandler(value = BaseException.class)
+    public IBaseResponseMessage<?> resolvebaseException(BaseException ex) {
+        ErrorDetails error = new ErrorDetails(ex.getResponseEnum().getCode(), ex.getMessage());
+
+        ResponseMessage<String> response = new ResponseMessage<>(error);
+        return response;
+    }
+
     @ExceptionHandler({ BindException.class, MethodArgumentNotValidException.class,
             ConstraintViolationException.class })
     public IBaseResponseMessage<?> resolveMethodArgumentNotValidException(Exception ex) {
 
-        ErrorDetails error = new ErrorDetails(SystemEvent.valid_exception_event.getErrorCode(),
-                handlerNotValidException(ex));
+        ErrorDetails error = new ErrorDetails(BusinessExceptionEnum.valid_exception.getCode(), handlerNotValidException(ex));
         ResponseMessage<String> response = new ResponseMessage<>(error);
 
         return response;

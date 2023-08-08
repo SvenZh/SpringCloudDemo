@@ -1,9 +1,13 @@
-package com.sven.common.domain.message;
+package com.sven.common.exception;
 
-public enum SystemEvent {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    sys_default_event(10000, "default event"),
-    valid_exception_event(10001, "校验失败"),
+@Getter
+@AllArgsConstructor
+public enum BusinessExceptionEnum implements BusinessExceptionAssert {
+
+    valid_exception(10001, "参数校验异常"),
     
     quartz_addjob_exception_event(20000, "创建定时任务失败[SchedulerException]"),
     quartz_addjob_classnotfoundexception_event(20001, "创建定时任务失败[ClassNotFoundException]"),
@@ -16,30 +20,12 @@ public enum SystemEvent {
     quartz_pauseAllJobs_exception_event(20008, "暂停所有定时任务失败"),
     quartz_resumeAllJobs_exception_event(20009, "恢复所有定时任务失败"),
     quartz_runOnce_exception_event(20010, "运行一次定时任务失败"),
-    quartz_jobList_exception_event(20011, "查询定时任务列表失败");
+    quartz_jobList_exception_event(20011, "查询定时任务列表失败")
+    ;
 
-    SystemEvent(int errorCode, String errorMessage) {
-        this.errorCode = errorCode;
-        this.errorMessage = errorMessage;
-    }
+    private int code;
+    private String message;
 
-    private int errorCode;
-    private String errorMessage;
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+    
 
 }

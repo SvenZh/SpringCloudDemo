@@ -68,7 +68,7 @@ public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper
         BeanUtils.copyProperties(dto, entity);
 
         int result = this.baseMapper.insert(entity);
-
+        
         return ResponseMessage.ok(result > 0);
     }
 
