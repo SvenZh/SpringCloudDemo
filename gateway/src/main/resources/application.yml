@@ -47,3 +47,8 @@ spring:
               uri: lb://auth-server
               predicates: 
               - Path=/oauth/**
+            - id: websocket
+              uri: lb:ws://websocket-server
+              predicates: 
+              - Path=/test/**
+              

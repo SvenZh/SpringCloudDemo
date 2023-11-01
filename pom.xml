@@ -28,6 +28,7 @@
 		<module>common</module>
 		<module>scheduler-server</module>
 		<module>system-server</module>
+		<module>websocket-server</module>
 	</modules>
 
 	<dependencyManagement>
