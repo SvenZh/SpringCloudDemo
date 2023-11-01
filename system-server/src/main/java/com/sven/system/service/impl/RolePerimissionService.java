@@ -7,38 +7,38 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.RolePerimissionDTO;
-import com.sven.common.vo.PerimissionInfoVO;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.system.entity.RolePerimissionInfoEntity;
-import com.sven.system.mapper.RolePerimissionServiceMapper;
+import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.RoleVO;
+import com.sven.system.dao.RolePerimissionServiceDAO;
+import com.sven.system.entity.RolePerimissionEntity;
 import com.sven.system.service.IPerimissionService;
 import com.sven.system.service.IRolePerimissionService;
 import com.sven.system.service.IRoleService;
 
 @Service
-public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMapper, RolePerimissionInfoEntity>
-        implements IRolePerimissionService {
+public class RolePerimissionService implements IRolePerimissionService {
 
     @Autowired
     private IPerimissionService perimissionService;
 
     @Autowired
+    private RolePerimissionServiceDAO rolePerimissionServiceDAO;
+
+    @Autowired
     private IRoleService roleService;
 
     @Override
-    public ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(final Long roleId) {
+    public ResponseMessage<List<PerimissionVO>> retrieveRolePerimissionInfoByRoleId(final Long roleId) {
 
-        LambdaQueryWrapper<RolePerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(RolePerimissionInfoEntity::getRoleId, roleId);
+        RolePerimissionDTO dto = new RolePerimissionDTO();
+        dto.setRoleId(roleId);
 
-        List<RolePerimissionInfoEntity> rolePerimissionInfoEntities = this.baseMapper.selectList(queryWrapper);
+        List<RolePerimissionEntity> rolePerimissionInfoEntities = rolePerimissionServiceDAO.selectList(dto);
 
-        List<PerimissionInfoVO> response = rolePerimissionInfoEntities.stream().map(entity -> {
-            ResponseMessage<PerimissionInfoVO> result = perimissionService
+        List<PerimissionVO> response = rolePerimissionInfoEntities.stream().map(entity -> {
+            ResponseMessage<PerimissionVO> result = perimissionService
                     .retrievePerimissionInfoById(entity.getPermissionId());
             if (result.isSuccess()) {
                 return result.getData();
@@ -53,11 +53,11 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
     @Override
     public ResponseMessage<Boolean> createRolePerimission(final RolePerimissionDTO dto) {
         dto.getPerimissionIds().stream().forEach(perimissionId -> {
-            RolePerimissionInfoEntity rolePerimissionInfoEntity = new RolePerimissionInfoEntity();
+            RolePerimissionEntity rolePerimissionInfoEntity = new RolePerimissionEntity();
             rolePerimissionInfoEntity.setPermissionId(perimissionId);
             rolePerimissionInfoEntity.setRoleId(dto.getRoleId());
 
-            this.baseMapper.insert(rolePerimissionInfoEntity);
+            rolePerimissionServiceDAO.insert(rolePerimissionInfoEntity);
         });
 
         return ResponseMessage.ok(true);
@@ -68,19 +68,19 @@ public class RolePerimissionService extends ServiceImpl<RolePerimissionServiceMa
         Boolean response = false;
 
         for (String roleName : authority) {
-            ResponseMessage<RoleInfoVO> remoteRoleInfoResponse = roleService.retrieveRoleInfoByRoleName(roleName);
+            ResponseMessage<RoleVO> remoteRoleInfoResponse = roleService.retrieveRoleInfoByRoleName(roleName);
             if (!remoteRoleInfoResponse.isSuccess()) {
                 break;
             }
 
-            ResponseMessage<List<PerimissionInfoVO>> remotePermissionInfoResponse = this
+            ResponseMessage<List<PerimissionVO>> remotePermissionInfoResponse = this
                     .retrieveRolePerimissionInfoByRoleId(remoteRoleInfoResponse.getData().getId());
 
             if (!remotePermissionInfoResponse.isSuccess()) {
                 break;
             }
 
-            List<PerimissionInfoVO> perimissionInfos = remotePermissionInfoResponse.getData();
+            List<PerimissionVO> perimissionInfos = remotePermissionInfoResponse.getData();
 
             if (perimissionInfos.stream()
                     .anyMatch(permission -> requestPath.equalsIgnoreCase(permission.getPermission()))) {

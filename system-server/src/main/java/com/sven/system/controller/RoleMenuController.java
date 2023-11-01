@@ -14,37 +14,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.RolePerimissionDTO;
-import com.sven.common.vo.PerimissionVO;
-import com.sven.system.service.IRolePerimissionService;
+import com.sven.common.dto.MenuDTO;
+import com.sven.common.vo.MenuVO;
+import com.sven.system.service.IRoleMenuService;
 
 @RestController
-@RequestMapping("/rolePerimission")
-public class RolePerimissionController {
+@RequestMapping("/roleMenu")
+public class RoleMenuController {
 
     @Autowired
-    private IRolePerimissionService rolePerimissionService;
-
-    @GetMapping("/retrieveRolePerimissionInfoByRoleId")
-    public IBaseResponseMessage<List<PerimissionVO>> retrieveRolePerimissionInfoByRoleId(
-            @RequestParam("roleId") final Long roleId) {
-        ResponseMessage<List<PerimissionVO>> response = rolePerimissionService
-                .retrieveRolePerimissionInfoByRoleId(roleId);
+    private IRoleMenuService roleMenuService;
+    
+    @PostMapping("/retrieveRolePerimissionInfoByRoleId")
+    public IBaseResponseMessage<List<MenuVO>> retrieveRolePerimissionInfoByRoleId(@RequestParam("roleId") final Long roleId) {
+        ResponseMessage<List<MenuVO>> response = roleMenuService.retrieveRoleMenuInfoByRoleId(roleId);
 
         return response;
     }
-
+    
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createRolePerimission(@RequestBody @Validated final RolePerimissionDTO dto) {
-        ResponseMessage<Boolean> response = rolePerimissionService.createRolePerimission(dto);
-
+    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final MenuDTO dto) {
+        ResponseMessage<Boolean> response = roleMenuService.createMenu(dto);
+        
         return response;
     }
     
     @GetMapping("/hasPerimission")
     public IBaseResponseMessage<Boolean> hasPerimission(@RequestParam("authority") final Set<String> authority,
             @RequestParam("requestPath") final String requestPath) {
-        ResponseMessage<Boolean> response = rolePerimissionService.hasPerimission(authority, requestPath);
+        ResponseMessage<Boolean> response = roleMenuService.hasPerimission(authority, requestPath);
 
         return response;
     }

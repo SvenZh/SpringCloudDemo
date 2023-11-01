@@ -15,10 +15,10 @@ import org.mockito.MockitoAnnotations;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.UserInfoDTO;
+import com.sven.common.dto.UserDTO;
 import com.sven.common.feign.client.SystemServerFeignClient;
-import com.sven.common.vo.UserInfoVO;
-import com.sven.system.entity.UserInfoEntity;
+import com.sven.common.vo.UserVO;
+import com.sven.system.entity.UserEntity;
 import com.sven.system.mapper.UserServiceMapper;
 import com.sven.system.service.impl.UserServiceImpl;
 
@@ -41,8 +41,8 @@ public class UserServiceImplTest {
     public void getUserInfoListHappyPath() {
         when(mockUserServiceMapper.selectList(Mockito.any())).thenReturn(mockSelectList());
 
-        ResponseMessage<IPage<UserInfoVO>> response = mockUserServiceImpl.retrieveUserPage(mockGetUserInfoListReqeust());
-        List<UserInfoVO> records = response.getData().getRecords();
+        ResponseMessage<IPage<UserVO>> response = mockUserServiceImpl.retrieveUserPage(mockGetUserInfoListReqeust());
+        List<UserVO> records = response.getData().getRecords();
         
         assertEquals(1, records.size());
         assertEquals(200, response.getCode());
@@ -52,9 +52,9 @@ public class UserServiceImplTest {
         assertNull(response.getError());
     }
 
-    private List<UserInfoEntity> mockSelectList() {
-        List<UserInfoEntity> response = new ArrayList<UserInfoEntity>();
-        UserInfoEntity entity = new UserInfoEntity();
+    private List<UserEntity> mockSelectList() {
+        List<UserEntity> response = new ArrayList<UserEntity>();
+        UserEntity entity = new UserEntity();
         entity.setAddress("address");
         entity.setEmail("email");
         entity.setName("name");
@@ -64,8 +64,8 @@ public class UserServiceImplTest {
         return response;
     }
 
-    private UserInfoDTO mockGetUserInfoListReqeust() {
-        UserInfoDTO dto = new UserInfoDTO();
+    private UserDTO mockGetUserInfoListReqeust() {
+        UserDTO dto = new UserDTO();
         dto.setPageSize(10);
         dto.setPageNo(1);
 

@@ -7,33 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserRoleCreationDTO;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.system.entity.UserRoleInfoEntity;
-import com.sven.system.mapper.UserRoleServiceMapper;
+import com.sven.common.vo.RoleVO;
+import com.sven.system.dao.UserRoleServiceDAO;
+import com.sven.system.entity.UserRoleEntity;
 import com.sven.system.service.IRoleService;
 import com.sven.system.service.IUserRoleService;
 
 @Service
-public class UserRoleServiceImpl extends ServiceImpl<UserRoleServiceMapper, UserRoleInfoEntity>
-        implements IUserRoleService {
+public class UserRoleServiceImpl implements IUserRoleService {
 
     @Autowired
     private IRoleService roleService;
 
+    @Autowired
+    private UserRoleServiceDAO userRoleServiceDAO;
+
     @Override
-    public ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(final Long userId) {
+    public ResponseMessage<List<RoleVO>> retrieveUserRoleInfoByUserId(final Long userId) {
 
-        LambdaQueryWrapper<UserRoleInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserRoleInfoEntity::getUserId, userId);
+        List<UserRoleEntity> userRoleInfoEntities = userRoleServiceDAO.selectList(userId);
 
-        List<UserRoleInfoEntity> userRoleInfoEntities = this.baseMapper.selectList(queryWrapper);
-
-        List<RoleInfoVO> response = userRoleInfoEntities.stream().map(entity -> {
-            ResponseMessage<RoleInfoVO> result = roleService.retrieveRoleInfoByRoleId(entity.getRoleId());
+        List<RoleVO> response = userRoleInfoEntities.stream().map(entity -> {
+            ResponseMessage<RoleVO> result = roleService.retrieveRoleInfoByRoleId(entity.getRoleId());
             if (result.isSuccess()) {
                 return result.getData();
             }
@@ -49,11 +46,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleServiceMapper, User
     public ResponseMessage<Boolean> creationUserRole(final UserRoleCreationDTO dto) {
         dto.getUserIds().parallelStream().forEach(userId -> {
             dto.getRoleIds().stream().forEach(roleId -> {
-                UserRoleInfoEntity userRoleInfoEntity = new UserRoleInfoEntity();
+                UserRoleEntity userRoleInfoEntity = new UserRoleEntity();
                 userRoleInfoEntity.setUserId(userId);
                 userRoleInfoEntity.setRoleId(roleId);
 
-                this.baseMapper.insert(userRoleInfoEntity);
+                userRoleServiceDAO.insert(userRoleInfoEntity);
             });
         });
 

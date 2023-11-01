@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import com.sven.auth.vo.UserInfo;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.feign.client.SystemServerFeignClient;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.common.vo.UserInfoVO;
+import com.sven.common.vo.RoleVO;
+import com.sven.common.vo.UserVO;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -26,18 +26,18 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        ResponseMessage<UserInfoVO> remoteResponse = systemServerFeignClient.retrieveUserInfoByName(username);
+        ResponseMessage<UserVO> remoteResponse = systemServerFeignClient.retrieveUserInfoByName(username);
 
         if (!remoteResponse.isSuccess()) {
             throw new UsernameNotFoundException(username);
         }
 
-        UserInfoVO userInfoVO = remoteResponse.getData();
+        UserVO userInfoVO = remoteResponse.getData();
 
         Long userId = userInfoVO.getId();
         String password = userInfoVO.getPassword();
-        List<RoleInfoVO> userRole = userInfoVO.getUserRole();
-        List<String> role = userRole.stream().map(RoleInfoVO::getName).collect(Collectors.toList());
+        List<RoleVO> userRole = userInfoVO.getUserRole();
+        List<String> role = userRole.stream().map(RoleVO::getName).collect(Collectors.toList());
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 

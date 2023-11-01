@@ -3,19 +3,17 @@ package com.sven.system.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.UserInfoDTO;
-import com.sven.common.vo.UserInfoVO;
-import com.sven.system.entity.UserInfoEntity;
+import com.sven.common.dto.UserDTO;
+import com.sven.common.vo.UserVO;
 
-public interface IUserService extends IService<UserInfoEntity> {
+public interface IUserService {
 
-    ResponseMessage<UserInfoVO> retrieveUserInfoByName(String userName);
+    ResponseMessage<UserVO> retrieveUserInfoByName(String userName);
 
-    ResponseMessage<Boolean> createUser(List<UserInfoDTO> dto);
+    ResponseMessage<Boolean> createUser(List<UserDTO> dto);
 
-    ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(UserInfoDTO dto);
+    ResponseMessage<IPage<UserVO>> retrieveUserPage(UserDTO dto);
 
-    ResponseMessage<List<UserInfoVO>> retrieveUserList(UserInfoDTO dto);
+    ResponseMessage<List<UserVO>> retrieveUserList(UserDTO dto);
 }

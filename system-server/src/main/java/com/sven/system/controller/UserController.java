@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.UserInfoDTO;
-import com.sven.common.vo.UserInfoVO;
+import com.sven.common.dto.UserDTO;
+import com.sven.common.vo.UserVO;
 import com.sven.system.service.IUserService;
 
 @RestController
@@ -26,29 +26,29 @@ public class UserController {
     private IUserService userService;
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<UserInfoVO>> retrieveRoleList(@RequestBody final UserInfoDTO dto) {
-        ResponseMessage<List<UserInfoVO>> response = userService.retrieveUserList(dto);
+    public IBaseResponseMessage<List<UserVO>> retrieveRoleList(@RequestBody final UserDTO dto) {
+        ResponseMessage<List<UserVO>> response = userService.retrieveUserList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<UserInfoVO>> retrieveUserPage(@RequestBody @Validated final UserInfoDTO dto) {
-        ResponseMessage<IPage<UserInfoVO>> response = userService.retrieveUserPage(dto);
+    public IBaseResponseMessage<IPage<UserVO>> retrieveUserPage(@RequestBody @Validated final UserDTO dto) {
+        ResponseMessage<IPage<UserVO>> response = userService.retrieveUserPage(dto);
         
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated final List<UserInfoDTO> dto) {
+    public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated final List<UserDTO> dto) {
         ResponseMessage<Boolean> response = userService.createUser(dto);
 
         return response;
     }
     
     @GetMapping("/retrieveUserInfoByName")
-    public IBaseResponseMessage<UserInfoVO> retrieveUserInfoByName(@RequestParam("userName") final String userName) {
-        ResponseMessage<UserInfoVO> response = userService.retrieveUserInfoByName(userName);
+    public IBaseResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") final String userName) {
+        ResponseMessage<UserVO> response = userService.retrieveUserInfoByName(userName);
 
         return response;
     }

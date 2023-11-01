@@ -2,15 +2,13 @@ package com.sven.system.service;
 
 import java.util.List;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserRoleCreationDTO;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.system.entity.UserRoleInfoEntity;
+import com.sven.common.vo.RoleVO;
 
-public interface IUserRoleService extends IService<UserRoleInfoEntity> {
+public interface IUserRoleService {
 
-    ResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(final Long userId);
+    ResponseMessage<List<RoleVO>> retrieveUserRoleInfoByUserId(final Long userId);
 
     ResponseMessage<Boolean> creationUserRole(final UserRoleCreationDTO dto);
 }

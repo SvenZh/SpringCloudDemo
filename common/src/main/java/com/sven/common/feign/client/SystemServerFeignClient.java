@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.vo.PerimissionInfoVO;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.common.vo.UserInfoVO;
+import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.RoleVO;
+import com.sven.common.vo.UserVO;
 
 @FeignClient(name = "system-server")
 public interface SystemServerFeignClient {
 
     @GetMapping("/user/retrieveUserInfoByName")
-    public ResponseMessage<UserInfoVO> retrieveUserInfoByName(@RequestParam("userName") String userName);
+    public ResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") String userName);
 
     @GetMapping("/role/retrieveRoleInfoByRoleName")
-    public ResponseMessage<RoleInfoVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") String roleName);
+    public ResponseMessage<RoleVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") String roleName);
 
     @GetMapping("/rolePerimission/retrieveRolePerimissionInfoByRoleId")
-    public ResponseMessage<List<PerimissionInfoVO>> retrieveRolePerimissionInfoByRoleId(
+    public ResponseMessage<List<PerimissionVO>> retrieveRolePerimissionInfoByRoleId(
             @RequestParam("roleId") Long roleId);
 
     @GetMapping("/rolePerimission/hasPerimission")

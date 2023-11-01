@@ -12,11 +12,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_role")
-public class RoleInfoEntity extends BaseEntityMessage {
+@TableName("sys_user")
+public class UserEntity extends BaseEntityMessage {
+
     private String name;
 
-    private Integer sort;
+    private String password;
 
-    private Integer status;
+    private String address;
+
+    private String email;
 }

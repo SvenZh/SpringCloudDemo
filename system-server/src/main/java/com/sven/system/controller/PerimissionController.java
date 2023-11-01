@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.PerimissionInfoDTO;
-import com.sven.common.vo.PerimissionInfoVO;
+import com.sven.common.dto.PerimissionDTO;
+import com.sven.common.vo.PerimissionVO;
 import com.sven.system.service.IPerimissionService;
 
 @RestController
@@ -24,21 +24,21 @@ public class PerimissionController {
     private IPerimissionService perimissionService;
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(@RequestBody final PerimissionInfoDTO dto) {
-        ResponseMessage<List<PerimissionInfoVO>> response = perimissionService.retrievePerimissionList(dto);
+    public IBaseResponseMessage<List<PerimissionVO>> retrievePerimissionList(@RequestBody final PerimissionDTO dto) {
+        ResponseMessage<List<PerimissionVO>> response = perimissionService.retrievePerimissionList(dto);
 
         return response;
     }
     
     @PostMapping("/page")
-    public IBaseResponseMessage<IPage<PerimissionInfoVO>> retrieveRolePage(@RequestBody final PerimissionInfoDTO dto) {
-        ResponseMessage<IPage<PerimissionInfoVO>> response = perimissionService.retrievePerimissionPage(dto);
+    public IBaseResponseMessage<IPage<PerimissionVO>> retrieveRolePage(@RequestBody final PerimissionDTO dto) {
+        ResponseMessage<IPage<PerimissionVO>> response = perimissionService.retrievePerimissionPage(dto);
         
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final PerimissionInfoDTO dto) {
+    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final PerimissionDTO dto) {
         ResponseMessage<Boolean> response = perimissionService.createPerimission(dto);
         
         return response;

@@ -3,43 +3,40 @@ package com.sven.system.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.UserInfoDTO;
-import com.sven.common.vo.RoleInfoVO;
-import com.sven.common.vo.UserInfoVO;
-import com.sven.system.entity.UserInfoEntity;
-import com.sven.system.mapper.UserServiceMapper;
+import com.sven.common.dto.UserDTO;
+import com.sven.common.vo.RoleVO;
+import com.sven.common.vo.UserVO;
+import com.sven.system.dao.UserServiceDAO;
+import com.sven.system.entity.UserEntity;
 import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
 @Service
 @DS("master")
-public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEntity> implements IUserService {
+public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserRoleService userRoleService;
 
+    @Autowired
+    private UserServiceDAO userServiceDAO;
+
     @Override
-    public ResponseMessage<List<UserInfoVO>> retrieveUserList(final UserInfoDTO dto) {
-        LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), UserInfoEntity::getName, dto.getName());
+    public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {
 
-        List<UserInfoEntity> userInfoEntities = this.baseMapper.selectList(queryWrapper);
+        List<UserEntity> userInfoEntities = userServiceDAO.selectList(dto);
 
-        List<UserInfoVO> response = userInfoEntities.stream().map(entity -> {
-            UserInfoVO vo = new UserInfoVO();
+        List<UserVO> response = userInfoEntities.stream().map(entity -> {
+            UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
 
             return vo;
@@ -49,18 +46,17 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
     }
 
     @Override
-    public ResponseMessage<UserInfoVO> retrieveUserInfoByName(final String userName) {
+    public ResponseMessage<UserVO> retrieveUserInfoByName(final String userName) {
 
-        UserInfoVO response = new UserInfoVO();
+        UserVO response = new UserVO();
 
-        LambdaQueryWrapper<UserInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserInfoEntity::getName, userName);
-
-        UserInfoEntity userInfoEntity = this.baseMapper.selectOne(queryWrapper);
+        UserDTO dto = new UserDTO();
+        dto.setName(userName);
+        UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
 
         BeanUtils.copyProperties(userInfoEntity, response);
 
-        ResponseMessage<List<RoleInfoVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
+        ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
 
         if (roleInfo.isSuccess()) {
             response.setUserRole(roleInfo.getData());
@@ -71,30 +67,30 @@ public class UserServiceImpl extends ServiceImpl<UserServiceMapper, UserInfoEnti
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ResponseMessage<Boolean> createUser(final List<UserInfoDTO> dto) {
-        List<UserInfoEntity> userInfoEntities = dto.stream().map(item -> {
-            UserInfoEntity userInfoEntity = new UserInfoEntity();
+    public ResponseMessage<Boolean> createUser(final List<UserDTO> dto) {
+        List<UserEntity> userInfoEntities = dto.stream().map(item -> {
+            UserEntity userInfoEntity = new UserEntity();
             BeanUtils.copyProperties(item, userInfoEntity);
 
             return userInfoEntity;
         }).collect(Collectors.toList());
 
-        boolean response = this.saveBatch(userInfoEntities, DEFAULT_BATCH_SIZE);
+        boolean response = userServiceDAO.saveBatch(userInfoEntities);
 
         return ResponseMessage.ok(response);
     }
 
     @Override
-    public ResponseMessage<IPage<UserInfoVO>> retrieveUserPage(final UserInfoDTO dto) {
-        List<UserInfoEntity> result = this.getBaseMapper().selectList(new QueryWrapper<>());
+    public ResponseMessage<IPage<UserVO>> retrieveUserPage(final UserDTO dto) {
+        List<UserEntity> result = userServiceDAO.selectList(dto);
 
-        List<UserInfoVO> response = result.stream().map(entity -> {
-            UserInfoVO vo = new UserInfoVO();
+        List<UserVO> response = result.stream().map(entity -> {
+            UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
             return vo;
         }).collect(Collectors.toList());
 
-        Page<UserInfoVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
+        Page<UserVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
         page.setRecords(response);
 
         return ResponseMessage.ok(page);

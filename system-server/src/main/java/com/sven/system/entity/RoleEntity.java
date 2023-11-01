@@ -1,7 +1,6 @@
-package com.sven.common.vo;
+package com.sven.system.entity;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.sven.common.domain.message.BaseEntityMessage;
 
 import lombok.AllArgsConstructor;
@@ -13,12 +12,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleInfoVO {
-    
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long id;
-    
+@TableName("sys_role")
+public class RoleEntity extends BaseEntityMessage {
     private String name;
-    
+
     private Integer sort;
+
+    private Integer status;
 }

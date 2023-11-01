@@ -15,15 +15,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_role_permission")
-public class RolePerimissionInfoEntity {
+@TableName("sys_user_role")
+public class UserRoleEntity {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long roleId;
+    private Long userId;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long permissionId;
+    private Long roleId;
 }

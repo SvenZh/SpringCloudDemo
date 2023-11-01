@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserRoleCreationDTO;
-import com.sven.common.vo.RoleInfoVO;
+import com.sven.common.vo.RoleVO;
 import com.sven.system.service.IUserRoleService;
 
 @RestController
@@ -25,8 +25,8 @@ public class UserRoleController {
     private IUserRoleService userRoleService;
 
     @GetMapping("/retrieveUserRoleInfoByUserId")
-    public IBaseResponseMessage<List<RoleInfoVO>> retrieveUserRoleInfoByUserId(@RequestParam("userId") final Long userId) {
-        ResponseMessage<List<RoleInfoVO>> response = userRoleService.retrieveUserRoleInfoByUserId(userId);
+    public IBaseResponseMessage<List<RoleVO>> retrieveUserRoleInfoByUserId(@RequestParam("userId") final Long userId) {
+        ResponseMessage<List<RoleVO>> response = userRoleService.retrieveUserRoleInfoByUserId(userId);
 
         return response;
     }

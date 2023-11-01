@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInfoDTO extends PageMessage {
+public class UserDTO extends PageMessage {
 
     private String name;
 }

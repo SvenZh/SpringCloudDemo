@@ -4,34 +4,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.PerimissionInfoDTO;
-import com.sven.common.vo.PerimissionInfoVO;
-import com.sven.system.entity.PerimissionInfoEntity;
-import com.sven.system.mapper.PerimissionServiceMapper;
+import com.sven.common.dto.PerimissionDTO;
+import com.sven.common.vo.PerimissionVO;
+import com.sven.system.dao.PerimissionServiceDAO;
+import com.sven.system.entity.PerimissionEntity;
 import com.sven.system.service.IPerimissionService;
 
 @Service
-public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper, PerimissionInfoEntity>
-        implements IPerimissionService {
+public class PerimissionServiceImpl implements IPerimissionService {
+    
+    @Autowired
+    private PerimissionServiceDAO perimissionServiceDAO;
     
     @Override
-    public ResponseMessage<List<PerimissionInfoVO>> retrievePerimissionList(final PerimissionInfoDTO dto) {
-        LambdaQueryWrapper<PerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), PerimissionInfoEntity::getName, dto.getName());
+    public ResponseMessage<List<PerimissionVO>> retrievePerimissionList(final PerimissionDTO dto) {
+        List<PerimissionEntity> perimissionInfoEntities = perimissionServiceDAO.selectList(dto);
 
-        List<PerimissionInfoEntity> perimissionInfoEntities = this.baseMapper.selectList(queryWrapper);
-
-        List<PerimissionInfoVO> response = perimissionInfoEntities.stream().map(entity -> {
-            PerimissionInfoVO vo = new PerimissionInfoVO();
+        List<PerimissionVO> response = perimissionInfoEntities.stream().map(entity -> {
+            PerimissionVO vo = new PerimissionVO();
             BeanUtils.copyProperties(entity, vo);
 
             return vo;
@@ -41,41 +38,40 @@ public class PerimissionServiceImpl extends ServiceImpl<PerimissionServiceMapper
     }
 
     @Override
-    public ResponseMessage<IPage<PerimissionInfoVO>> retrievePerimissionPage(final PerimissionInfoDTO dto) {
-        LambdaQueryWrapper<PerimissionInfoEntity> queryWrapper = new LambdaQueryWrapper<>();
-        List<PerimissionInfoEntity> perimissionInfoEntities = this.baseMapper.selectList(queryWrapper);
+    public ResponseMessage<IPage<PerimissionVO>> retrievePerimissionPage(final PerimissionDTO dto) {
+        List<PerimissionEntity> perimissionInfoEntities = perimissionServiceDAO.selectList(dto);
 
-        List<PerimissionInfoVO> response = perimissionInfoEntities.stream().map(entity -> {
-            PerimissionInfoVO vo = new PerimissionInfoVO();
+        List<PerimissionVO> response = perimissionInfoEntities.stream().map(entity -> {
+            PerimissionVO vo = new PerimissionVO();
             BeanUtils.copyProperties(entity, vo);
 
             return vo;
         }).collect(Collectors.toList());
 
-        Page<PerimissionInfoVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
+        Page<PerimissionVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
         page.setRecords(response);
 
         return ResponseMessage.ok(page);
     }
 
     @Override
-    public ResponseMessage<Boolean> createPerimission(final PerimissionInfoDTO dto) {
-        PerimissionInfoEntity entity = new PerimissionInfoEntity();
+    public ResponseMessage<Boolean> createPerimission(final PerimissionDTO dto) {
+        PerimissionEntity entity = new PerimissionEntity();
         entity.setCreateAt(new Date());
         entity.setCreateBy(1665943054155702273L);
         entity.setUpdateAt(new Date());
         entity.setUpdateBy(1665943054155702273L);
         BeanUtils.copyProperties(dto, entity);
 
-        int result = this.baseMapper.insert(entity);
+        int result = perimissionServiceDAO.insert(entity);
         
         return ResponseMessage.ok(result > 0);
     }
 
     @Override
-    public ResponseMessage<PerimissionInfoVO> retrievePerimissionInfoById(final Long perimissionId) {
-        PerimissionInfoVO response = new PerimissionInfoVO();
-        PerimissionInfoEntity entity = this.baseMapper.selectById(perimissionId);
+    public ResponseMessage<PerimissionVO> retrievePerimissionInfoById(final Long perimissionId) {
+        PerimissionVO response = new PerimissionVO();
+        PerimissionEntity entity = perimissionServiceDAO.selectById(perimissionId);
 
         BeanUtils.copyProperties(entity, response);
 
