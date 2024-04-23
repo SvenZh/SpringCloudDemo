@@ -1,0 +1,32 @@
+server:
+   port: 10070
+      
+spring:
+   jackson:
+      default-property-inclusion: NON_NULL   
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
+   cloud:
+      loadbalancer: 
+         ribbon: 
+            enabled: false      
+   application:
+      name: batch-server
+   datasource:
+      dynamic:
+         primary: master 
+         datasource:
+            master:
+               driver-class-name: ${batch-server.datasource.master.driver-class-name}
+               url: ${batch-server.datasource.master.url}
+               username: ${batch-server.datasource.master.username}
+               password: ${batch-server.datasource.master.password}
+#            slave: 
+#               driver-class-name: ${auth-server.datasource.slave.driver-class-name}
+#               url: ${auth-server.datasource.slave.url}
+#               username: ${auth-server.datasource.slave.username}
+#               password: ${auth-server.datasource.slave.password}
+
+logging:
+   config: classpath:logback-custom.xml
+      

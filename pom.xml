@@ -29,6 +29,7 @@
 		<module>scheduler-server</module>
 		<module>system-server</module>
 		<module>websocket-server</module>
+		<module>batch-server</module>
 	</modules>
 
 	<dependencyManagement>
