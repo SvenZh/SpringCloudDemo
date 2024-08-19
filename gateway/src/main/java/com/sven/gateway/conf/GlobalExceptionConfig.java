@@ -2,8 +2,8 @@ package com.sven.gateway.conf;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -23,20 +23,20 @@ import java.util.List;
 
 @Configuration
 @AutoConfigureBefore(ErrorWebFluxAutoConfiguration.class)
-@EnableConfigurationProperties({ ServerProperties.class, ResourceProperties.class })
+@EnableConfigurationProperties({ ServerProperties.class, Resources.class })
 public class GlobalExceptionConfig {
 
     private final ServerProperties serverProperties;
 
     private final ApplicationContext applicationContext;
 
-    private final ResourceProperties resourceProperties;
+    private final Resources resourceProperties;
 
     private final List<ViewResolver> viewResolvers;
 
     private final ServerCodecConfigurer serverCodecConfigurer;
 
-    public GlobalExceptionConfig(ServerProperties serverProperties, ResourceProperties resourceProperties,
+    public GlobalExceptionConfig(ServerProperties serverProperties, Resources resourceProperties,
             ObjectProvider<List<ViewResolver>> viewResolversProvider, ServerCodecConfigurer serverCodecConfigurer,
             ApplicationContext applicationContext) {
         this.serverProperties = serverProperties;

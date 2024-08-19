@@ -1,7 +1,7 @@
 package com.sven.gateway.handler;
 
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties.Resources;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class GlobalExceptionHandler extends DefaultErrorWebExceptionHandler {
 
-    public GlobalExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
+    public GlobalExceptionHandler(ErrorAttributes errorAttributes, Resources resourceProperties,
             ErrorProperties errorProperties, ApplicationContext applicationContext) {
         super(errorAttributes, resourceProperties, errorProperties, applicationContext);
     }
