@@ -55,7 +55,7 @@ public class OAuth2ConfigurerUtils {
         }
         return authorizationService;
     }
-
+    
     public OAuth2AuthorizationConsentService getAuthorizationConsentService(HttpSecurity httpSecurity) {
         OAuth2AuthorizationConsentService authorizationConsentService = httpSecurity.getSharedObject(OAuth2AuthorizationConsentService.class);
         if (authorizationConsentService == null) {

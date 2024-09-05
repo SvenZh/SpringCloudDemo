@@ -3,6 +3,7 @@ package com.sven.auth.provider;
 import java.security.Principal;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -74,8 +75,9 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
 
         Map<String, Object> reqParameters = customOAuth2PasswordAuthorizationToken.getAdditionalParameters();
         String username = (String) reqParameters.get(OAuth2ParameterNames.USERNAME);
+        String password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                username, null);
+                username, password);
         Authentication usernamePasswordAuthentication = authenticationManager
                 .authenticate(usernamePasswordAuthenticationToken);
         
@@ -106,14 +108,14 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
                 generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
 
         if (generatedAccessToken instanceof ClaimAccessor) {
-            authorizationBuilder.id(accessToken.getTokenValue())
+            authorizationBuilder
                     .token(accessToken,
                             (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
                                     ((ClaimAccessor) generatedAccessToken).getClaims()))
                     .authorizedScopes(authorizedScopes)
                     .attribute(Principal.class.getName(), usernamePasswordAuthentication);
         } else {
-            authorizationBuilder.id(accessToken.getTokenValue()).accessToken(accessToken);
+            authorizationBuilder.accessToken(accessToken);
         }
         
         OAuth2RefreshToken refreshToken = null;
@@ -136,8 +138,8 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
         OAuth2Authorization authorization = authorizationBuilder.build();
         this.authorizationService.save(authorization);
         
-        return new OAuth2AccessTokenAuthenticationToken(
-                registeredClient, clientPrincipal, accessToken, refreshToken, reqParameters);
+        return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken,
+                Objects.requireNonNull(authorization.getAccessToken().getClaims()));
     }
 
     @Override

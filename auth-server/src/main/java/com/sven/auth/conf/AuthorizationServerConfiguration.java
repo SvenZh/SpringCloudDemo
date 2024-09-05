@@ -1,11 +1,13 @@
 package com.sven.auth.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,20 +45,19 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-@EnableWebSecurity
-public class SecurityConfig {
-
+@Configuration
+public class AuthorizationServerConfiguration {
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
+    
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
-        httpSecurity.apply(authorizationServerConfigurer);
-        
-        authorizationServerConfigurer.tokenEndpoint(tokenEndpoint -> {
+        httpSecurity.apply(authorizationServerConfigurer.tokenEndpoint(tokenEndpoint -> {
             tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2PasswordAuthorizationConvert());
-        });
+        }));
         
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
-        
         httpSecurity
             .requestMatcher(endpointsMatcher)
             .csrf(csrf -> csrf.disable())
@@ -76,9 +77,9 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
     
-    private void addCustomOAuth2AuthenticationProvider(HttpSecurity httpSecurity) {
-        AuthenticationManager authenticationManager = httpSecurity.getSharedObject(AuthenticationManager.class);
-        OAuth2AuthorizationService authorizationService = httpSecurity.getSharedObject(OAuth2AuthorizationService.class);
+    private void addCustomOAuth2AuthenticationProvider(HttpSecurity httpSecurity) throws Exception {
+        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+        OAuth2AuthorizationService authorizationService = OAuth2ConfigurerUtils.getAuthorizationService(httpSecurity);
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2ConfigurerUtils.getTokenGenerator(httpSecurity);
         
         CustomOAuth2PasswordAuthorizationProvider customOAuth2PasswordAuthorizationProvider = new CustomOAuth2PasswordAuthorizationProvider(
