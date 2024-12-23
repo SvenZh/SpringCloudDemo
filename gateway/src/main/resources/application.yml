@@ -10,16 +10,17 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: localhost:8848
-        namespace: ${spring.application.name}
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
         group: ${spring.profiles.active}
-        service: auth-server
+        service: ${spring.application.name}
       config:
-        server-addr: localhost:8848
-        namespace: ${spring.application.name}
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
         file-extension: yml
         group: ${spring.profiles.active}
   config:
     import:
       - nacos:${spring.application.name}
+      - nacos:common
               

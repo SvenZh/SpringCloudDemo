@@ -8,41 +8,41 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
-import com.sven.auth.token.CustomOAuth2PasswordAuthorizationToken;
+import com.sven.auth.conf.SecurityConstants;
+import com.sven.auth.token.CustomOAuth2SmsAuthorizationToken;
 import com.sven.auth.utils.OAuth2EndpointUtils;
 
-public class CustomOAuth2PasswordAuthorizationConvert extends OAuth2BaseAuthorizationConvert {
+public class CustomOAuth2SmsAuthorizationConvert extends OAuth2BaseAuthorizationConvert {
 
     @Override
     public void checkParams(HttpServletRequest request) {
         MultiValueMap<String, String> parameters = OAuth2EndpointUtils.getQueryParameters(request);
 
-        String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
-        if (!StringUtils.hasText(username) || parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.USERNAME,
+        String phome = parameters.getFirst(SecurityConstants.PHONE);
+        if (!StringUtils.hasText(phome) || parameters.get(SecurityConstants.PHONE).size() != 1) {
+            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, SecurityConstants.PHONE,
                     OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
         }
 
-        String password = parameters.getFirst(OAuth2ParameterNames.PASSWORD);
-        if (!StringUtils.hasText(password) || parameters.get(OAuth2ParameterNames.PASSWORD).size() != 1) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.PASSWORD,
+        String code = parameters.getFirst(SecurityConstants.CODE);
+        if (!StringUtils.hasText(code) || parameters.get(SecurityConstants.CODE).size() != 1) {
+            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, SecurityConstants.CODE,
                     OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
         }
     }
 
     @Override
     public boolean support(String grantType) {
-        return AuthorizationGrantType.PASSWORD.getValue().equals(grantType);
+        return SecurityConstants.GRANT_TYPE_SMS.equals(grantType);
     }
 
     @Override
     public Authentication tokenGenerator(Authentication principal, Set<String> scopes,
             Map<String, Object> additionalParameters) {
-        return new CustomOAuth2PasswordAuthorizationToken(AuthorizationGrantType.PASSWORD, principal, scopes,
+        return new CustomOAuth2SmsAuthorizationToken(new AuthorizationGrantType(SecurityConstants.GRANT_TYPE_SMS), principal, scopes,
                 additionalParameters);
     }
 

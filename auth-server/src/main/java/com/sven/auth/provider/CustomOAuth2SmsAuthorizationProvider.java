@@ -20,7 +20,6 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.OAuth2Token;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
@@ -33,15 +32,15 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.util.CollectionUtils;
 
-import com.sven.auth.token.CustomOAuth2PasswordAuthorizationToken;
+import com.sven.auth.token.CustomOAuth2SmsAuthorizationToken;
 
-public class CustomOAuth2PasswordAuthorizationProvider implements AuthenticationProvider {
+public class CustomOAuth2SmsAuthorizationProvider implements AuthenticationProvider {
     private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1";
     private final OAuth2AuthorizationService authorizationService;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
     private final AuthenticationManager authenticationManager;
 
-    public CustomOAuth2PasswordAuthorizationProvider(AuthenticationManager authenticationManager,
+    public CustomOAuth2SmsAuthorizationProvider(AuthenticationManager authenticationManager,
             OAuth2AuthorizationService authorizationService,
             OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         this.authenticationManager = authenticationManager;
@@ -51,33 +50,32 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        CustomOAuth2PasswordAuthorizationToken customOAuth2PasswordAuthorizationToken = (CustomOAuth2PasswordAuthorizationToken) authentication;
+        CustomOAuth2SmsAuthorizationToken customOAuth2SmsAuthorizationToken = (CustomOAuth2SmsAuthorizationToken) authentication;
 
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(
-                customOAuth2PasswordAuthorizationToken);
+                customOAuth2SmsAuthorizationToken);
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
 
-        if (!registeredClient.getAuthorizationGrantTypes().contains(customOAuth2PasswordAuthorizationToken.getAuthorizationGrantType())) {
+        if (!registeredClient.getAuthorizationGrantTypes().contains(customOAuth2SmsAuthorizationToken.getAuthorizationGrantType())) {
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.UNAUTHORIZED_CLIENT);
         }
 
         Set<String> authorizedScopes;
-        if (!CollectionUtils.isEmpty(customOAuth2PasswordAuthorizationToken.getScopes())) {
-            for (String requestedScope : customOAuth2PasswordAuthorizationToken.getScopes()) {
+        if (!CollectionUtils.isEmpty(customOAuth2SmsAuthorizationToken.getScopes())) {
+            for (String requestedScope : customOAuth2SmsAuthorizationToken.getScopes()) {
                 if (!registeredClient.getScopes().contains(requestedScope)) {
                     throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
                 }
             }
-            authorizedScopes = new LinkedHashSet<>(customOAuth2PasswordAuthorizationToken.getScopes());
+            authorizedScopes = new LinkedHashSet<>(customOAuth2SmsAuthorizationToken.getScopes());
         } else {
             throw new OAuth2AuthenticationException(new OAuth2Error("scope is empty"), "scope is empty");
         }
 
-        Map<String, Object> reqParameters = customOAuth2PasswordAuthorizationToken.getAdditionalParameters();
-        String username = (String) reqParameters.get(OAuth2ParameterNames.USERNAME);
-        String password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                username, password);
+        Map<String, Object> reqParameters = customOAuth2SmsAuthorizationToken.getAdditionalParameters();
+        String phone = (String) reqParameters.get("phone");
+        String code = (String) reqParameters.get("code");
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(phone, code);
         Authentication usernamePasswordAuthentication = authenticationManager
                 .authenticate(usernamePasswordAuthenticationToken);
         
@@ -86,13 +84,13 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
                 .principal(usernamePasswordAuthentication)
                 .authorizationServerContext(AuthorizationServerContextHolder.getContext())
                 .authorizedScopes(authorizedScopes)
-                .authorizationGrantType(customOAuth2PasswordAuthorizationToken.getAuthorizationGrantType())
-                .authorizationGrant(customOAuth2PasswordAuthorizationToken);
+                .authorizationGrantType(customOAuth2SmsAuthorizationToken.getAuthorizationGrantType())
+                .authorizationGrant(customOAuth2SmsAuthorizationToken);
         
         OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
                 .withRegisteredClient(registeredClient)
                 .principalName(usernamePasswordAuthentication.getName())
-                .authorizationGrantType(customOAuth2PasswordAuthorizationToken.getAuthorizationGrantType())
+                .authorizationGrantType(customOAuth2SmsAuthorizationToken.getAuthorizationGrantType())
                 .authorizedScopes(authorizedScopes);
         
         OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
@@ -144,7 +142,7 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return CustomOAuth2PasswordAuthorizationToken.class.isAssignableFrom(authentication);
+        return CustomOAuth2SmsAuthorizationToken.class.isAssignableFrom(authentication);
     }
 
     private OAuth2ClientAuthenticationToken getAuthenticatedClientElseThrowInvalidClient(
@@ -158,5 +156,4 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
         }
         throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
     }
-
 }

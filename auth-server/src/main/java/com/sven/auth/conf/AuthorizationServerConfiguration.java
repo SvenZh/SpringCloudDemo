@@ -1,12 +1,10 @@
 package com.sven.auth.conf;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
@@ -36,8 +34,10 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.sven.auth.convert.CustomOAuth2PasswordAuthorizationConvert;
+import com.sven.auth.convert.CustomOAuth2SmsAuthorizationConvert;
+import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
-import com.sven.auth.utils.OAuth2ConfigurerUtils;
+import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -47,19 +47,18 @@ import java.util.UUID;
 
 @Configuration
 public class AuthorizationServerConfiguration {
-    @Autowired
-    private AuthenticationConfiguration authenticationConfiguration;
     
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
         httpSecurity.apply(authorizationServerConfigurer.tokenEndpoint(tokenEndpoint -> {
             tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2PasswordAuthorizationConvert());
+            tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2SmsAuthorizationConvert());
         }));
         
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
-        httpSecurity
-            .requestMatcher(endpointsMatcher)
+        SecurityFilterChain securityFilterChain = httpSecurity
+            .requestMatcher(endpointsMatcher)       // 拦截授权服务器的相关请求
             .csrf(csrf -> csrf.disable())
             .formLogin(Customizer.withDefaults())
             .sessionManagement(AbstractHttpConfigurer::disable)
@@ -70,22 +69,26 @@ public class AuthorizationServerConfiguration {
             .oauth2ResourceServer(oauth2ResourceServer -> {
                 oauth2ResourceServer.jwt(jwt -> jwt.decoder(jwtDecoder(jwkSource())));
             })
-            ;
-       
+            .build();
+
         addCustomOAuth2AuthenticationProvider(httpSecurity);
-        
-        return httpSecurity.build();
+        return securityFilterChain;
     }
     
+    @SuppressWarnings("unchecked")
     private void addCustomOAuth2AuthenticationProvider(HttpSecurity httpSecurity) throws Exception {
-        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        OAuth2AuthorizationService authorizationService = OAuth2ConfigurerUtils.getAuthorizationService(httpSecurity);
-        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = OAuth2ConfigurerUtils.getTokenGenerator(httpSecurity);
+        AuthenticationManager authenticationManager = httpSecurity.getSharedObject(AuthenticationManager.class);
+        OAuth2AuthorizationService authorizationService = httpSecurity.getSharedObject(OAuth2AuthorizationService.class);
+        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = httpSecurity.getSharedObject(OAuth2TokenGenerator.class);
         
         CustomOAuth2PasswordAuthorizationProvider customOAuth2PasswordAuthorizationProvider = new CustomOAuth2PasswordAuthorizationProvider(
                 authenticationManager, authorizationService, tokenGenerator);
+        CustomOAuth2SmsAuthorizationProvider customOAuth2SmsAuthorizationProvider = new CustomOAuth2SmsAuthorizationProvider(
+                authenticationManager, authorizationService, tokenGenerator);
 
+        httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider(userDetailsService()));
         httpSecurity.authenticationProvider(customOAuth2PasswordAuthorizationProvider);
+        httpSecurity.authenticationProvider(customOAuth2SmsAuthorizationProvider);
     }
     
     @Bean
@@ -95,31 +98,6 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
-//        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-//                .clientId("myClient")
-//                .clientSecret(passwordEncoder.encode("123456"))
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-//                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-//                .redirectUri("https://www.baidu.com")
-//                .scope("all")
-//                .tokenSettings(TokenSettings.builder()
-//                        .authorizationCodeTimeToLive(Duration.ofMinutes(30))
-//                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-//                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-//                        .reuseRefreshTokens(true)
-//                        .refreshTokenTimeToLive(Duration.ofMinutes(60))
-//                        .build())
-//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-//                .build();
-//        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-//        RegisteredClient repositoryByClientId = registeredClientRepository.findByClientId(registeredClient.getClientId());
-//        if (repositoryByClientId == null) {
-//            registeredClientRepository.save(registeredClient);
-//        }
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     } 
     

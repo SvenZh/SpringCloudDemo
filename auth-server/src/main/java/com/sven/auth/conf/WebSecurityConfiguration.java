@@ -18,7 +18,6 @@ public class WebSecurityConfiguration {
             .frameOptions()
             .sameOrigin()// 避免iframe同源无法登录
             ;
-        
         return httpSecurity.build();
     }
     
