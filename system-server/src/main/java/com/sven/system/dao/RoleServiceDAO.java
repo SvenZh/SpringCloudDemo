@@ -1,11 +1,11 @@
 package com.sven.system.dao;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.nacos.common.utils.Objects;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.dto.RoleDTO;
@@ -26,7 +26,7 @@ public class RoleServiceDAO extends ServiceImpl<RoleServiceMapper, RoleEntity> {
     
     public RoleEntity selectOne(RoleDTO dto) {
         LambdaQueryWrapper<RoleEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(!Objects.isNull(dto.getId()), RoleEntity::getId, dto.getId());
+        queryWrapper.eq(Objects.nonNull(dto.getId()), RoleEntity::getId, dto.getId());
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), RoleEntity::getName, dto.getName());
         
         RoleEntity response = this.baseMapper.selectOne(queryWrapper);

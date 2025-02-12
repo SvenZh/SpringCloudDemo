@@ -11,7 +11,7 @@ import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
 
 @RestController
-@RequestMapping("/oauth")
+@RequestMapping("/test")
 public class AuthController {
 
     @Autowired
@@ -22,5 +22,11 @@ public class AuthController {
         CaptchVO response = authService.getCaptcha();
         
         return ResponseMessage.ok(response);
+    }
+    
+    @GetMapping(value = "/hello")
+    public IBaseResponseMessage<String> hello() {
+        
+        return ResponseMessage.ok("hello");
     }
 }

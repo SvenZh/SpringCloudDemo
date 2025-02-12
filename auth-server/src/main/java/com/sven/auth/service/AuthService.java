@@ -18,10 +18,10 @@ import com.wf.captcha.base.Captcha;
 @RefreshScope
 public class AuthService {
 
-    @Value("${auth-server.captcha.length}")
+    @Value("${captcha.length}")
     private int captchaLen;
     
-    @Value("${auth-server.captcha.expire}")
+    @Value("${captcha.expire}")
     private long expire;
     
     @Autowired

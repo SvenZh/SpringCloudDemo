@@ -5,50 +5,22 @@ logging:
    config: classpath:logback-custom.xml
 
 spring:
-   application:
-      name: gateway
-   cloud:
-      loadbalancer: 
-         ribbon: 
-            enabled: false
-      gateway:
-         loadbalancer:
-            retry:
-                enabled: true
-         discovery:
-            locator:
-                enabled: true
-         routes:
-            - id: perimission
-              uri: lb://system-server
-              predicates: 
-              - Path=/perimission/**
-            - id: role-perimission
-              uri: lb://system-server
-              predicates: 
-              - Path=/rolePerimission/**
-            - id: role
-              uri: lb://system-server
-              predicates: 
-              - Path=/role/**
-            - id: user
-              uri: lb://system-server
-              predicates: 
-              - Path=/user/**                       
-            - id: user-role
-              uri: lb://system-server
-              predicates: 
-              - Path=/userRole/**                       
-            - id: quartz
-              uri: lb://scheduler-server
-              predicates: 
-              - Path=/quartz/**
-            - id: auth
-              uri: lb://auth-server
-              predicates: 
-              - Path=/oauth/**
-            - id: websocket
-              uri: lb:ws://websocket-server
-              predicates: 
-              - Path=/test/**
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        group: ${spring.profiles.active}
+        service: ${spring.application.name}
+      config:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        file-extension: yml
+        group: ${spring.profiles.active}
+  config:
+    import:
+      - nacos:${spring.application.name}
+      - nacos:common
               
