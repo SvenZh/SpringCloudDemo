@@ -1,17 +1,16 @@
 package com.sven.auth.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
@@ -22,12 +21,17 @@ import org.springframework.security.oauth2.server.authorization.client.JdbcRegis
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -38,15 +42,21 @@ import com.sven.auth.convert.CustomOAuth2SmsAuthorizationConvert;
 import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
 import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
+import com.sven.auth.vo.CustomUserMixin;
+import com.sven.auth.vo.UserInfo;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration
 public class AuthorizationServerConfiguration {
+    
+    @Autowired
+    private UserDetailsService userDetailsService;
     
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
@@ -59,9 +69,6 @@ public class AuthorizationServerConfiguration {
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
         SecurityFilterChain securityFilterChain = httpSecurity
             .requestMatcher(endpointsMatcher)       // 拦截授权服务器的相关请求
-            .csrf(csrf -> csrf.disable())
-            .formLogin(Customizer.withDefaults())
-            .sessionManagement(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.anyRequest().authenticated();
              })
@@ -82,11 +89,11 @@ public class AuthorizationServerConfiguration {
         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = httpSecurity.getSharedObject(OAuth2TokenGenerator.class);
         
         CustomOAuth2PasswordAuthorizationProvider customOAuth2PasswordAuthorizationProvider = new CustomOAuth2PasswordAuthorizationProvider(
-                authenticationManager, authorizationService, tokenGenerator);
+                authenticationManager, authorizationService, oAuth2TokenGenerator());
         CustomOAuth2SmsAuthorizationProvider customOAuth2SmsAuthorizationProvider = new CustomOAuth2SmsAuthorizationProvider(
-                authenticationManager, authorizationService, tokenGenerator);
+                authenticationManager, authorizationService, oAuth2TokenGenerator());
 
-        httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider(userDetailsService()));
+        httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider(userDetailsService));
         httpSecurity.authenticationProvider(customOAuth2PasswordAuthorizationProvider);
         httpSecurity.authenticationProvider(customOAuth2SmsAuthorizationProvider);
     }
@@ -104,7 +111,23 @@ public class AuthorizationServerConfiguration {
     @Bean
     public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
             RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+        JdbcOAuth2AuthorizationService service = new JdbcOAuth2AuthorizationService(jdbcTemplate,
+                registeredClientRepository);
+        JdbcOAuth2AuthorizationService.OAuth2AuthorizationRowMapper authorizationRowMapper = new JdbcOAuth2AuthorizationService.OAuth2AuthorizationRowMapper(
+                registeredClientRepository);
+        authorizationRowMapper.setLobHandler(new DefaultLobHandler());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClassLoader classLoader = JdbcOAuth2AuthorizationService.class.getClassLoader();
+        List<Module> securityModules = SecurityJackson2Modules.getModules(classLoader);
+        objectMapper.registerModules(securityModules);
+        objectMapper.registerModule(new OAuth2AuthorizationServerJackson2Module());
+        objectMapper.addMixIn(UserInfo.class, CustomUserMixin.class);
+        authorizationRowMapper.setObjectMapper(objectMapper);
+
+        service.setAuthorizationRowMapper(authorizationRowMapper);
+        
+        return service;
     }
     
     @Bean
@@ -114,10 +137,10 @@ public class AuthorizationServerConfiguration {
     }
     
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withUsername("admin").password(passwordEncoder().encode("123456")).roles("admin")
-                .build();
-        return new InMemoryUserDetailsManager(userDetails);
+    public OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator() {
+        OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+        accessTokenGenerator.setAccessTokenCustomizer(new CustomeOAuth2TokenCustomizer());
+        return new DelegatingOAuth2TokenGenerator(accessTokenGenerator, new OAuth2RefreshTokenGenerator());
     }
     
     @Bean

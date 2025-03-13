@@ -7,4 +7,6 @@ public interface SecurityConstants {
     String CODE = "code";
     
     String GRANT_TYPE_SMS = "sms";
+    
+    String DETAILS_USER = "details";
 }

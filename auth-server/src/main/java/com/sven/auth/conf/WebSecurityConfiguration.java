@@ -12,11 +12,12 @@ public class WebSecurityConfiguration {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-            .anyRequest()
-            .authenticated())
+//            .antMatchers("/test/**").permitAll()      // 白名单
+            .anyRequest().authenticated())
+            .formLogin().and()
             .headers()
             .frameOptions()
-            .sameOrigin()// 避免iframe同源无法登录
+            .sameOrigin()                               // 避免iframe同源无法登录
             ;
         return httpSecurity.build();
     }

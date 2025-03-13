@@ -14,8 +14,6 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
-import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowException;
 import com.sven.gateway.provider.ResponseProvider;
 
 import java.util.Map;
@@ -39,13 +37,13 @@ public class GlobalExceptionHandler extends DefaultErrorWebExceptionHandler {
             code = ((ResponseStatusException) error).getStatus().value();
         }
 
-        if (error instanceof FlowException) {
-            return ResponseProvider.forbidden("请求太频繁, 请稍后再试");
-        }
-
-        if (error instanceof ParamFlowException) {
-            return ResponseProvider.forbidden("请求太频繁, 请稍后再试");
-        }
+//        if (error instanceof FlowException) {
+//            return ResponseProvider.forbidden("请求太频繁, 请稍后再试");
+//        }
+//
+//        if (error instanceof ParamFlowException) {
+//            return ResponseProvider.forbidden("请求太频繁, 请稍后再试");
+//        }
 
         return ResponseProvider.response(code, this.buildMessage(request, error));
     }

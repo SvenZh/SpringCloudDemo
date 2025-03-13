@@ -1,9 +1,6 @@
 server:
    port: 10010
 
-logging:
-   config: classpath:logback-custom.xml
-
 spring:
   application:
     name: gateway
@@ -22,5 +19,4 @@ spring:
   config:
     import:
       - nacos:${spring.application.name}
-      - nacos:common
-              
+      - nacos:common  
