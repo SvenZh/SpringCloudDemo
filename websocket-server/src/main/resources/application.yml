@@ -2,37 +2,22 @@ server:
    port: 10060
 
 spring:
-   jackson:
-      default-property-inclusion: NON_NULL   
-      date-format: yyyy-MM-dd HH:mm:ss
-      time-zone: GMT+8
-   cloud:
-      loadbalancer: 
-         ribbon: 
-            enabled: false
-   application:
-      name: websocket-server
-   datasource:
-      dynamic:
-         primary: master 
-         datasource:
-            master:
-               driver-class-name: ${websocket-server.datasource.master.driver-class-name}
-               url: ${websocket-server.datasource.master.url}
-               username: ${websocket-server.datasource.master.username}
-               password: ${websocket-server.datasource.master.password}
-#            slave: 
-#               driver-class-name: ${websocket-server.datasource.slave.driver-class-name}
-#               url: ${websocket-server.datasource.slave.url}
-#               username: ${websocket-server.datasource.slave.username}
-#               password: ${websocket-server.datasource.slave.password}
-logging:
-   config: classpath:logback-custom.xml
-  
-mybatis-plus: 
-  mapper-locations: classpath:*/mapper/*Mapper.xml
-  configuration:
-    cache-enabled: true
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  application:
+    name: websocket-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        group: ${spring.profiles.active}
+        service: ${spring.application.name}
+      config:
+        server-addr: ${nacos.host}:${nacos.port}
+        namespace: ${nacos.namespace}
+        file-extension: yml
+        group: ${spring.profiles.active}
+  config:
+    import:
+      - nacos:${spring.application.name}
+      - nacos:common 
     
