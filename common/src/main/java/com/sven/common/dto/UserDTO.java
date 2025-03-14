@@ -10,4 +10,6 @@ import lombok.Setter;
 public class UserDTO extends PageMessage {
 
     private String name;
+    
+    private String phone;
 }

@@ -1,10 +1,12 @@
 package com.sven.system.service.impl;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserServiceDAO userServiceDAO;
+    
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {
@@ -63,6 +68,34 @@ public class UserServiceImpl implements IUserService {
         }
 
         return ResponseMessage.ok(response);
+    }
+    
+    @Override
+    public ResponseMessage<UserVO> retrieveUserInfoByPhone(final String phone) {
+        
+        UserVO response = new UserVO();
+        
+        UserDTO dto = new UserDTO();
+        dto.setPhone(phone);
+        UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
+        
+        BeanUtils.copyProperties(userInfoEntity, response);
+        
+        ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
+        
+        if (roleInfo.isSuccess()) {
+            response.setUserRole(roleInfo.getData());
+        }
+        
+        return ResponseMessage.ok(response);
+    }
+    
+    @Override
+    public ResponseMessage<Boolean> sms(final String phone) {
+        
+        redisTemplate.opsForValue().set(phone, "123", Duration.ofMinutes(5));
+        
+        return ResponseMessage.ok(true);
     }
 
     @Override

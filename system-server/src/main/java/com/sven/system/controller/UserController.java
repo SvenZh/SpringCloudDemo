@@ -52,4 +52,18 @@ public class UserController {
 
         return response;
     }
+    
+    @GetMapping("/retrieveUserInfoByphone")
+    public IBaseResponseMessage<UserVO> retrieveUserInfoByphone(@RequestParam("phone") final String phone) {
+        ResponseMessage<UserVO> response = userService.retrieveUserInfoByPhone(phone);
+        
+        return response;
+    }
+    
+    @GetMapping("/sms")
+    public IBaseResponseMessage<Boolean> sms(@RequestParam("phone") final String phone) {
+        ResponseMessage<Boolean> response = userService.sms(phone);
+        
+        return response;
+    }
 }

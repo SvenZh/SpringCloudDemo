@@ -3,9 +3,11 @@ package com.sven.auth.conf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.lob.DefaultLobHandler;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -64,6 +66,7 @@ public class AuthorizationServerConfiguration {
         httpSecurity.apply(authorizationServerConfigurer.tokenEndpoint(tokenEndpoint -> {
             tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2PasswordAuthorizationConvert());
             tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2SmsAuthorizationConvert());
+            tokenEndpoint.accessTokenResponseHandler(null);
         }));
         
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
@@ -72,10 +75,13 @@ public class AuthorizationServerConfiguration {
             .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.anyRequest().authenticated();
              })
+            .csrf(csrf -> csrf.disable())
+            .formLogin(Customizer.withDefaults())
+            .sessionManagement(sm -> sm.disable())
             .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
-            .oauth2ResourceServer(oauth2ResourceServer -> {
-                oauth2ResourceServer.jwt(jwt -> jwt.decoder(jwtDecoder(jwkSource())));
-            })
+//            .oauth2ResourceServer(oauth2ResourceServer -> {
+//                oauth2ResourceServer.jwt(jwt -> jwt.decoder(jwtDecoder(jwkSource())));
+//            })
             .build();
 
         addCustomOAuth2AuthenticationProvider(httpSecurity);
@@ -86,7 +92,6 @@ public class AuthorizationServerConfiguration {
     private void addCustomOAuth2AuthenticationProvider(HttpSecurity httpSecurity) throws Exception {
         AuthenticationManager authenticationManager = httpSecurity.getSharedObject(AuthenticationManager.class);
         OAuth2AuthorizationService authorizationService = httpSecurity.getSharedObject(OAuth2AuthorizationService.class);
-        OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator = httpSecurity.getSharedObject(OAuth2TokenGenerator.class);
         
         CustomOAuth2PasswordAuthorizationProvider customOAuth2PasswordAuthorizationProvider = new CustomOAuth2PasswordAuthorizationProvider(
                 authenticationManager, authorizationService, oAuth2TokenGenerator());
@@ -139,6 +144,7 @@ public class AuthorizationServerConfiguration {
     @Bean
     public OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator() {
         OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();
+//        CustomeOAuth2AccessTokenGenerator accessTokenGenerator = new CustomeOAuth2AccessTokenGenerator();
         accessTokenGenerator.setAccessTokenCustomizer(new CustomeOAuth2TokenCustomizer());
         return new DelegatingOAuth2TokenGenerator(accessTokenGenerator, new OAuth2RefreshTokenGenerator());
     }

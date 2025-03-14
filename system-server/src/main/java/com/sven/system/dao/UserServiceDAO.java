@@ -25,7 +25,8 @@ public class UserServiceDAO extends ServiceImpl<UserServiceMapper, UserEntity> {
 
     public UserEntity selectOne(UserDTO dto) {
         LambdaQueryWrapper<UserEntity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserEntity::getName, dto.getName());
+        queryWrapper.eq(StringUtils.isNoneEmpty(dto.getName()), UserEntity::getName, dto.getName());
+        queryWrapper.eq(StringUtils.isNoneEmpty(dto.getPhone()), UserEntity::getPhone, dto.getPhone());
 
         UserEntity response = this.baseMapper.selectOne(queryWrapper);
 

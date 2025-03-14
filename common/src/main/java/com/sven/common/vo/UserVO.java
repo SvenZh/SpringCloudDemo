@@ -23,5 +23,7 @@ public class UserVO {
 
     private String password;
     
+    private String phone;
+    
     private List<RoleVO> userRole;
 }

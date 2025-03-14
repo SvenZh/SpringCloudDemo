@@ -1,5 +1,10 @@
 package com.sven.auth.provider;
 
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +24,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.sven.auth.conf.SecurityConstants;
+import com.sven.auth.service.CustomUserDetailsService;
+
+import cn.hutool.extra.spring.SpringUtil;
 
 public class CustomDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
     /**
@@ -81,8 +89,21 @@ public class CustomDaoAuthenticationProvider extends AbstractUserDetailsAuthenti
     protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
             throws AuthenticationException {
         prepareTimingAttackProtection();
+        ServletRequestAttributes request = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String grantType = request.getRequest().getParameter(OAuth2ParameterNames.GRANT_TYPE);
+        String clientId = request.getRequest().getParameter(OAuth2ParameterNames.CLIENT_ID);
+        
+        Map<String, CustomUserDetailsService> userDetailsServiceMap = SpringUtil.getBeansOfType(CustomUserDetailsService.class);
+        Optional<CustomUserDetailsService> optional = userDetailsServiceMap.values()
+                .stream()
+                .filter(service -> service.support(clientId, grantType))
+                .max(Comparator.comparingInt(Ordered::getOrder));
+        if (!optional.isPresent()) {
+            throw new InternalAuthenticationServiceException("UserDetailsService error , not register");
+        }
+        
         try {
-            UserDetails loadedUser = this.getUserDetailsService().loadUserByUsername(username);
+            UserDetails loadedUser = optional.get().loadUserByUsername(username);
             if (loadedUser == null) {
                 throw new InternalAuthenticationServiceException(
                         "UserDetailsService returned null, which is an interface contract violation");

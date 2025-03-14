@@ -2,7 +2,6 @@ package com.sven.common.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.sven.common.domain.message.BaseEntityMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

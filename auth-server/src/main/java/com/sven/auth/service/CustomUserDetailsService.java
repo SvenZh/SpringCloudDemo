@@ -2,45 +2,44 @@ package com.sven.auth.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
 import com.sven.auth.vo.UserInfo;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.feign.client.SystemServerFeignClient;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 
-@Service
-public class UserService implements UserDetailsService {
+public interface CustomUserDetailsService extends UserDetailsService, Ordered {
 
-    @Autowired
-    private SystemServerFeignClient systemServerFeignClient;
-
-    @Override
-    public UserDetails loadUserByUsername(String username) {
-        ResponseMessage<UserVO> remoteResponse = systemServerFeignClient.retrieveUserInfoByName(username);
-
+    default boolean support(String clientId, String grantType) {
+        return true;
+    }
+    
+    default UserDetails getUserDetails(ResponseMessage<UserVO> remoteResponse) {
+        
         if (!remoteResponse.isSuccess()) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException("用户不存在");
         }
 
         UserVO userInfoVO = remoteResponse.getData();
-
-        Long userId = userInfoVO.getId();
-        String password = userInfoVO.getPassword();
+        
         List<RoleVO> userRole = userInfoVO.getUserRole();
-        List<String> role = userRole.stream().map(RoleVO::getName).collect(Collectors.toList());
+        Set<String> role = userRole.stream().map(RoleVO::getName).collect(Collectors.toSet());
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 
-        return new UserInfo(userId, username, password, authorities);
+        return new UserInfo(userInfoVO.getId(), userInfoVO.getName(), userInfoVO.getName(), userInfoVO.getPassword(), authorities);
     }
+    
+    default UserDetails loadUserByUser(UserInfo user) {
+        return this.loadUserByUsername(user.getUsername());
+    }   
 }

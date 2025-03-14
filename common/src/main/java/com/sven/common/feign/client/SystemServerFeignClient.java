@@ -17,6 +17,9 @@ public interface SystemServerFeignClient {
 
     @GetMapping("/user/retrieveUserInfoByName")
     public ResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") String userName);
+    
+    @GetMapping("/user/retrieveUserInfoByphone")
+    public ResponseMessage<UserVO> retrieveUserInfoByPhone(@RequestParam("phone") String phone);
 
     @GetMapping("/role/retrieveRoleInfoByRoleName")
     public ResponseMessage<RoleVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") String roleName);
