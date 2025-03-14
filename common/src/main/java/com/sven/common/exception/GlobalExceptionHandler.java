@@ -1,4 +1,4 @@
-package com.sven.business.conf;
+package com.sven.common.exception;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.sven.common.domain.message.ErrorDetails;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.exception.BaseException;
-import com.sven.common.exception.BusinessExceptionEnum;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

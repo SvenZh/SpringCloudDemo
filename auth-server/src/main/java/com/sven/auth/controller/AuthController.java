@@ -3,6 +3,7 @@ package com.sven.auth.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sven.auth.service.AuthService;
@@ -25,8 +26,7 @@ public class AuthController {
     }
     
     @GetMapping(value = "/hello")
-    public IBaseResponseMessage<String> hello() {
-        
+    public IBaseResponseMessage<String> hello(@RequestParam("type") String type) {
         return ResponseMessage.ok("hello");
     }
 }

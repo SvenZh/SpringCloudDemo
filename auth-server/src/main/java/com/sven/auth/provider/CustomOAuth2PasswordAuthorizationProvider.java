@@ -78,8 +78,7 @@ public class CustomOAuth2PasswordAuthorizationProvider implements Authentication
         String password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 username, password);
-        Authentication usernamePasswordAuthentication = authenticationManager
-                .authenticate(usernamePasswordAuthenticationToken);
+        Authentication usernamePasswordAuthentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         
         DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                 .registeredClient(registeredClient)

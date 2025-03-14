@@ -39,10 +39,10 @@ public class CustomOAuth2SmsAuthorizationProvider implements AuthenticationProvi
     private final OAuth2AuthorizationService authorizationService;
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
     private final AuthenticationManager authenticationManager;
-
+    
     public CustomOAuth2SmsAuthorizationProvider(AuthenticationManager authenticationManager,
             OAuth2AuthorizationService authorizationService,
-            OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+            OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator){
         this.authenticationManager = authenticationManager;
         this.authorizationService = authorizationService;
         this.tokenGenerator = tokenGenerator;
@@ -75,6 +75,7 @@ public class CustomOAuth2SmsAuthorizationProvider implements AuthenticationProvi
         Map<String, Object> reqParameters = customOAuth2SmsAuthorizationToken.getAdditionalParameters();
         String phone = (String) reqParameters.get("phone");
         String code = (String) reqParameters.get("code");
+        
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(phone, code);
         Authentication usernamePasswordAuthentication = authenticationManager
                 .authenticate(usernamePasswordAuthenticationToken);
