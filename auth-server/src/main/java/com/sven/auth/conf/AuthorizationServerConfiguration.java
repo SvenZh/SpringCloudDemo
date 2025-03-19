@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.server.authorization.JdbcOAuth2Author
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationConsentAuthenticationProvider;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -43,6 +44,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.sven.auth.convert.CustomOAuth2PasswordAuthorizationConvert;
 import com.sven.auth.convert.CustomOAuth2SmsAuthorizationConvert;
 import com.sven.auth.filter.ValidateCodeFilter;
+import com.sven.auth.handler.CustomAuthorizationResponseSuccessHandler;
 import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
 import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
@@ -69,9 +71,8 @@ public class AuthorizationServerConfiguration {
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
         
         httpSecurity.addFilterBefore(new ValidateCodeFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
-        
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
-        
+        // oauth2.0的配置托管给 SpringSecurity
         httpSecurity.apply(authorizationServerConfigurer);
         
         authorizationServerConfigurer
@@ -79,13 +80,22 @@ public class AuthorizationServerConfiguration {
                 authorizationEndpoint.authenticationProviders(authenticationProviders -> {
                     authenticationProviders.forEach(authenticationProvider -> {
                         if (authenticationProvider instanceof OAuth2AuthorizationCodeRequestAuthenticationProvider) {
+                            // 无授权同意页面的授权码生成方式
                             ((OAuth2AuthorizationCodeRequestAuthenticationProvider) authenticationProvider)
-                                .setAuthorizationCodeGenerator(new CustomOAuth2AuthorizationCodeGenerator());
+                                    .setAuthorizationCodeGenerator(new CustomOAuth2AuthorizationCodeGenerator());
+                        }
+
+                        if (authenticationProvider instanceof OAuth2AuthorizationConsentAuthenticationProvider) {
+                            // 授权同意页面的授权码生成方式
+                            ((OAuth2AuthorizationConsentAuthenticationProvider) authenticationProvider)
+                                    .setAuthorizationCodeGenerator(new CustomOAuth2AuthorizationCodeGenerator());
                         }
                     });
                 });
+                
             })
             .tokenEndpoint(tokenEndpoint -> {
+                // 自定义授权模式Token转换器
                 tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2PasswordAuthorizationConvert());
                 tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2SmsAuthorizationConvert());
             })
@@ -103,6 +113,7 @@ public class AuthorizationServerConfiguration {
             .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
             .build();
 
+        // 自定义授权模式验证器
         addCustomOAuth2AuthenticationProvider(httpSecurity);
         return securityFilterChain;
     }
