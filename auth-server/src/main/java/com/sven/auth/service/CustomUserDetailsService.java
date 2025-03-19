@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.sven.auth.vo.UserInfo;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
@@ -36,7 +35,7 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 
-        return new UserInfo(userInfoVO.getId(), userInfoVO.getName(), userInfoVO.getName(), userInfoVO.getPassword(), authorities);
+        return new UserInfo(userInfoVO.getId(), userInfoVO.getName(), userInfoVO.getPassword(), userInfoVO.getPhone(), authorities);
     }
     
     default UserDetails loadUserByUser(UserInfo user) {

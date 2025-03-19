@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum BusinessExceptionEnum implements BusinessExceptionAssert {
 
     valid_exception(10001, "参数校验异常"),
+    user_not_found(10002, "用户不存在"),
     
     quartz_addjob_exception_event(20000, "创建定时任务失败[SchedulerException]"),
     quartz_addjob_classnotfoundexception_event(20001, "创建定时任务失败[ClassNotFoundException]"),

@@ -1,4 +1,4 @@
-package com.sven.auth.conf;
+package com.sven.auth.token.generator;
 
 import java.time.Instant;
 import java.util.Base64;

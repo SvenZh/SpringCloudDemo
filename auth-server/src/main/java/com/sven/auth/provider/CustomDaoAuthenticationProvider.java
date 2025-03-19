@@ -23,8 +23,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.sven.auth.conf.SecurityConstants;
 import com.sven.auth.service.CustomUserDetailsService;
+import com.sven.auth.service.SecurityConstants;
 
 import cn.hutool.extra.spring.SpringUtil;
 
@@ -51,8 +51,7 @@ public class CustomDaoAuthenticationProvider extends AbstractUserDetailsAuthenti
 
     private UserDetailsPasswordService userDetailsPasswordService;
 
-    public CustomDaoAuthenticationProvider(UserDetailsService userDetailsService) {
-        setUserDetailsService(userDetailsService);
+    public CustomDaoAuthenticationProvider() {
         setPasswordEncoder(new BCryptPasswordEncoder());
     }
 

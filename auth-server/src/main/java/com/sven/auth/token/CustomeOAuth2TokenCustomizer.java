@@ -1,10 +1,11 @@
-package com.sven.auth.conf;
+package com.sven.auth.token;
 
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsSet;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
-import com.sven.auth.vo.UserInfo;
+import com.sven.auth.service.SecurityConstants;
+import com.sven.auth.service.UserInfo;
 
 public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth2TokenClaimsContext>{
 

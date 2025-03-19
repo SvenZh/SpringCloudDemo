@@ -1,6 +1,5 @@
 package com.sven.business.conf;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -29,7 +29,7 @@ public class ResourceServerConfig {
                     .anyRequest().authenticated();
         })
         
-        .oauth2ResourceServer().jwt()
+        .oauth2ResourceServer(OAuth2ResourceServerConfigurer::opaqueToken);
         ;
 
         return httpSecurity.build();
