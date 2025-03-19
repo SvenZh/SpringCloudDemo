@@ -10,9 +10,9 @@ import com.sven.common.config.FeignConfig;
 import com.sven.common.config.MybatisPlusConfig;
 import com.sven.common.config.ValidatorConfiguration;
 import com.sven.common.exception.GlobalExceptionHandler;
-import com.sven.common.security.EnablePigResourceServer;
+import com.sven.common.security.EnableResourceServer;
 
-@EnablePigResourceServer
+@EnableResourceServer
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = { "com.sven.common.feign.client" }, defaultConfiguration = FeignConfig.class)
