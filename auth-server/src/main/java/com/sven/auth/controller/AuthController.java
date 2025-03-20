@@ -29,4 +29,9 @@ public class AuthController {
     public IBaseResponseMessage<String> hello(@RequestParam("type") String type) {
         return ResponseMessage.ok("hello");
     }
+    
+    @GetMapping(value = "/reg")
+    public void test(@RequestParam("clientId") String clientId) {
+        authService.test(clientId);   
+    }
 }

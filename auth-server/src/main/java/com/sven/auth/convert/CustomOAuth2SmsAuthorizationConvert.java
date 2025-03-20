@@ -11,9 +11,9 @@ import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
-import com.sven.auth.conf.SecurityConstants;
 import com.sven.auth.token.CustomOAuth2SmsAuthorizationToken;
 import com.sven.auth.utils.OAuth2EndpointUtils;
+import com.sven.auth.service.SecurityConstants;
 
 public class CustomOAuth2SmsAuthorizationConvert extends OAuth2BaseAuthorizationConvert {
 

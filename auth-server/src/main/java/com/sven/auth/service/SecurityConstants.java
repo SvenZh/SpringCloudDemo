@@ -1,7 +1,9 @@
-package com.sven.auth.conf;
+package com.sven.auth.service;
 
 public interface SecurityConstants {
 
+    String BCRYPT = "{bcrypt}";
+    
     String PHONE = "phone";
     
     String CODE = "code";
@@ -17,4 +19,12 @@ public interface SecurityConstants {
     String DETAILS_USER_ID = "user_id";
     
     String USERNAME = "username";
+    
+    String OAUTH_TOKEN_URL = "/oauth2/token";
+
+    String REFRESH_TOKEN = "refresh_token";
+    
+    String PASSWORD_TOKEN = "password";
+    
+    String AUTHORIZATION_CODE = "authorization_code";
 }

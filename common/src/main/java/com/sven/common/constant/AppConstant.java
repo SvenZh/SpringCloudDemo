@@ -6,5 +6,5 @@ public interface AppConstant {
     public String TEST_CODE = "test";
     public String PROD_CODE = "prod";
     public String SIGNING_KEY = "SpringCloudDemo";
-    public String VALIDATION_CODE_PREFIX = "validationCode";
+    public String VALIDATION_CODE_PREFIX = "validationCode-";
 }

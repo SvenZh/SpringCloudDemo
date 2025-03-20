@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.sven.auth.provider.CustomDaoAuthenticationProvider;
+
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
@@ -19,6 +21,8 @@ public class WebSecurityConfiguration {
             .frameOptions()
             .sameOrigin()                               // 避免iframe同源无法登录
             ;
+        
+        httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider());
         return httpSecurity.build();
     }
     

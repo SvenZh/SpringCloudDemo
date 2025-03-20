@@ -1,15 +1,20 @@
-package com.sven.auth.vo;
+package com.sven.auth.service;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 
 import lombok.Getter;
 
 @Getter
-public class UserInfo extends User {
+public class UserInfo extends User implements OAuth2AuthenticatedPrincipal {
 
+    private final Map<String, Object> attributes = new HashMap<>();
+    
     private static final long serialVersionUID = -4427480555371949046L;
 
     private Long id;
@@ -21,5 +26,15 @@ public class UserInfo extends User {
         super(username, password, authorities);
         this.id = id;
         this.phone = phone;
+    }
+    
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+
+    @Override
+    public String getName() {
+        return this.getUsername();
     }
 }

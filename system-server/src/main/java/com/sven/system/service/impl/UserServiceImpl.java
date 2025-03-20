@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
+import com.sven.common.exception.BusinessExceptionEnum;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
@@ -58,7 +60,9 @@ public class UserServiceImpl implements IUserService {
         UserDTO dto = new UserDTO();
         dto.setName(userName);
         UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
-
+        
+        BusinessExceptionEnum.user_not_found.assertNotNull(userInfoEntity);
+        
         BeanUtils.copyProperties(userInfoEntity, response);
 
         ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
@@ -79,6 +83,8 @@ public class UserServiceImpl implements IUserService {
         dto.setPhone(phone);
         UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
         
+        BusinessExceptionEnum.user_not_found.assertNotNull(userInfoEntity);
+        
         BeanUtils.copyProperties(userInfoEntity, response);
         
         ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
@@ -93,7 +99,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public ResponseMessage<Boolean> sms(final String phone) {
         
-        redisTemplate.opsForValue().set(phone, "123", Duration.ofMinutes(5));
+        redisTemplate.opsForValue().set(AppConstant.VALIDATION_CODE_PREFIX + phone, "123", Duration.ofMinutes(5));
         
         return ResponseMessage.ok(true);
     }
