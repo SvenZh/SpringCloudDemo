@@ -15,6 +15,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
+import com.sven.common.security.NoToken;
 import com.sven.common.vo.UserVO;
 import com.sven.system.service.IUserService;
 
@@ -46,6 +47,7 @@ public class UserController {
         return response;
     }
     
+    @NoToken
     @GetMapping("/retrieveUserInfoByName")
     public IBaseResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") final String userName) {
         ResponseMessage<UserVO> response = userService.retrieveUserInfoByName(userName);
@@ -53,6 +55,7 @@ public class UserController {
         return response;
     }
     
+    @NoToken
     @GetMapping("/retrieveUserInfoByphone")
     public IBaseResponseMessage<UserVO> retrieveUserInfoByphone(@RequestParam("phone") final String phone) {
         ResponseMessage<UserVO> response = userService.retrieveUserInfoByPhone(phone);
