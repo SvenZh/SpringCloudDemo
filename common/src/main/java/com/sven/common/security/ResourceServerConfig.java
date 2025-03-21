@@ -1,10 +1,9 @@
 package com.sven.common.security;
 
-import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +16,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RefreshScope
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(PermitAllUrlConfig.class)
 public class ResourceServerConfig {
-
-    @Value("${security.oauth2.ignore}")
-    private List<String> ignore;
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private PermitAllUrlConfig permitAllUrl;
     
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -31,7 +31,7 @@ public class ResourceServerConfig {
         httpSecurity
         .authorizeHttpRequests(authorizeRequests -> 
             authorizeRequests
-                .antMatchers(ArrayUtils.toStringArray(ignore.toArray())).permitAll()
+                .antMatchers(ArrayUtils.toStringArray(permitAllUrl.getUrls().toArray())).permitAll()
                 .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2ResourceServer -> 
             oauth2ResourceServer

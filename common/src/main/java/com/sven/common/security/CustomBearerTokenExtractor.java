@@ -22,10 +22,10 @@ public class CustomBearerTokenExtractor implements BearerTokenResolver {
     private boolean allowUriQueryParameter = true;
 
     private String bearerTokenHeaderName = HttpHeaders.AUTHORIZATION;
-
+    
     @Override
     public String resolve(HttpServletRequest request) {
-
+        
         final String authorizationHeaderToken = resolveFromAuthorizationHeader(request);
         final String parameterToken = isParameterTokenSupportedForRequest(request)
                 ? resolveFromRequestParameters(request) : null;
