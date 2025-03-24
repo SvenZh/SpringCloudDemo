@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.server.resource.BearerTokenError;
 import org.springframework.security.oauth2.server.resource.BearerTokenErrors;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.util.StringUtils;
 
 public class CustomBearerTokenExtractor implements BearerTokenResolver {
@@ -23,8 +25,23 @@ public class CustomBearerTokenExtractor implements BearerTokenResolver {
 
     private String bearerTokenHeaderName = HttpHeaders.AUTHORIZATION;
     
+    private final PathMatcher pathMatcher = new AntPathMatcher();
+
+    private final PermitAllUrlConfig permitAllUrl;
+
+    public CustomBearerTokenExtractor(PermitAllUrlConfig permitAllUrl) {
+        this.permitAllUrl = permitAllUrl;
+    }
+    
     @Override
     public String resolve(HttpServletRequest request) {
+        boolean match = permitAllUrl.getUrls()
+                .stream()
+                .anyMatch(url -> pathMatcher.match(url, request.getRequestURI()));
+
+        if (match) {
+            return null;
+        }
         
         final String authorizationHeaderToken = resolveFromAuthorizationHeader(request);
         final String parameterToken = isParameterTokenSupportedForRequest(request)
