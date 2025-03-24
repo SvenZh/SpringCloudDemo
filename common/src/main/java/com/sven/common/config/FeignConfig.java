@@ -2,14 +2,9 @@ package com.sven.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
-
-import com.sven.common.security.CustomBearerTokenExtractor;
-import com.sven.common.security.CustomOAuth2AccessTokenInterceptor;
 
 import feign.Logger;
 import feign.Logger.Level;
-import feign.RequestInterceptor;
 
 @Configuration
 public class FeignConfig {
@@ -25,16 +20,6 @@ public class FeignConfig {
 //                    .andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));
 //        };
 //    }
-    
-    @Bean
-    public BearerTokenResolver bearerTokenExtractor() {
-        return new CustomBearerTokenExtractor();
-    }
-    
-    @Bean
-    public RequestInterceptor oauthRequestInterceptor(BearerTokenResolver tokenResolver) {
-        return new CustomOAuth2AccessTokenInterceptor(tokenResolver);
-    }
     
     @Bean
     public Level logger() {

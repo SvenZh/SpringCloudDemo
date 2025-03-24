@@ -38,15 +38,11 @@ public class PermitAllUrlConfig implements InitializingBean {
 
         map.keySet().forEach(info -> {
             HandlerMethod handlerMethod = map.get(info);
-
-            // 获取方法上边的注解 替代path variable 为 *
             NoToken method = AnnotationUtils.findAnnotation(handlerMethod.getMethod(), NoToken.class);
             Optional.ofNullable(method)
                 .ifPresent(inner -> Objects.requireNonNull(info.getPathPatternsCondition())
                     .getPatternValues()
                     .forEach(url -> urls.add(ReUtil.replaceAll(url, PATTERN, "*"))));
-
-            // 获取类上边的注解, 替代path variable 为 *
             NoToken controller = AnnotationUtils.findAnnotation(handlerMethod.getBeanType(), NoToken.class);
             Optional.ofNullable(controller)
                 .ifPresent(inner -> Objects.requireNonNull(info.getPathPatternsCondition())

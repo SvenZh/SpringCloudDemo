@@ -3,8 +3,6 @@ package com.sven.common.security;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,10 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RefreshScope
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(PermitAllUrlConfig.class)
 public class ResourceServerConfig {
 
     @Autowired
@@ -38,7 +34,7 @@ public class ResourceServerConfig {
             // 错误处理
             .authenticationEntryPoint(new CustomResourceAuthExceptionEntryPoint(objectMapper))
             // 获取TOKEN
-            .bearerTokenResolver(new CustomBearerTokenExtractor())
+            .bearerTokenResolver(new CustomBearerTokenExtractor(permitAllUrl))
             .opaqueToken()
             )
         .headers()
@@ -46,7 +42,7 @@ public class ResourceServerConfig {
         .disable()
         .and()
         .csrf()
-        .disable();
+        .disable()
         ;
 
         return httpSecurity.build();
