@@ -16,6 +16,18 @@ spring:
         namespace: ${nacos.namespace}
         file-extension: yml
         group: ${spring.profiles.active}
+    sentinel:
+      transport:
+        port: ${sentinel.transport.port}
+        dashboard: ${sentinel.dashboard.host}:${sentinel.dashboard.port}
+      datasource:
+        flow:
+          nacos:
+            data-id: sentinel-flow-config
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: ${spring.profiles.active}
+            rule-type: flow
   config:
     import:
       - nacos:${spring.application.name}
