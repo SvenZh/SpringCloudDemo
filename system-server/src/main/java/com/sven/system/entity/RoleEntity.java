@@ -18,5 +18,7 @@ public class RoleEntity extends BaseEntityMessage {
 
     private Integer sort;
 
+    private String code;
+    
     private Integer status;
 }

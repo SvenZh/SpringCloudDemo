@@ -35,7 +35,7 @@ public class ResourceServerConfig {
             .authenticationEntryPoint(new CustomResourceAuthExceptionEntryPoint(objectMapper))
             // 获取TOKEN
             .bearerTokenResolver(new CustomBearerTokenExtractor(permitAllUrl))
-            .opaqueToken()
+            .opaqueToken().introspector(new CustomOpaqueTokenIntrospector("http://127.0.0.1:10030/oauth2/introspect", "admin", "admin"))
             )
         .headers()
         .frameOptions()

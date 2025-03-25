@@ -31,7 +31,7 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
         UserVO userInfoVO = remoteResponse.getData();
         
         List<RoleVO> userRole = userInfoVO.getUserRole();
-        Set<String> role = userRole.stream().map(RoleVO::getName).collect(Collectors.toSet());
+        Set<String> role = userRole.stream().map(RoleVO::getCode).collect(Collectors.toSet());
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 

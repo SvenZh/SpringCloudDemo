@@ -8,8 +8,9 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import feign.RequestInterceptor;
 
 @Configuration
-@EnableConfigurationProperties(PermitAllUrlConfig.class)
+@EnableConfigurationProperties(value = {PermitAllUrlConfig.class})
 public class ResourceServerAutoConfig {
+    
     @Bean
     public BearerTokenResolver bearerTokenExtractor(PermitAllUrlConfig permitAllUrlConfig) {
         return new CustomBearerTokenExtractor(permitAllUrlConfig);
@@ -18,5 +19,10 @@ public class ResourceServerAutoConfig {
     @Bean
     public RequestInterceptor oauthRequestInterceptor(BearerTokenResolver tokenResolver) {
         return new CustomOAuth2AccessTokenInterceptor(tokenResolver);
+    }
+    
+    @Bean("pms")
+    public PermissionService permissionService() {
+        return new PermissionService();
     }
 }

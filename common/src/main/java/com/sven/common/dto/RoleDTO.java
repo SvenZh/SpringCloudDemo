@@ -16,6 +16,9 @@ public class RoleDTO extends PageMessage {
     @NotEmpty(message = "不能为空")
     private String name;
     
+    @NotEmpty(message = "不能为空")
+    private String code;
+    
     private Integer sort = 1;
 
     private Integer deleted = 0;

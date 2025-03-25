@@ -24,7 +24,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.sven.auth.service.CustomUserDetailsService;
-import com.sven.auth.service.SecurityConstants;
+import com.sven.common.constant.SecurityConstants;
 
 import cn.hutool.extra.spring.SpringUtil;
 
