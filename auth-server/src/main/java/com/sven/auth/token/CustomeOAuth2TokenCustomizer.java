@@ -11,7 +11,7 @@ import com.sven.common.constant.SecurityConstants;
 
 public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth2TokenClaimsContext>{
 
-    // TOKEN字段增强
+    
     @Override
     public void customize(OAuth2TokenClaimsContext context) {
         OAuth2TokenClaimsSet.Builder claims = context.getClaims();
@@ -22,6 +22,7 @@ public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth
             return;
         }
 
+        // TOKEN字段增强
         UserInfo userInfo = (UserInfo) context.getPrincipal().getPrincipal();
         claims.claim(SecurityConstants.DETAILS_USER, userInfo);
         claims.claim(SecurityConstants.DETAILS_USER_ID, userInfo.getId());

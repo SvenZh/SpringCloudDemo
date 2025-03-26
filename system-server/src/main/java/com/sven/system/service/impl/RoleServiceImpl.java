@@ -1,6 +1,5 @@
 package com.sven.system.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,10 +57,6 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     public ResponseMessage<Boolean> createRole(final RoleDTO dto) {
         RoleEntity entity = new RoleEntity();
-        entity.setCreateAt(new Date());
-        entity.setCreateBy(1665943054155702273L);
-        entity.setUpdateAt(new Date());
-        entity.setUpdateBy(1665943054155702273L);
         BeanUtils.copyProperties(dto, entity);
 
         int result = roleServiceDAO.insert(entity);

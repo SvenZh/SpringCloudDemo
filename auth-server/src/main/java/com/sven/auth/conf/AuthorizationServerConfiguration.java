@@ -137,5 +137,4 @@ public class AuthorizationServerConfiguration {
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
-    
 }

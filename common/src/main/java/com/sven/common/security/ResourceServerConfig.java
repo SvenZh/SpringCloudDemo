@@ -27,7 +27,9 @@ public class ResourceServerConfig {
         httpSecurity
         .authorizeHttpRequests(authorizeRequests -> 
             authorizeRequests
+                 // 白名单
                 .antMatchers(ArrayUtils.toStringArray(permitAllUrl.getUrls().toArray())).permitAll()
+                 // 其他所有的请求都需要鉴权
                 .anyRequest().authenticated())
         .oauth2ResourceServer(oauth2ResourceServer -> 
             oauth2ResourceServer
@@ -35,6 +37,7 @@ public class ResourceServerConfig {
             .authenticationEntryPoint(new CustomResourceAuthExceptionEntryPoint(objectMapper))
             // 获取TOKEN
             .bearerTokenResolver(new CustomBearerTokenExtractor(permitAllUrl))
+            // OpaqueToken自省
             .opaqueToken().introspector(new CustomOpaqueTokenIntrospector("http://127.0.0.1:10030/oauth2/introspect", "admin", "admin"))
             )
         .headers()

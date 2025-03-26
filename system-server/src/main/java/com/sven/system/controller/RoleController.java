@@ -54,7 +54,7 @@ public class RoleController {
         return response;
     }
     
-    @PreAuthorize("@pms.hasPermission('admin')")
+    @PreAuthorize("@pms.hasPermission('role.add')")
     @PostMapping("/creation")
     public IBaseResponseMessage<Boolean> createRole(@RequestBody @Validated final RoleDTO dto) {
         ResponseMessage<Boolean> response = roleService.createRole(dto);

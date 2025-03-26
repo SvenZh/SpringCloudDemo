@@ -17,10 +17,12 @@ import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.exception.BusinessExceptionEnum;
+import com.sven.common.vo.PerimissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
 import com.sven.system.entity.UserEntity;
+import com.sven.system.service.IRolePerimissionService;
 import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
@@ -31,6 +33,10 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private IUserRoleService userRoleService;
 
+    @Autowired
+    private IRolePerimissionService rolePerimissionService;
+
+    
     @Autowired
     private UserServiceDAO userServiceDAO;
     
@@ -54,47 +60,46 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseMessage<UserVO> retrieveUserInfoByName(final String userName) {
-
-        UserVO response = new UserVO();
-
         UserDTO dto = new UserDTO();
         dto.setName(userName);
-        UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
-        
-        BusinessExceptionEnum.user_not_found.assertNotNull(userInfoEntity);
-        
-        BeanUtils.copyProperties(userInfoEntity, response);
 
-        ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
-
-        if (roleInfo.isSuccess()) {
-            response.setUserRole(roleInfo.getData());
-        }
-
-        return ResponseMessage.ok(response);
+        return ResponseMessage.ok(retrieveUserInfo(dto));
     }
     
     @Override
     public ResponseMessage<UserVO> retrieveUserInfoByPhone(final String phone) {
-        
-        UserVO response = new UserVO();
-        
         UserDTO dto = new UserDTO();
         dto.setPhone(phone);
+        
+        return ResponseMessage.ok(retrieveUserInfo(dto));
+    }
+    
+    private UserVO retrieveUserInfo(UserDTO dto) {
+        UserVO response = new UserVO();
         UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
-        
+
         BusinessExceptionEnum.user_not_found.assertNotNull(userInfoEntity);
-        
+
         BeanUtils.copyProperties(userInfoEntity, response);
-        
+
         ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
-        
+
         if (roleInfo.isSuccess()) {
             response.setUserRole(roleInfo.getData());
         }
-        
-        return ResponseMessage.ok(response);
+
+        List<PerimissionVO> userPerimission = response.getUserRole().stream().flatMap(role -> {
+            ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
+                    .retrieveRolePerimissionInfoByRoleId(role.getId());
+
+            return perimissionVO.getData().stream();
+        }).collect(Collectors.toList());
+
+        response.setUserPerimission(userPerimission);
+
+        return response;
     }
+    
     
     @Override
     public ResponseMessage<Boolean> sms(final String phone) {

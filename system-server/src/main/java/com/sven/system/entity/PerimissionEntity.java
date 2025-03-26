@@ -18,6 +18,8 @@ import lombok.Setter;
 public class PerimissionEntity extends BaseEntityMessage {
     private String name;
 
+    private String code;
+    
     private Integer type;
 
     private String method;

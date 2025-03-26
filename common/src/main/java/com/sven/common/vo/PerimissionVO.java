@@ -15,6 +15,8 @@ public class PerimissionVO {
     
     private String name;
 
+    private String code;
+    
     private Integer type;
 
     private String method;
