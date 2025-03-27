@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.sven.common.domain.message.ResponseMessage;
+import com.sven.common.security.UserInfo;
 import com.sven.common.vo.PerimissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;

@@ -35,7 +35,6 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IRolePerimissionService rolePerimissionService;
-
     
     @Autowired
     private UserServiceDAO userServiceDAO;
