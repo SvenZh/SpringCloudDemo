@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService {
     private UserServiceDAO userServiceDAO;
     
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {

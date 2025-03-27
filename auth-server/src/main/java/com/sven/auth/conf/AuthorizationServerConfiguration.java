@@ -43,7 +43,7 @@ import com.sven.auth.token.generator.CustomeOAuth2AccessTokenGenerator;
 public class AuthorizationServerConfiguration {
     
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
@@ -122,16 +122,16 @@ public class AuthorizationServerConfiguration {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
     
-    @Bean
-    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
-            RegisteredClientRepository registeredClientRepository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-    }
-    
 //    @Bean
-//    public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
-//        return new RedisOAuth2AuthorizationService(redisTemplate);
+//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
+//            RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
 //    }
+    
+    @Bean
+    public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
+        return new RedisOAuth2AuthorizationService(redisTemplate);
+    }
     
     @Bean
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,

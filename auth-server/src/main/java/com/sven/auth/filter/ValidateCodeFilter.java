@@ -23,9 +23,9 @@ import cn.hutool.core.util.StrUtil;
 @Component
 public class ValidateCodeFilter extends OncePerRequestFilter {
 
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     
-    public ValidateCodeFilter(RedisTemplate<String, String> redisTemplate) {
+    public ValidateCodeFilter(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
     
@@ -75,7 +75,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         String phone = request.getRequest().getParameter("phone");
 
         String key = AppConstant.VALIDATION_CODE_PREFIX + phone;
-        String cacheCode = redisTemplate.opsForValue().get(key);
+        Object cacheCode = redisTemplate.opsForValue().get(key);
 
         if (!code.equals(cacheCode)) {
             throw new RuntimeException("验证码错误");
