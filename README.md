@@ -6,6 +6,8 @@
     + 自定义鉴权模式
     + 自定义Token生成方式
     + 资源服务opaqueToken自省
- - WebSocket、Spring batch最小化配置
+ - RESTFul接口权限校验和限流
+ - WebSocket简易聊天室
+ - Spring batch批处理最小化配置
  - Apache camel组件示例
- - Sentinel Nacos限流和规则持久化
+ - Sentinel限流和规则持久化
