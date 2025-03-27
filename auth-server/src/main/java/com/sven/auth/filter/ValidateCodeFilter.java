@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.sven.common.constant.AppConstant;
 import com.sven.common.constant.SecurityConstants;
-import com.sven.common.security.UserInfo;
 
 import cn.hutool.core.util.StrUtil;
 
@@ -52,6 +51,11 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         }
         
         if (StrUtil.equals(SecurityConstants.PASSWORD_TOKEN, grantType)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        if (StrUtil.equals(SecurityConstants.CLIENT_CREDENTIALS, grantType)) {
             filterChain.doFilter(request, response);
             return;
         }

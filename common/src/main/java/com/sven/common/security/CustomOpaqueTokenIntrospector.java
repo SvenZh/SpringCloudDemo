@@ -43,7 +43,7 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
     private final RestOperations restOperations;
 
     private Converter<String, RequestEntity<?>> requestEntityConverter;
-
+    
     /**
      * Creates a {@code OpaqueTokenAuthenticationProvider} with the provided parameters
      * @param introspectionUri The introspection endpoint uri

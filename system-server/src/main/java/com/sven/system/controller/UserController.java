@@ -3,6 +3,7 @@ package com.sven.system.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,7 @@ public class UserController {
         return response;
     }
     
+    @PreAuthorize("@pms.hasPermission('user.add')")
     @PostMapping("/creation")
     public IBaseResponseMessage<Boolean> createUser(@RequestBody @Validated final List<UserDTO> dto) {
         ResponseMessage<Boolean> response = userService.createUser(dto);
@@ -63,6 +65,7 @@ public class UserController {
         return response;
     }
     
+    @NoToken
     @GetMapping("/sms")
     public IBaseResponseMessage<Boolean> sms(@RequestParam("phone") final String phone) {
         ResponseMessage<Boolean> response = userService.sms(phone);

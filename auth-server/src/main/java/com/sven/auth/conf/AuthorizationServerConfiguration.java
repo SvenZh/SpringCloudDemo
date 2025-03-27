@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
@@ -33,6 +34,7 @@ import com.sven.auth.filter.ValidateCodeFilter;
 import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
 import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
+import com.sven.auth.service.RedisOAuth2AuthorizationService;
 import com.sven.auth.token.CustomeOAuth2TokenCustomizer;
 import com.sven.auth.token.generator.CustomOAuth2AuthorizationCodeGenerator;
 import com.sven.auth.token.generator.CustomeOAuth2AccessTokenGenerator;
@@ -118,7 +120,18 @@ public class AuthorizationServerConfiguration {
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
-    } 
+    }
+    
+    @Bean
+    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
+            RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    }
+    
+//    @Bean
+//    public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
+//        return new RedisOAuth2AuthorizationService(redisTemplate);
+//    }
     
     @Bean
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,

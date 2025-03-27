@@ -10,7 +10,6 @@ import com.sven.common.constant.SecurityConstants;
 import com.sven.common.security.UserInfo;
 
 public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth2TokenClaimsContext>{
-
     
     @Override
     public void customize(OAuth2TokenClaimsContext context) {
