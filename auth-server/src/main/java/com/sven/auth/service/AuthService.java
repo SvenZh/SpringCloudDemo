@@ -1,8 +1,10 @@
 package com.sven.auth.service;
 
 import java.time.Duration;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.sven.auth.vo.CaptchVO;
 import com.sven.common.constant.AppConstant;
+import com.sven.common.dto.RegClientDTO;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 
@@ -56,21 +59,47 @@ public class AuthService {
         return new CaptchVO(image, uuId);
     }
     
-    public void test(String clientId) {
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString()).clientId(clientId)
-                .clientSecret(passwordEncoder.encode(clientId))
+    public void test(RegClientDTO dto) {
+        TokenSettings tokenSettings = TokenSettings.builder()
+                .authorizationCodeTimeToLive(Duration.ofMinutes(30))
+                .accessTokenTimeToLive(Duration.ofMinutes(30))
+                .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                .reuseRefreshTokens(true)
+                .refreshTokenTimeToLive(Duration.ofMinutes(60))
+                .build();
+        
+        ClientSettings clientSettings = ClientSettings.builder()
+                .requireAuthorizationConsent(false)
+                .build();
+        if (dto.getTokenSettings() != null) {
+            tokenSettings = TokenSettings.builder()
+                    .authorizationCodeTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getAuthorizationCodeTimeToLive()))
+                    .accessTokenTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getAccessTokenTimeToLive()))
+                    .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                    .reuseRefreshTokens(dto.getTokenSettings().getReuseRefreshTokens())
+                    .refreshTokenTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getRefreshTokenTimeToLive()))
+                    .build();
+        }
+        
+        if (dto.getClientSettings() != null) {
+            clientSettings = ClientSettings.builder()
+                    .requireAuthorizationConsent(dto.getClientSettings().getRequireAuthorizationConsent())
+                    .build();
+        }
+        
+        Set<AuthorizationGrantType> grantTypes = dto.getGrantType().stream()
+                .map(grantType -> new AuthorizationGrantType(grantType)).collect(Collectors.toSet());
+        
+        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString()).clientId(dto.getClientId())
+                .clientSecret(passwordEncoder.encode(dto.getClientId()))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .authorizationGrantType(AuthorizationGrantType.PASSWORD).redirectUri("https://liuyan.cjn.cn/")
-                .scope("all")
-                .tokenSettings(TokenSettings.builder().authorizationCodeTimeToLive(Duration.ofMinutes(30))
-                        .accessTokenTimeToLive(Duration.ofMinutes(30))
-                        .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED).reuseRefreshTokens(true)
-                        .refreshTokenTimeToLive(Duration.ofMinutes(60)).build())
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build()).build();
+                .authorizationGrantTypes((grantType) -> grantType.addAll(grantTypes))
+                .redirectUri(dto.getRedirectUri())
+                .scopes((scope) -> scope.addAll(dto.getScopes()))
+                .tokenSettings(tokenSettings)
+                .clientSettings(clientSettings)
+                .build();
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         RegisteredClient repositoryByClientId = registeredClientRepository
                 .findByClientId(registeredClient.getClientId());

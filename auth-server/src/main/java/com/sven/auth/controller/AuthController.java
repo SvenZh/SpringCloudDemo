@@ -1,7 +1,10 @@
 package com.sven.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +13,8 @@ import com.sven.auth.service.AuthService;
 import com.sven.auth.vo.CaptchVO;
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
+import com.sven.common.dto.RegClientDTO;
+import com.sven.common.security.NoToken;
 
 @RestController
 @RequestMapping("/test")
@@ -30,8 +35,9 @@ public class AuthController {
         return ResponseMessage.ok("hello");
     }
     
-    @GetMapping(value = "/reg")
-    public void test(@RequestParam("clientId") String clientId) {
-        authService.test(clientId);   
+    @NoToken
+    @PostMapping(value = "/reg")
+    public void test(@RequestBody @Validated RegClientDTO dto) {
+        authService.test(dto);   
     }
 }
