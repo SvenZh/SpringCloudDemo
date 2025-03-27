@@ -1,8 +1,10 @@
 package com.sven.common.domain.message;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -22,13 +24,17 @@ public class BaseEntityMessage {
     @TableLogic
     private Integer deleted;
     
-    private Date createAt;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createAt;
     
     @JsonSerialize(using = ToStringSerializer.class)
+    @TableField(fill = FieldFill.INSERT)
     private Long createBy;
     
-    private Date updateAt;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateAt;
     
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long updateBy;
 }

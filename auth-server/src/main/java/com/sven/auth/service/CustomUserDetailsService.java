@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.sven.common.domain.message.ResponseMessage;
+import com.sven.common.vo.PerimissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 
@@ -31,7 +32,11 @@ public interface CustomUserDetailsService extends UserDetailsService, Ordered {
         UserVO userInfoVO = remoteResponse.getData();
         
         List<RoleVO> userRole = userInfoVO.getUserRole();
-        Set<String> role = userRole.stream().map(RoleVO::getName).collect(Collectors.toSet());
+        List<PerimissionVO> userPerimissions = userInfoVO.getUserPerimission();
+        
+        Set<String> role = userRole.stream().map(RoleVO::getCode).collect(Collectors.toSet());
+        Set<String> perimission = userPerimissions.stream().map(PerimissionVO::getCode).collect(Collectors.toSet());
+        role.addAll(perimission);
         
         Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.toArray(new String[0]));
 

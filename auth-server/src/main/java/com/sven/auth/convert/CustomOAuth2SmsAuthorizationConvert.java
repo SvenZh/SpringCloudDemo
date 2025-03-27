@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 
 import com.sven.auth.token.CustomOAuth2SmsAuthorizationToken;
 import com.sven.auth.utils.OAuth2EndpointUtils;
-import com.sven.auth.service.SecurityConstants;
+import com.sven.common.constant.SecurityConstants;
 
 public class CustomOAuth2SmsAuthorizationConvert extends OAuth2BaseAuthorizationConvert {
 

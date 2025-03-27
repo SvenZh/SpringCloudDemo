@@ -15,9 +15,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.sven.auth.service.SecurityConstants;
 import com.sven.auth.service.UserInfo;
 import com.sven.common.constant.AppConstant;
+import com.sven.common.constant.SecurityConstants;
 
 import cn.hutool.core.util.StrUtil;
 

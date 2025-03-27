@@ -1,4 +1,4 @@
-package com.sven.auth.service;
+package com.sven.common.constant;
 
 public interface SecurityConstants {
 
@@ -11,6 +11,8 @@ public interface SecurityConstants {
     String GRANT_TYPE_SMS = "sms";
     
     String DETAILS_USER = "user_info";
+    
+    String AUTHORITIES = "authorities";
     
     String CLIENT_ID = "clientId";
     

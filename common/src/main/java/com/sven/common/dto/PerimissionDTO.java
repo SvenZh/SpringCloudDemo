@@ -15,6 +15,9 @@ public class PerimissionDTO extends PageMessage {
     @NotEmpty(message = "不能为空")
     private String name;
 
+    @NotEmpty(message = "不能为空")
+    private String code;
+    
     private Integer type = 1;
     
     @NotEmpty(message = "不能为空")

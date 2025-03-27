@@ -8,3 +8,4 @@
     + 资源服务opaqueToken自省
  - WebSocket、Spring batch最小化配置
  - Apache camel组件示例
+ - Sentinel nacos限流和规则持久化

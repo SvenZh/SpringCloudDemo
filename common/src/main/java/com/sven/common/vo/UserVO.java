@@ -26,4 +26,6 @@ public class UserVO {
     private String phone;
     
     private List<RoleVO> userRole;
+    
+    private List<PerimissionVO> userPerimission;
 }
