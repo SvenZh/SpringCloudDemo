@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.sven.common.constant.SecurityConstants;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.feign.client.SystemServerFeignClient;
+import com.sven.common.security.UserInfo;
 import com.sven.common.vo.UserVO;
 
 @Service

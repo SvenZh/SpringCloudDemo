@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.sven.auth.service.UserInfo;
+import com.sven.common.security.UserInfo;
 
 import lombok.extern.slf4j.Slf4j;
 

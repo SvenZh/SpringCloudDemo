@@ -1,4 +1,4 @@
-package com.sven.auth.service;
+package com.sven.common.security;
 
 import java.util.Collection;
 import java.util.HashMap;
