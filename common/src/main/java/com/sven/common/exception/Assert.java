@@ -6,14 +6,20 @@ public interface Assert {
 
     BaseException newException(Throwable t, Object... args);
 
-    default void assertNotNull(Object obj) {
+    default void assertNotNull(Object obj, Object... args) {
         if (obj == null) {
-            throw newException(obj);
+            throw newException(args);
+        }
+    }
+    
+    default void assertNotTrue(Boolean obj, Object... args) {
+        if (obj) {
+            throw newException(args);
         }
     }
 
-    default void assertNotNull(Object obj, Object... args) {
-        if (obj == null) {
+    default void assertNotFalse(Boolean obj, Object... args) {
+        if (!obj) {
             throw newException(args);
         }
     }
