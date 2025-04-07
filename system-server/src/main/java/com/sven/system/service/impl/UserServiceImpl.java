@@ -52,10 +52,25 @@ public class UserServiceImpl implements IUserService {
         List<UserVO> response = userInfoEntities.stream().map(entity -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
+            ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(vo.getId());
 
+            if (!roleInfo.isSuccess()) {
+                return vo;
+            }
+           
+            List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
+                ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
+                        .retrieveRolePerimissionInfoByRoleId(role.getId());
+                
+                return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            }).collect(Collectors.toList());
+
+            vo.setUserRole(roleInfo.getData());
+            vo.setUserPerimission(userPerimission);
+            
             return vo;
         }).collect(Collectors.toList());
-
+        
         return ResponseMessage.ok(response);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
+import com.sven.common.config.AsyncConfig;
 import com.sven.common.config.FeignConfig;
 import com.sven.common.config.MyMetaObjectHandler;
 import com.sven.common.config.MybatisPlusConfig;
@@ -18,7 +19,8 @@ import com.sven.common.security.EnableResourceServer;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = { "com.sven.common.feign.client" }, defaultConfiguration = FeignConfig.class)
-@Import(value = {GlobalExceptionHandler.class, ValidatorConfiguration.class, MybatisPlusConfig.class, MyMetaObjectHandler.class, RedisTemplateConfig.class })
+@Import(value = { GlobalExceptionHandler.class, ValidatorConfiguration.class, MybatisPlusConfig.class,
+        MyMetaObjectHandler.class, RedisTemplateConfig.class, AsyncConfig.class })
 public class BusinessServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(BusinessServiceApplication.class, args);
