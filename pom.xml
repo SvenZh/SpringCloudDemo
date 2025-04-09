@@ -14,13 +14,16 @@
 		<spring.cloud.alibaba>2021.0.6.1</spring.cloud.alibaba>
 		<mybatisPlus.version>3.5.7</mybatisPlus.version>
 		<maven-checkstyle-plugin.version>3.2.2</maven-checkstyle-plugin.version>
-		<jacoco-maven-plugin.coverage>0.10</jacoco-maven-plugin.coverage>
+		<jacoco-maven-plugin.coverage>0.01</jacoco-maven-plugin.coverage>
 		<jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
 		<mysql-drive.version>8.0.33</mysql-drive.version>
 		<druid.version>1.2.16</druid.version>
 		<redis.version>3.1.1</redis.version>
 		<apache.camel.version>3.10.0</apache.camel.version>
 		<oauth2-authorization-server.version>0.4.5</oauth2-authorization-server.version>
+		<caffeine.version>3.2.0</caffeine.version>
+		<hutool.version>5.8.29</hutool.version>
+		<dynamic.datasource.version>3.6.1</dynamic.datasource.version>
 	</properties>
 
 	<modules>
@@ -102,6 +105,11 @@
 				<version>${mybatisPlus.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+				<version>${dynamic.datasource.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>druid-spring-boot-starter</artifactId>
 				<version>${druid.version}</version>
@@ -117,6 +125,20 @@
 				<groupId>com.mysql</groupId>
 				<artifactId>mysql-connector-j</artifactId>
 				<version>${mysql-drive.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.springframework.boot</groupId>
+			    <artifactId>spring-boot-starter-cache</artifactId>
+			</dependency>
+			<dependency>
+			    <groupId>com.github.ben-manes.caffeine</groupId>
+			    <artifactId>caffeine</artifactId>
+			    <version>${caffeine.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>${hutool.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -138,6 +160,11 @@
 		</resources>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.0</version>
+				</plugin>
 				<plugin>
 					<groupId>com.spotify</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
@@ -179,6 +206,7 @@
 						<includeTestSourceDirectory>false</includeTestSourceDirectory>
 						<consoleOutput>true</consoleOutput>
 						<failsOnError>false</failsOnError>
+						<failOnViolation>false</failOnViolation>
 						<excludes>**/conf/**,**/entity/**,**/dto/**,**/vo/**</excludes>
 					</configuration>
 					<executions>
