@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
@@ -140,17 +139,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseMessage<IPage<UserVO>> retrieveUserPage(final UserDTO dto) {
-        List<UserEntity> result = userServiceDAO.selectList(dto);
-
-        List<UserVO> response = result.stream().map(entity -> {
+        IPage<UserEntity> result = userServiceDAO.paging(dto);
+        
+        IPage<UserVO> response = result.convert(entity -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
             return vo;
-        }).collect(Collectors.toList());
+        });
 
-        Page<UserVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
-        page.setRecords(response);
-
-        return ResponseMessage.ok(page);
+        return ResponseMessage.ok(response);
     }
 }
