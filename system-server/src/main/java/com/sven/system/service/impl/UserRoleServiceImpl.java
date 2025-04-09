@@ -45,13 +45,11 @@ public class UserRoleServiceImpl implements IUserRoleService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseMessage<Boolean> creationUserRole(final UserRoleCreationDTO dto) {
         dto.getUserIds().parallelStream().forEach(userId -> {
-            dto.getRoleIds().stream().forEach(roleId -> {
-                UserRoleEntity userRoleInfoEntity = new UserRoleEntity();
-                userRoleInfoEntity.setUserId(userId);
-                userRoleInfoEntity.setRoleId(roleId);
+            List<UserRoleEntity> userRoleEntities = dto.getRoleIds().stream()
+                    .map(roleId -> UserRoleEntity.builder().userId(userId).roleId(roleId).build())
+                    .collect(Collectors.toList());
 
-                userRoleServiceDAO.insert(userRoleInfoEntity);
-            });
+            userRoleServiceDAO.saveBatch(userRoleEntities);
         });
 
         return ResponseMessage.ok(true);

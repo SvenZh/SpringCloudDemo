@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.dto.UserDTO;
 import com.sven.system.entity.UserEntity;
@@ -17,10 +19,15 @@ public class UserServiceDAO extends ServiceImpl<UserServiceMapper, UserEntity> {
     public List<UserEntity> selectList(UserDTO dto) {
         LambdaQueryWrapper<UserEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), UserEntity::getName, dto.getName());
-
-        List<UserEntity> response = this.baseMapper.selectList(queryWrapper);
-
-        return response;
+        
+        return this.baseMapper.selectList(queryWrapper);
+    }
+    
+    public IPage<UserEntity> paging(UserDTO dto) {
+        LambdaQueryWrapper<UserEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), UserEntity::getName, dto.getName());
+        
+        return this.baseMapper.selectPage(Page.of(dto.getPageNo(), dto.getPageSize()), queryWrapper);
     }
 
     public UserEntity selectOne(UserDTO dto) {

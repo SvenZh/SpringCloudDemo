@@ -1,7 +1,9 @@
 package com.sven.system.service.impl;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -12,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
@@ -50,10 +51,25 @@ public class UserServiceImpl implements IUserService {
         List<UserVO> response = userInfoEntities.stream().map(entity -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
+            ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(vo.getId());
 
+            if (!roleInfo.isSuccess()) {
+                return vo;
+            }
+           
+            List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
+                ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
+                        .retrieveRolePerimissionInfoByRoleId(role.getId());
+                
+                return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            }).collect(Collectors.toList());
+
+            vo.setUserRole(roleInfo.getData());
+            vo.setUserPerimission(userPerimission);
+            
             return vo;
         }).collect(Collectors.toList());
-
+        
         return ResponseMessage.ok(response);
     }
 
@@ -76,24 +92,22 @@ public class UserServiceImpl implements IUserService {
     private UserVO retrieveUserInfo(UserDTO dto) {
         UserVO response = new UserVO();
         UserEntity userInfoEntity = userServiceDAO.selectOne(dto);
-
         BusinessExceptionEnum.user_not_found.assertNotNull(userInfoEntity);
-
         BeanUtils.copyProperties(userInfoEntity, response);
-
         ResponseMessage<List<RoleVO>> roleInfo = userRoleService.retrieveUserRoleInfoByUserId(response.getId());
 
-        if (roleInfo.isSuccess()) {
-            response.setUserRole(roleInfo.getData());
+        if (!roleInfo.isSuccess()) {
+            return response;
         }
-
-        List<PerimissionVO> userPerimission = response.getUserRole().stream().flatMap(role -> {
+       
+        List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
             ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
                     .retrieveRolePerimissionInfoByRoleId(role.getId());
-
-            return perimissionVO.getData().stream();
+            
+            return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
         }).collect(Collectors.toList());
 
+        response.setUserRole(roleInfo.getData());
         response.setUserPerimission(userPerimission);
 
         return response;
@@ -125,17 +139,14 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public ResponseMessage<IPage<UserVO>> retrieveUserPage(final UserDTO dto) {
-        List<UserEntity> result = userServiceDAO.selectList(dto);
-
-        List<UserVO> response = result.stream().map(entity -> {
+        IPage<UserEntity> result = userServiceDAO.paging(dto);
+        
+        IPage<UserVO> response = result.convert(entity -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);
             return vo;
-        }).collect(Collectors.toList());
+        });
 
-        Page<UserVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
-        page.setRecords(response);
-
-        return ResponseMessage.ok(page);
+        return ResponseMessage.ok(response);
     }
 }

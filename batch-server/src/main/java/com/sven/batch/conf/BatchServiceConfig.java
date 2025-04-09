@@ -10,7 +10,7 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
+import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,12 +31,13 @@ public class BatchServiceConfig extends DefaultBatchConfigurer {
     
     @Autowired
     private TestProcessor testProcessor;
+    
     @Autowired
     private TestWrite testWrite;
     
     @Override
     protected JobRepository createJobRepository() throws Exception {
-        MapJobRepositoryFactoryBean factoryBean = new MapJobRepositoryFactoryBean();
+        JobRepositoryFactoryBean factoryBean = new JobRepositoryFactoryBean();
         factoryBean.afterPropertiesSet();
         return factoryBean.getObject();
     }
@@ -49,7 +50,6 @@ public class BatchServiceConfig extends DefaultBatchConfigurer {
         }
         return new TestReader(data);
     }
-    
     
     @Bean
     public Step step1() {

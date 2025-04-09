@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sven.common.dto.PerimissionDTO;
 import com.sven.system.entity.PerimissionEntity;
@@ -21,6 +23,13 @@ public class PerimissionServiceDAO extends ServiceImpl<PerimissionServiceMapper,
         List<PerimissionEntity> perimissionInfoEntities = this.baseMapper.selectList(queryWrapper);
 
         return perimissionInfoEntities;
+    }
+    
+    public IPage<PerimissionEntity> paging(PerimissionDTO dto) {
+        LambdaQueryWrapper<PerimissionEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotEmpty(dto.getName()), PerimissionEntity::getName, dto.getName());
+        
+        return this.baseMapper.selectPage(Page.of(dto.getPageNo(), dto.getPageSize()), queryWrapper);
     }
     
     public int insert(PerimissionEntity entity) {

@@ -11,3 +11,7 @@
  - Spring batch批处理最小化配置
  - Apache camel组件示例
  - Sentinel限流和规则持久化
+ - checkStyle代码格式检查
+    +  `mvn checkstyle:checkstyle`
+ - jacoco单元测试覆盖率
+    +  `mvn test jacoco:report`

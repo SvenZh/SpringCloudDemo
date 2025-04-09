@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.PerimissionDTO;
 import com.sven.common.vo.PerimissionVO;
@@ -38,19 +37,16 @@ public class PerimissionServiceImpl implements IPerimissionService {
 
     @Override
     public ResponseMessage<IPage<PerimissionVO>> retrievePerimissionPage(final PerimissionDTO dto) {
-        List<PerimissionEntity> perimissionInfoEntities = perimissionServiceDAO.selectList(dto);
+        IPage<PerimissionEntity> perimissionInfoEntities = perimissionServiceDAO.paging(dto);
 
-        List<PerimissionVO> response = perimissionInfoEntities.stream().map(entity -> {
+        IPage<PerimissionVO> response = perimissionInfoEntities.convert(entity -> {
             PerimissionVO vo = new PerimissionVO();
             BeanUtils.copyProperties(entity, vo);
 
             return vo;
-        }).collect(Collectors.toList());
+        });
 
-        Page<PerimissionVO> page = Page.of(dto.getPageNo(), dto.getPageSize(), response.size());
-        page.setRecords(response);
-
-        return ResponseMessage.ok(page);
+        return ResponseMessage.ok(response);
     }
 
     @Override
