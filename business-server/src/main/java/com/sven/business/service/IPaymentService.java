@@ -8,5 +8,5 @@ public interface IPaymentService extends Ordered {
     
     public boolean payment(BigDecimal price);
 
-    public boolean isSupport(Integer type);
+    public boolean isSupport(String payCode);
 }

@@ -7,8 +7,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.sven.business.event.PaymentEvent;
+import com.sven.common.annotation.PayStrategyAnnotation;
 
 @Service
+@PayStrategyAnnotation("aliPay")
 public class AliPaymentServiceImpl extends PaymentAbstract {
 
     @Autowired
@@ -21,8 +23,8 @@ public class AliPaymentServiceImpl extends PaymentAbstract {
     }
 
     @Override
-    public boolean isSupport(Integer type) {
-        return 2 == type;
+    public boolean isSupport(String payCode) {
+        return "aliPay".equals(payCode);
     }
 
     @Override

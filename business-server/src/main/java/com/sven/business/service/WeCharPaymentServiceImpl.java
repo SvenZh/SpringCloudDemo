@@ -7,8 +7,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.sven.business.event.PaymentEvent;
+import com.sven.common.annotation.PayStrategyAnnotation;
 
 @Service
+@PayStrategyAnnotation("weCharPay")
 public class WeCharPaymentServiceImpl extends PaymentAbstract {
 
     @Autowired
@@ -22,8 +24,8 @@ public class WeCharPaymentServiceImpl extends PaymentAbstract {
     }
 
     @Override
-    public boolean isSupport(Integer type) {
-        return 1 == type;
+    public boolean isSupport(String payCode) {
+        return "weCharPay".equals(payCode);
     }
 
     @Override
