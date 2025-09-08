@@ -117,21 +117,24 @@ public class AuthorizationServerConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    // 使用jdbc存储客户端信息
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
     
-//    @Bean
-//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
-//            RegisteredClientRepository registeredClientRepository) {
-//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-//    }
+    // 使用jdbc存储授权信息、TOKEN
+   @Bean
+   public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
+           RegisteredClientRepository registeredClientRepository) {
+       return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+   }
     
-    @Bean
-    public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
-        return new RedisOAuth2AuthorizationService(redisTemplate);
-    }
+    // 使用redis存储授权信息、TOKEN
+    // @Bean
+    // public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
+    //     return new RedisOAuth2AuthorizationService(redisTemplate);
+    // }
     
     @Bean
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,

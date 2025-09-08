@@ -23,6 +23,9 @@ public class RegClientDTO {
     @NotEmpty(message = "不能为空")
     private String redirectUri;
     
+    @NotEmpty(message = "不能为空")
+    private String clientSecret;
+
     private TokenSettings tokenSettings;
     
     private ClientSettings clientSettings;

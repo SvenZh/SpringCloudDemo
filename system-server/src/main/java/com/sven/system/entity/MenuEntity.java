@@ -22,7 +22,7 @@ public class MenuEntity extends BaseEntityMessage{
     private Integer sort;
     
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long parent_id;
+    private Long parentId;
     
     private String icon;
     

@@ -75,7 +75,7 @@ public class AuthService {
             tokenSettings = TokenSettings.builder()
                     .authorizationCodeTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getAuthorizationCodeTimeToLive()))
                     .accessTokenTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getAccessTokenTimeToLive()))
-                    .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                    .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                     .reuseRefreshTokens(dto.getTokenSettings().getReuseRefreshTokens())
                     .refreshTokenTimeToLive(Duration.ofMinutes(dto.getTokenSettings().getRefreshTokenTimeToLive()))
                     .build();
@@ -91,7 +91,7 @@ public class AuthService {
                 .map(grantType -> new AuthorizationGrantType(grantType)).collect(Collectors.toSet());
         
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString()).clientId(dto.getClientId())
-                .clientSecret(passwordEncoder.encode(dto.getClientId()))
+                .clientSecret(passwordEncoder.encode(dto.getClientSecret()))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantTypes((grantType) -> grantType.addAll(grantTypes))
