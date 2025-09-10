@@ -1,6 +1,7 @@
 package com.sven.auth.service;
 
 import java.time.Duration;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +60,7 @@ public class AuthService {
         return new CaptchVO(image, uuId);
     }
     
-    public void test(RegClientDTO dto) {
+    public Boolean registeredClient(RegClientDTO dto) {
         TokenSettings tokenSettings = TokenSettings.builder()
                 .authorizationCodeTimeToLive(Duration.ofMinutes(30))
                 .accessTokenTimeToLive(Duration.ofMinutes(30))
@@ -90,7 +91,15 @@ public class AuthService {
         Set<AuthorizationGrantType> grantTypes = dto.getGrantType().stream()
                 .map(grantType -> new AuthorizationGrantType(grantType)).collect(Collectors.toSet());
         
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString()).clientId(dto.getClientId())
+        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        RegisteredClient repositoryByClientId = registeredClientRepository
+                .findByClientId(dto.getClientId());
+        String id = UUID.randomUUID().toString();
+        if (Objects.nonNull(repositoryByClientId)) {
+            id = repositoryByClientId.getId();
+        }
+
+        RegisteredClient registeredClient = RegisteredClient.withId(id).clientId(dto.getClientId())
                 .clientSecret(passwordEncoder.encode(dto.getClientSecret()))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -100,11 +109,8 @@ public class AuthService {
                 .tokenSettings(tokenSettings)
                 .clientSettings(clientSettings)
                 .build();
-        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
-        RegisteredClient repositoryByClientId = registeredClientRepository
-                .findByClientId(registeredClient.getClientId());
-        if (repositoryByClientId == null) {
-            registeredClientRepository.save(registeredClient);
-        }
+
+        registeredClientRepository.save(registeredClient);
+        return true;
     }
 }

@@ -17,11 +17,11 @@ public class PermissionService {
             return false;
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return false;
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         return authorities.stream().map(GrantedAuthority::getAuthority).filter(StringUtils::hasText)
-                .anyMatch(x -> PatternMatchUtils.simpleMatch(permissions, x));
+                .anyMatch(x -> x.equals("admin") || PatternMatchUtils.simpleMatch(permissions, x));
     }
 }

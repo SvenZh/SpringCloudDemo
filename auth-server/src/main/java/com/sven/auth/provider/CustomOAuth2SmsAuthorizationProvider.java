@@ -77,8 +77,7 @@ public class CustomOAuth2SmsAuthorizationProvider implements AuthenticationProvi
         String code = (String) reqParameters.get("code");
         
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken.unauthenticated(phone, code);
-        Authentication usernamePasswordAuthentication = authenticationManager
-                .authenticate(usernamePasswordAuthenticationToken);
+        Authentication usernamePasswordAuthentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         
         DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                 .registeredClient(registeredClient)

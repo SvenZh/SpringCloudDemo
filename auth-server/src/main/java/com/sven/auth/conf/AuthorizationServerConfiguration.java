@@ -31,6 +31,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import com.sven.auth.convert.CustomOAuth2PasswordAuthorizationConvert;
 import com.sven.auth.convert.CustomOAuth2SmsAuthorizationConvert;
 import com.sven.auth.filter.ValidateCodeFilter;
+import com.sven.auth.handler.CustomAuthorizationResponseSuccessHandler;
 import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
 import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
@@ -44,33 +45,38 @@ public class AuthorizationServerConfiguration {
     
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-    
+
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-        
+        // 短信登录验证码过滤器
         httpSecurity.addFilterBefore(new ValidateCodeFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
         // oauth2.0的配置托管给 SpringSecurity
         httpSecurity.apply(authorizationServerConfigurer);
         
         authorizationServerConfigurer
+            // 授权配置
             .authorizationEndpoint(authorizationEndpoint -> {
-                authorizationEndpoint.authenticationProviders(authenticationProviders -> {
-                    authenticationProviders.forEach(authenticationProvider -> {
-                        if (authenticationProvider instanceof OAuth2AuthorizationCodeRequestAuthenticationProvider) {
-                            // 无授权同意页面的授权码生成方式
-                            ((OAuth2AuthorizationCodeRequestAuthenticationProvider) authenticationProvider)
-                                    .setAuthorizationCodeGenerator(new CustomOAuth2AuthorizationCodeGenerator());
-                        }
+                    authorizationEndpoint
+                            .authenticationProviders(authenticationProviders -> {
+                                authenticationProviders.forEach(authenticationProvider -> {
+                                    if (authenticationProvider instanceof OAuth2AuthorizationCodeRequestAuthenticationProvider) {
+                                        // 无授权同意页面的授权码生成方式
+                                        ((OAuth2AuthorizationCodeRequestAuthenticationProvider) authenticationProvider)
+                                                .setAuthorizationCodeGenerator(
+                                                        new CustomOAuth2AuthorizationCodeGenerator());
+                                    }
 
-                        if (authenticationProvider instanceof OAuth2AuthorizationConsentAuthenticationProvider) {
-                            // 授权同意页面的授权码生成方式
-                            ((OAuth2AuthorizationConsentAuthenticationProvider) authenticationProvider)
-                                    .setAuthorizationCodeGenerator(new CustomOAuth2AuthorizationCodeGenerator());
-                        }
-                    });
-                });
-                
+                                    if (authenticationProvider instanceof OAuth2AuthorizationConsentAuthenticationProvider) {
+                                        // 授权同意页面的授权码生成方式
+                                        ((OAuth2AuthorizationConsentAuthenticationProvider) authenticationProvider)
+                                                .setAuthorizationCodeGenerator(
+                                                        new CustomOAuth2AuthorizationCodeGenerator());
+                                    }
+                                });
+                            })
+                            .authorizationResponseHandler(new CustomAuthorizationResponseSuccessHandler())
+                            ;
             })
             .tokenEndpoint(tokenEndpoint -> {
                 // 自定义授权模式Token转换器
@@ -106,10 +112,12 @@ public class AuthorizationServerConfiguration {
         CustomOAuth2SmsAuthorizationProvider customOAuth2SmsAuthorizationProvider = new CustomOAuth2SmsAuthorizationProvider(
                 authenticationManager, authorizationService, oAuth2TokenGenerator());
 
+        // 针对UsernamePasswordAuthenticationToken的验证器
         httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider());
+        // 用户密码授权模式验证器提供者, 组装成UsernamePasswordAuthenticationToken给CustomDaoAuthenticationProvider进行校验，成功后返回accessToken和refreshToken
         httpSecurity.authenticationProvider(customOAuth2PasswordAuthorizationProvider);
+        // 短信授权模式验证器提供者, 组装成UsernamePasswordAuthenticationToken给CustomDaoAuthenticationProvider进行校验, 成功后返回accessToken和refreshToken
         httpSecurity.authenticationProvider(customOAuth2SmsAuthorizationProvider);
-        
     }
     
     @Bean
@@ -123,18 +131,18 @@ public class AuthorizationServerConfiguration {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
     
-    // 使用jdbc存储授权信息、TOKEN
-   @Bean
-   public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
-           RegisteredClientRepository registeredClientRepository) {
-       return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-   }
+    // 使用jdbc存储授权信息、TOKEN。需要对UserInfo配置Jackson序列化
+//    @Bean
+//    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
+//            RegisteredClientRepository registeredClientRepository) {
+//        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+//    }
     
     // 使用redis存储授权信息、TOKEN
-    // @Bean
-    // public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
-    //     return new RedisOAuth2AuthorizationService(redisTemplate);
-    // }
+    @Bean
+    public OAuth2AuthorizationService authorizationService(RedisTemplate<String, Object> redisTemplate) {
+        return new RedisOAuth2AuthorizationService(redisTemplate);
+    }
     
     @Bean
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
@@ -142,16 +150,20 @@ public class AuthorizationServerConfiguration {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
     
+    // 自定义TOKEN的生成方式
     @Bean
     public OAuth2TokenGenerator<? extends OAuth2Token> oAuth2TokenGenerator() {
         CustomeOAuth2AccessTokenGenerator accessTokenGenerator = new CustomeOAuth2AccessTokenGenerator();
+        // token增强
         accessTokenGenerator.setAccessTokenCustomizer(new CustomeOAuth2TokenCustomizer());
         return new DelegatingOAuth2TokenGenerator(accessTokenGenerator, new OAuth2RefreshTokenGenerator());
     }
     
+    // 改变所有默认端点的请求路径
     @Bean 
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        return AuthorizationServerSettings.builder()
+            .issuer("https://auth.server.com")      // 授权服务者的签发标识
+            .build();
     }
-    
 }

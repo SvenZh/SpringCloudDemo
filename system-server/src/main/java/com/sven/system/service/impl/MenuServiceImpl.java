@@ -22,14 +22,16 @@ public class MenuServiceImpl implements IMenuService{
     @Override
     public ResponseMessage<List<MenuVO>> retrieveMenuList(MenuDTO dto) {
         
-        dto.getRoleName();
-        
         return null;
     }
 
     @Override
     public ResponseMessage<Boolean> createMenu(MenuDTO dto) {
-        return null;
+        MenuEntity entity = new MenuEntity();
+        BeanUtils.copyProperties(dto, entity);
+        boolean response = menuServiceDAO.createMenu(entity);
+
+        return ResponseMessage.ok(response);
     }
 
     @Override

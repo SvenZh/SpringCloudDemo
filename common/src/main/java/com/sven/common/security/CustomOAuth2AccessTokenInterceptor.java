@@ -6,6 +6,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -35,8 +37,8 @@ public class CustomOAuth2AccessTokenInterceptor implements RequestInterceptor {
             return;
         }
         HttpServletRequest request = getRequest().get();
-
         String token = tokenResolver.resolve(request);
+
         if (StringUtils.isBlank(token)) {
             return;
         }

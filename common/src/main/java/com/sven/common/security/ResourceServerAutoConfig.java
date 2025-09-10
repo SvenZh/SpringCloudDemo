@@ -11,6 +11,7 @@ import feign.RequestInterceptor;
 @EnableConfigurationProperties(value = {PermitAllUrlConfig.class})
 public class ResourceServerAutoConfig {
     
+    // 定义一个解析器，提取出HTTP请求中的TOKEN
     @Bean
     public BearerTokenResolver bearerTokenExtractor(PermitAllUrlConfig permitAllUrlConfig) {
         return new CustomBearerTokenExtractor(permitAllUrlConfig);
