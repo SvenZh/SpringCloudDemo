@@ -121,20 +121,16 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
         ResponseEntity<Map<String, Object>> responseEntity = makeRequest(requestEntity);
         Map<String, Object> claims = adaptToNimbusResponse(responseEntity);
         // 缓存TOKEN, 而不是每次都请求授权服务器
-        try {
-            Duration defExpTime = Duration.ofMinutes(5);
-            if (claims.containsKey("exp")) {
-                Long expiration = ((Number) claims.get("exp")).longValue();
-                Long currentTime = System.currentTimeMillis() / 1000;
-                Long ttl = expiration - currentTime;
-                if (ttl > 0) {
-                    defExpTime = Duration.ofSeconds(Math.max(ttl - 60, 60));
-                }
+        Duration defExpTime = Duration.ofMinutes(5);
+        if (claims.containsKey("exp")) {
+            Long expiration = ((Number) claims.get("exp")).longValue();
+            Long currentTime = System.currentTimeMillis() / 1000;
+            Long ttl = expiration - currentTime;
+            if (ttl > 0) {
+                defExpTime = Duration.ofSeconds(Math.max(ttl - 60, 60));
             }
-            redisTemplate.opsForValue().set(redisIntrospectionToken, claims, defExpTime);
-        } catch (Exception ex) {
-            // ignore
         }
+        redisTemplate.opsForValue().set(redisIntrospectionToken, claims, defExpTime);
         return convertClaimsSet(claims);
     }
 

@@ -23,7 +23,11 @@ public class WebSecurityConfiguration {
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .formLogin(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.sameOrigin()));
+                .headers(headers -> headers
+                                .frameOptions(frameOptionsCustomizer -> frameOptionsCustomizer.sameOrigin())
+                                .cacheControl(cacheControl -> cacheControl.disable()))
+                .logout(Customizer.withDefaults())
+                ;
 
         httpSecurity.authenticationProvider(new CustomDaoAuthenticationProvider());
         return httpSecurity.build();

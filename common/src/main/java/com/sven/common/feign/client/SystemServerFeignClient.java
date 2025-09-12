@@ -17,11 +17,11 @@ import com.sven.common.vo.UserVO;
 public interface SystemServerFeignClient {
 
     @NoToken
-    @GetMapping("/user/retrieveUserInfoByName")
+    @GetMapping("/internal/retrieveUserInfoByName")
     public ResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") String userName);
     
     @NoToken
-    @GetMapping("/user/retrieveUserInfoByphone")
+    @GetMapping("/internal/retrieveUserInfoByphone")
     public ResponseMessage<UserVO> retrieveUserInfoByPhone(@RequestParam("phone") String phone);
 
     @GetMapping("/role/retrieveRoleInfoByRoleName")
