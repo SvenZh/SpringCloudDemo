@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
@@ -18,12 +19,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
@@ -202,16 +206,20 @@ public class AuthorizationServerConfiguration {
     @Bean 
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-            .issuer("https://auth.server.com")      // 授权服务者的签发标识
+            .issuer("http://127.0.0.1:10030")      // 授权服务者的签发标识
             .build();
     }
 
     @Bean
     public JwtEncoder jwtEncoder() {
-        // 使用RSA密钥对
+        return new NimbusJwtEncoder(jwkSource());
+    }
+
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
         RSAKey rsaKey = generateRsaKey();
-        JWKSource<SecurityContext> jwkSource = (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(rsaKey));
-        return new NimbusJwtEncoder(jwkSource);
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
 
     private static RSAKey generateRsaKey() {
@@ -239,10 +247,20 @@ public class AuthorizationServerConfiguration {
     private static OidcUserInfo userInfoMapper(OidcUserInfoAuthenticationContext contrxt) {
         Map<String, Object> claims = new HashMap<>();
         Authentication authentication = contrxt.getAuthentication();
+        OAuth2Authorization oAuth2Authorization = contrxt.getAuthorization();
         BearerTokenAuthentication bearerTokenAuthentication = (BearerTokenAuthentication) authentication.getPrincipal();
+
+        OAuth2AccessToken oAuth2AccessToken = (OAuth2AccessToken) bearerTokenAuthentication.getCredentials();
+        Set<String> scopes = oAuth2AccessToken.getScopes();
         UserInfo userInfo = (UserInfo) bearerTokenAuthentication.getPrincipal();
+        claims.put(StandardClaimNames.SUB, oAuth2Authorization.getPrincipalName());
         claims.put(SecurityConstants.DETAILS_USER_ID, userInfo.getId());
         claims.put(SecurityConstants.USERNAME, userInfo.getUsername());
+
+        if (scopes.contains("phone")) {
+            claims.put("phone", userInfo.getPhone());
+        }
+
         return new OidcUserInfo(claims);
     }
 }
