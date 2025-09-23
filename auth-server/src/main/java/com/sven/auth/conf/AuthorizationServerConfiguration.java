@@ -107,7 +107,7 @@ public class AuthorizationServerConfiguration {
                 tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2PasswordAuthorizationConvert());
                 tokenEndpoint.accessTokenRequestConverter(new CustomOAuth2SmsAuthorizationConvert());
             })
-            // 令牌验签请求, 处理/oauth2/introspect请求
+            // 令牌验签, 处理/oauth2/introspect请求
             .tokenIntrospectionEndpoint(Customizer.withDefaults())
             // 令牌撤销, 处理/oauth2/revoke请求
             .tokenRevocationEndpoint(Customizer.withDefaults())
@@ -144,7 +144,6 @@ public class AuthorizationServerConfiguration {
         return securityFilterChain;
     }
     
-    @SuppressWarnings("unchecked")
     private void addCustomOAuth2AuthenticationProvider(HttpSecurity httpSecurity) throws Exception {
         AuthenticationManager authenticationManager = httpSecurity.getSharedObject(AuthenticationManager.class);
         OAuth2AuthorizationService authorizationService = httpSecurity.getSharedObject(OAuth2AuthorizationService.class);

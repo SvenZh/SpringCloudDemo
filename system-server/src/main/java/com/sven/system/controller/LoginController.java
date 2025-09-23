@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,13 +21,23 @@ public class LoginController {
     @NoToken
     @GetMapping("/home")
     public String homePage(Model model,
-            @AuthenticationPrincipal OAuth2User oauth2User,
+            @AuthenticationPrincipal Object principal,
             Authentication authentication) {
 
-        if (oauth2User != null) {
+        if (principal instanceof OidcUser) {
+            OidcUser oidcUser = (OidcUser) principal;
+            model.addAttribute("userName", oidcUser.getAttribute("username"));
+            model.addAttribute("userAttributes", oidcUser.getAttributes());
+            model.addAttribute("loginType", "OIDC");
+            model.addAttribute("email", oidcUser.getEmail());
+            model.addAttribute("subject", oidcUser.getSubject());
+
+        } else if (principal instanceof OAuth2User) {
+            OAuth2User oauth2User = (OAuth2User) principal;
             model.addAttribute("userName", oauth2User.getName());
             model.addAttribute("userAttributes", oauth2User.getAttributes());
             model.addAttribute("loginType", "OAuth2");
+
         } else if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("userName", authentication.getName());
             model.addAttribute("loginType", "Form");
@@ -60,14 +73,14 @@ public class LoginController {
         // 获取错误信息
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         Object exception = request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-        
+
         if (status != null) {
             model.addAttribute("status", status.toString());
         }
         if (exception != null) {
             model.addAttribute("error", exception.toString());
         }
-        
+
         return "error";
     }
 }
