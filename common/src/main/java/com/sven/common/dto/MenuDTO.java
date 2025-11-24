@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class MenuDTO {
     @NotEmpty(message = "不能为空")
-    private String roleName;
+    private String name;
 }

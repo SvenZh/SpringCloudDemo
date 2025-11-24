@@ -16,4 +16,8 @@ public class MenuServiceDAO extends ServiceImpl<MenuServiceMapper, MenuEntity>{
     public MenuEntity selectById(Long menuId) {
         return this.baseMapper.selectById(menuId);
     }
+
+    public Boolean createMenu(MenuEntity entity) {
+        return this.baseMapper.insert(entity) > 0;
+    }
 }

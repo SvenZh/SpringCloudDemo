@@ -10,6 +10,7 @@ public enum BusinessExceptionEnum implements BusinessExceptionAssert {
     valid_exception(10001, "参数校验异常"),
     user_not_found(10002, "用户不存在"),
     bearer_token_expire(10003, "TOKEN已过期"),
+    no_access_permission(10004, "无权限访问"),
     
     quartz_addjob_exception_event(20000, "创建定时任务失败[SchedulerException]"),
     quartz_addjob_classnotfoundexception_event(20001, "创建定时任务失败[ClassNotFoundException]"),

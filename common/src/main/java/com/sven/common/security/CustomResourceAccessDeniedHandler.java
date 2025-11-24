@@ -1,0 +1,40 @@
+package com.sven.common.security;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sven.common.domain.message.ErrorDetails;
+import com.sven.common.domain.message.ResponseMessage;
+import com.sven.common.exception.BusinessExceptionEnum;
+
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class CustomResourceAccessDeniedHandler implements AccessDeniedHandler {
+
+    private final ObjectMapper objectMapper;
+
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+            AccessDeniedException accessDeniedException) throws IOException, ServletException {
+
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        ResponseMessage<String> result = new ResponseMessage<>();
+        result.setError(new ErrorDetails(BusinessExceptionEnum.no_access_permission));
+
+        PrintWriter printWriter = response.getWriter();
+        printWriter.append(objectMapper.writeValueAsString(result));
+    }
+
+}

@@ -3,6 +3,7 @@ package com.sven.system.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,6 +38,7 @@ public class PerimissionController {
         return response;
     }
     
+    @PreAuthorize("@pms.hasPermission('perimission.add')")
     @PostMapping("/creation")
     public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final PerimissionDTO dto) {
         ResponseMessage<Boolean> response = perimissionService.createPerimission(dto);

@@ -1,16 +1,19 @@
 package com.sven.common.security;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sven.common.constant.SecurityConstants;
 
 public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
@@ -44,13 +48,15 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
 
     private Converter<String, RequestEntity<?>> requestEntityConverter;
     
+    private final RedisTemplate<String, Object> redisTemplate;
+
     /**
      * Creates a {@code OpaqueTokenAuthenticationProvider} with the provided parameters
      * @param introspectionUri The introspection endpoint uri
      * @param clientId The client id authorized to introspect
      * @param clientSecret The client's secret
      */
-    public CustomOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret) {
+    public CustomOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret, RedisTemplate<String, Object> redisTemplate) {
         Assert.notNull(introspectionUri, "introspectionUri cannot be null");
         Assert.notNull(clientId, "clientId cannot be null");
         Assert.notNull(clientSecret, "clientSecret cannot be null");
@@ -58,6 +64,7 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(clientId, clientSecret));
         this.restOperations = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -68,11 +75,12 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
      * @param introspectionUri The introspection endpoint uri
      * @param restOperations The client for performing the introspection request
      */
-    public CustomOpaqueTokenIntrospector(String introspectionUri, RestOperations restOperations) {
+    public CustomOpaqueTokenIntrospector(String introspectionUri, RestOperations restOperations, RedisTemplate<String, Object> redisTemplate) {
         Assert.notNull(introspectionUri, "introspectionUri cannot be null");
         Assert.notNull(restOperations, "restOperations cannot be null");
         this.requestEntityConverter = this.defaultRequestEntityConverter(URI.create(introspectionUri));
         this.restOperations = restOperations;
+        this.redisTemplate = redisTemplate;
     }
 
     private Converter<String, RequestEntity<?>> defaultRequestEntityConverter(URI introspectionUri) {
@@ -97,12 +105,32 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
 
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
+
+        // 从redis中获取
+        String redisIntrospectionToken = SecurityConstants.REDIS_INTROSPECTION_TOKEN + token;
+        Map<String, Object> cachedClaims = (Map<String, Object>) redisTemplate.opsForValue().get(redisIntrospectionToken);
+        if (Objects.nonNull(cachedClaims)) {
+            return convertClaimsSet(cachedClaims);
+        }
+
         RequestEntity<?> requestEntity = this.requestEntityConverter.convert(token);
         if (requestEntity == null) {
             throw new OAuth2IntrospectionException("requestEntityConverter returned a null entity");
         }
+        // 非透明的OpaqueToken需要请求授权服务器对TOKEN进行校验
         ResponseEntity<Map<String, Object>> responseEntity = makeRequest(requestEntity);
         Map<String, Object> claims = adaptToNimbusResponse(responseEntity);
+        // 缓存TOKEN, 而不是每次都请求授权服务器
+        Duration defExpTime = Duration.ofMinutes(5);
+        if (claims.containsKey("exp")) {
+            Long expiration = ((Number) claims.get("exp")).longValue();
+            Long currentTime = System.currentTimeMillis() / 1000;
+            Long ttl = expiration - currentTime;
+            if (ttl > 0) {
+                defExpTime = Duration.ofSeconds(Math.max(ttl - 60, 60));
+            }
+        }
+        redisTemplate.opsForValue().set(redisIntrospectionToken, claims, defExpTime);
         return convertClaimsSet(claims);
     }
 
@@ -165,6 +193,15 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
                 }
                 return roles;
             }
+
+            if (v instanceof Collection) {
+                Collection<String> roles = ((Collection) v);
+                for (String role : roles) {
+                    authorities.add(new SimpleGrantedAuthority(role));
+                }
+                return roles;
+            }
+
             return v;
         });
         Long userId = (Long) claims.getOrDefault(SecurityConstants.DETAILS_USER_ID, 0L);

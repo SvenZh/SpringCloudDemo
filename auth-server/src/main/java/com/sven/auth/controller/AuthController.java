@@ -37,7 +37,9 @@ public class AuthController {
     
     @NoToken
     @PostMapping(value = "/reg")
-    public void test(@RequestBody @Validated RegClientDTO dto) {
-        authService.test(dto);   
+    public IBaseResponseMessage<Boolean> registeredClient(@RequestBody @Validated RegClientDTO dto) {
+        authService.registeredClient(dto);  
+        return ResponseMessage.ok(true);
+         
     }
 }
