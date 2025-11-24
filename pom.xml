@@ -24,6 +24,7 @@
 		<caffeine.version>3.2.0</caffeine.version>
 		<hutool.version>5.8.29</hutool.version>
 		<dynamic.datasource.version>3.6.1</dynamic.datasource.version>
+		<skywalking.logback.version>8.9.0</skywalking.logback.version>
 	</properties>
 
 	<modules>
@@ -140,6 +141,11 @@
 				<artifactId>hutool-all</artifactId>
 				<version>${hutool.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>org.apache.skywalking</groupId>
+                <artifactId>apm-toolkit-logback-1.x</artifactId>
+                <version>${skywalking.logback.version}</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 

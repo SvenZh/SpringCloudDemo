@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录t</title>
+    <style>
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 8px; }
+        .btn { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .alert { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        .alert-success { background: #d4edda; color: #155724; }
+        .oauth-buttons { margin-top: 20px; }
+        .oauth-btn { display: block; padding: 10px; margin: 10px 0; text-align: center; 
+                    background: #28a745; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>用户登录</h2>
+        
+        <!-- 错误消息 -->
+        <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+        
+        <!-- 退出消息 -->
+        <div th:if="${logoutMessage}" class="alert alert-success" th:text="${logoutMessage}"></div>
+
+        <!-- 表单登录 -->
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">用户名:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">密码:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="btn">登录</button>
+        </form>
+
+        <div class="oauth-buttons">
+            <h3>或使用第三方登录</h3>
+            <a th:href="@{/oauth2/authorization/myResourceServer}" class="oauth-btn">
+                使用 My OAuth Server 登录
+            </a>
+        </div>
+    </div>
+</body>
+</html>
