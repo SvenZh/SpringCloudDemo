@@ -31,4 +31,5 @@ spring:
   config:
     import:
       - nacos:${spring.application.name}
-      - nacos:common  
+      - nacos:common
+      - nacos:${spring.application.name}-dubbo 

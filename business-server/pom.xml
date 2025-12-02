@@ -91,6 +91,14 @@
 		    <artifactId>sentinel-datasource-nacos</artifactId>
 		    <version>1.8.8</version>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-nacos-spring-boot-starter</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
