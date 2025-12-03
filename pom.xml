@@ -27,6 +27,8 @@
 		<dynamic.datasource.version>3.6.1</dynamic.datasource.version>
 		<skywalking.logback.version>8.9.0</skywalking.logback.version>
 		<dubbo.version>3.3.0</dubbo.version>
+		<seata.version>2.5.0</seata.version>
+		<spring.cloud.seata.version>2025.0.0.0</spring.cloud.seata.version>
 	</properties>
 
 	<modules>
@@ -154,6 +156,22 @@
                 <version>${dubbo.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                <version>${spring.cloud.seata.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.seata</groupId>
+                        <artifactId>seata-spring-boot-starter</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 		</dependencies>
 	</dependencyManagement>
