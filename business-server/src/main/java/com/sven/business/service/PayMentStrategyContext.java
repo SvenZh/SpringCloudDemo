@@ -13,16 +13,16 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import com.sven.common.annotation.PayStrategyAnnotation;
+import com.sven.common.dubbo.server.IPaymentService;
 
 @Component
 public class PayMentStrategyContext {
 
     private Map<String, IPaymentService> payMentStrategyMap;
     
-    @Autowired
-    private List<IPaymentService> paymentServiceList;
+    // @Autowired
+    // private List<IPaymentService> paymentServiceList;
     
-    @Autowired
     public PayMentStrategyContext(List<IPaymentService> strategies) {
         this.payMentStrategyMap = strategies.stream()
                 .collect(Collectors.toMap(

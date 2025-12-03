@@ -2,6 +2,8 @@ package com.sven.business.service;
 
 import java.math.BigDecimal;
 
+import com.sven.common.dubbo.server.IPaymentService;
+
 public abstract class PaymentAbstract implements IPaymentService {
 
     @Override

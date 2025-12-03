@@ -6,7 +6,7 @@
        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:property-placeholder/>
 
-    <dubbo:service interface="com.sven.business.service.IPaymentService" 
+    <dubbo:service interface="com.sven.common.dubbo.server.IPaymentService" 
                    ref="aliPay" 
                    group="business-server" 
                    version="1.0.0" />

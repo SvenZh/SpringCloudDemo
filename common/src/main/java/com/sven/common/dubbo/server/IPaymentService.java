@@ -1,4 +1,4 @@
-package com.sven.business.service;
+package com.sven.common.dubbo.server;
 
 import java.math.BigDecimal;
 
