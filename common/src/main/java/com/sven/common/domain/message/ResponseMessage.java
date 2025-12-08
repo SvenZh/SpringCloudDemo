@@ -1,5 +1,7 @@
 package com.sven.common.domain.message;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseMessage<T> implements IBaseResponseMessage<T> {
+public class ResponseMessage<T> implements IBaseResponseMessage<T>, Serializable {
 
     private T data;
     

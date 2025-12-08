@@ -29,4 +29,5 @@ spring:
     import:
       - nacos:${spring.application.name}
       - nacos:common
+      - nacos:${spring.application.name}-dubbo 
       

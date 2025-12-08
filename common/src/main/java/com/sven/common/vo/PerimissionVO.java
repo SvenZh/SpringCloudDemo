@@ -1,5 +1,7 @@
 package com.sven.common.vo;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -8,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PerimissionVO {
+public class PerimissionVO implements Serializable {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;

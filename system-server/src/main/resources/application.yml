@@ -50,3 +50,6 @@ feign:
             loggerLevel: FULL
    hystrix:
      enabled: true
+
+seata:
+    enabled: false
