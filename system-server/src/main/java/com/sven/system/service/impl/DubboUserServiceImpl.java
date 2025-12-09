@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
@@ -39,6 +40,7 @@ public class DubboUserServiceImpl implements IUserService {
     private IRolePerimissionService rolePerimissionService;
 
     @Override
+    @SentinelResource(value = "retrieveUserInfoByName")
     public ResponseMessage<UserVO> retrieveUserInfoByName(String userName) {
         UserDTO dto = new UserDTO();
         dto.setName(userName);

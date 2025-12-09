@@ -9,11 +9,12 @@ import org.springframework.context.annotation.ImportResource;
 
 import com.sven.common.config.FeignConfig;
 import com.sven.common.config.RedisTemplateConfig;
+import com.sven.common.config.SentinelConfig;
 
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = { "com.sven.common.feign.client" }, defaultConfiguration = FeignConfig.class)
-@Import(value = { RedisTemplateConfig.class })
+@Import(value = { RedisTemplateConfig.class, SentinelConfig.class })
 @ImportResource(value = {"classpath:conf/dubbo-context.xml"})
 public class AuthApplication {
     public static void main(String[] args) {

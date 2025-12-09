@@ -9,7 +9,7 @@ import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHan
 public class SentinelConfig {
 
     /**
-     * 自定义限流异常处理
+     * HTTP限流异常处理
      */
     @Bean
     public BlockExceptionHandler sentinelBlockExceptionHandler() {

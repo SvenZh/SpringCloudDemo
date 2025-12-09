@@ -29,7 +29,7 @@
 		<dubbo.version>3.3.0</dubbo.version>
 		<seata.version>2.5.0</seata.version>
 		<spring.cloud.seata.version>2025.0.0.0</spring.cloud.seata.version>
-		<sentinel.dubbo.version>1.8.9</sentinel.dubbo.version>
+		<csp.version>1.8.9</csp.version>
 	</properties>
 
 	<modules>
@@ -161,7 +161,12 @@
             <dependency>
                 <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-apache-dubbo3-adapter</artifactId>
-                <version>${sentinel.dubbo.version}</version>
+                <version>${csp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-nacos</artifactId>
+                <version>${csp.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.seata</groupId>

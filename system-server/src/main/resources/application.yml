@@ -16,6 +16,19 @@ spring:
         namespace: ${nacos.namespace}
         file-extension: yml
         group: ${spring.profiles.active}
+    sentinel:
+      eager: true
+      transport:
+        port: ${sentinel.transport.port}
+        dashboard: ${sentinel.dashboard.host}:${sentinel.dashboard.port}
+      datasource:
+        flow:   # 流控规则      
+          nacos:
+            data-id: ${spring.application.name}-flow-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: flow
   config:
     import:
       - nacos:${spring.application.name}
@@ -30,9 +43,6 @@ management:
    endpoint:
       health:
          show-details: always
-
-logging:
-   config: classpath:logback-custom.xml
 
 feign:
    compression:

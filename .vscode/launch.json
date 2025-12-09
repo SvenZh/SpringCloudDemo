@@ -6,7 +6,19 @@
             "request": "launch",
             "mainClass": "com.sven.business.BusinessServiceApplication",
             "projectName": "business-server",
-            "vmArgs": "-Dsentinel.transport.port=8719 -Dsentinel.dashboard.host=127.0.0.01 -Dsentinel.dashboard.port=8858 -Dspring.profiles.active=dev -Dfile.encoding=UTF-8 -Dnacos.host=127.0.0.1 -Dnacos.port=8848 -Dnacos.namespace=demo -javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar -Dskywalking.agent.service_name=business-server -Dskywalking.collector.backend_service=127.0.0.1:11800"
+            "vmArgs": [
+                "-Dsentinel.transport.port=8719",
+                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.port=8858",
+                "-Dspring.profiles.active=dev",
+                "-Dfile.encoding=UTF-8",
+                "-Dnacos.host=127.0.0.1",
+                "-Dnacos.port=8848",
+                "-Dnacos.namespace=demo",
+                "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
+                "-Dskywalking.agent.service_name=business-server",
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
+            ]
         },
         {
             "type": "java",
@@ -14,7 +26,19 @@
             "request": "launch",
             "mainClass": "com.sven.auth.AuthApplication",
             "projectName": "auth-server",
-            "vmArgs": "-Dspring.profiles.active=dev -Dfile.encoding=UTF-8 -Dnacos.host=127.0.0.1 -Dnacos.port=8848 -Dnacos.namespace=demo -javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar -Dskywalking.agent.service_name=auth-server -Dskywalking.collector.backend_service=127.0.0.1:11800"
+            "vmArgs": [
+                "-Dsentinel.transport.port=8719",
+                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.port=8858",
+                "-Dspring.profiles.active=dev",
+                "-Dfile.encoding=UTF-8",
+                "-Dnacos.host=127.0.0.1",
+                "-Dnacos.port=8848",
+                "-Dnacos.namespace=demo",
+                "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
+                "-Dskywalking.agent.service_name=auth-server",
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
+            ]      
         },
         {
             "type": "java",
@@ -22,7 +46,19 @@
             "request": "launch",
             "mainClass": "com.sven.system.SystemServiceApplication",
             "projectName": "system-server",
-            "vmArgs": "-Dspring.profiles.active=dev -Dfile.encoding=UTF-8 -Dnacos.host=127.0.0.1 -Dnacos.port=8848 -Dnacos.namespace=demo -javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar -Dskywalking.agent.service_name=system-server -Dskywalking.collector.backend_service=127.0.0.1:11800"
+            "vmArgs": [
+                "-Dsentinel.transport.port=8719",
+                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.port=8858",
+                "-Dspring.profiles.active=dev",
+                "-Dfile.encoding=UTF-8",
+                "-Dnacos.host=127.0.0.1",
+                "-Dnacos.port=8848",
+                "-Dnacos.namespace=demo",
+                "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
+                "-Dskywalking.agent.service_name=system-server",
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
+            ]  
         }
     ]
 }
