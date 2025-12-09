@@ -23,10 +23,10 @@ spring:
       datasource:
         flow:
           nacos:
-            data-id: sentinel-flow-config
+            data-id: ${spring.application.name}-flow-rules
             server-addr: ${nacos.host}:${nacos.port}
             namespace: ${nacos.namespace}
-            group-id: ${spring.profiles.active}
+            group-id: SENTINEL_GROUP
             rule-type: flow
   config:
     import:
