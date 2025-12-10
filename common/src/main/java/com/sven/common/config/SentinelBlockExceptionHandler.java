@@ -27,6 +27,9 @@ public class SentinelBlockExceptionHandler implements BlockExceptionHandler {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * HTTP限流异常处理
+     */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, BlockException e) throws Exception {
         // 记录日志

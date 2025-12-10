@@ -46,6 +46,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -55,6 +56,7 @@ import com.sven.auth.convert.CustomOAuth2SmsAuthorizationConvert;
 import com.sven.auth.convert.CustomOidcUserInfoRequestConverter;
 import com.sven.auth.filter.ValidateCodeFilter;
 import com.sven.auth.handler.CustomAuthorizationResponseSuccessHandler;
+import com.sven.auth.handler.GlobalAuthenticationEntryPoint;
 import com.sven.auth.provider.CustomDaoAuthenticationProvider;
 import com.sven.auth.provider.CustomOAuth2PasswordAuthorizationProvider;
 import com.sven.auth.provider.CustomOAuth2SmsAuthorizationProvider;
@@ -70,7 +72,7 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity, OAuth2AuthorizationService authorizationService,
-            RedisTemplate<String, Object> redisTemplate) throws Exception {
+            RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) throws Exception {
         // 短信登录验证码过滤器
         httpSecurity.addFilterBefore(new ValidateCodeFilter(redisTemplate), UsernamePasswordAuthenticationFilter.class);
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
@@ -137,6 +139,12 @@ public class AuthorizationServerConfiguration {
             .formLogin(Customizer.withDefaults())
             .sessionManagement(sm -> sm.disable())
             .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
+            .exceptionHandling(exception -> 
+                exception
+                    .authenticationEntryPoint(new GlobalAuthenticationEntryPoint(objectMapper))     // 认证失败异常处理
+                    // .accessDeniedHandler(null)                     // 认证成功后，授权检查失败
+                )     
+                         
             .build();
 
         // 自定义授权模式验证器
