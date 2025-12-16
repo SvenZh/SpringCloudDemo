@@ -62,4 +62,10 @@ feign:
      enabled: true
 
 seata:
-    enabled: false
+  enabled: false
+  config:
+    type: nacos
+    nacos:
+      server-addr: ${nacos.host}:${nacos.port}
+      group: ${spring.profiles.active}
+      namespace: ${nacos.namespace}

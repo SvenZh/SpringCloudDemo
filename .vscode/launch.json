@@ -17,7 +17,7 @@
                 "-Dnacos.namespace=demo",
                 "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
                 "-Dskywalking.agent.service_name=business-server",
-                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800"
             ]
         },
         {
@@ -37,8 +37,8 @@
                 "-Dnacos.namespace=demo",
                 "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
                 "-Dskywalking.agent.service_name=auth-server",
-                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
-            ]      
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800"
+            ]
         },
         {
             "type": "java",
@@ -57,8 +57,8 @@
                 "-Dnacos.namespace=demo",
                 "-javaagent:E:\\personal\\skywalking\\skywalking-agent\\skywalking-agent.jar",
                 "-Dskywalking.agent.service_name=system-server",
-                "-Dskywalking.collector.backend_service=127.0.0.1:11800",
-            ]  
+                "-Dskywalking.collector.backend_service=127.0.0.1:11800"
+            ]
         }
     ]
 }

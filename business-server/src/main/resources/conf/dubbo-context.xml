@@ -6,7 +6,6 @@
        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:property-placeholder/>
 
-    <dubbo:application name="${dubbo.application.name}"/>
     <dubbo:registry protocol="nacos" group= "${spring.profiles.active}" address="${dubbo.registry.nacos.address}"/>
     <dubbo:provider timeout="30000" retries="0" filter="testFilter"></dubbo:provider>
     <dubbo:consumer timeout="25000" retries="0" check="false"></dubbo:consumer>
