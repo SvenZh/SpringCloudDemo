@@ -33,4 +33,25 @@ spring:
     import:
       - nacos:${spring.application.name}
       - nacos:common
-      - nacos:${spring.application.name}-dubbo 
+      - nacos:${spring.application.name}-dubbo
+
+seata:
+  enabled: true
+  config:
+    type: nacos
+    nacos:
+      server-addr: ${nacos.host}:${nacos.port}
+      group: ${spring.profiles.active}
+      namespace: ${nacos.namespace}
+      dataId: seataServer.properties
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${nacos.host}:${nacos.port}
+      group : ${spring.profiles.active}
+      namespace: ${nacos.namespace}
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default

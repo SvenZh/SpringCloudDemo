@@ -7,13 +7,13 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcException;
 
-@Activate(group = "provider")
-public class DubboTestFilter implements Filter {
-
+@Activate(group = "consumer")
+public class DubboConsumerFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        System.out.println("=== Consumer Filter 开始 ===");
         Result result = invoker.invoke(invocation);
-        System.out.println("DubboTestFilter>>>>>>>>>>>>>>>>>" + result.getValue());
+        System.out.println("=== Consumer Filter 结束 ===");
         return result;
     }
 }

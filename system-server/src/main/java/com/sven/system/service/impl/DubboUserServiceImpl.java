@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.google.common.collect.Lists;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.dubbo.server.IUserService;
@@ -71,5 +72,17 @@ public class DubboUserServiceImpl implements IUserService {
 
         return response;
     }
+
+    @Override
+    @SentinelResource(value = "addUser")
+    public ResponseMessage<Void> addUser(String userName) {
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(userName);
+        userServiceDAO.saveBatch(Lists.newArrayList(userEntity));
+
+        return ResponseMessage.ok(null);
+    }
+
 
 }
