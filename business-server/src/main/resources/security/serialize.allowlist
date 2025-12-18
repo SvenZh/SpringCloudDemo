@@ -1,0 +1,2 @@
+# ===== Spring Security OAuth2核心类 =====
+org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthentication

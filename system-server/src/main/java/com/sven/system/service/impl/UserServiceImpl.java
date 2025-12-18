@@ -27,8 +27,12 @@ import com.sven.system.service.IRolePerimissionService;
 import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @DS("master")
+@Slf4j
 public class UserServiceImpl implements IUserService {
 
     @Autowired
@@ -47,7 +51,7 @@ public class UserServiceImpl implements IUserService {
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {
 
         List<UserEntity> userInfoEntities = userServiceDAO.selectList(dto);
-
+        log.info("查询用户列表, 返回结果是：{}", JSONUtil.toJsonStr(userInfoEntities));
         List<UserVO> response = userInfoEntities.stream().map(entity -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(entity, vo);

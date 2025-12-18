@@ -1,0 +1,2 @@
+providerFilter=com.sven.common.dubbo.filter.DubboProviderFilter
+consumerFilter=com.sven.common.dubbo.filter.DubboConsumerFilter

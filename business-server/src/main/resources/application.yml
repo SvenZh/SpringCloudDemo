@@ -17,18 +17,41 @@ spring:
         file-extension: yml
         group: ${spring.profiles.active}
     sentinel:
+      eager: true
       transport:
         port: ${sentinel.transport.port}
         dashboard: ${sentinel.dashboard.host}:${sentinel.dashboard.port}
       datasource:
-        flow:
+        flow:   # 流控规则      
           nacos:
-            data-id: sentinel-flow-config
+            data-id: ${spring.application.name}-flow-rules
             server-addr: ${nacos.host}:${nacos.port}
             namespace: ${nacos.namespace}
-            group-id: ${spring.profiles.active}
+            group-id: SENTINEL_GROUP
             rule-type: flow
   config:
     import:
       - nacos:${spring.application.name}
-      - nacos:common  
+      - nacos:common
+      - nacos:${spring.application.name}-dubbo
+
+seata:
+  enabled: true
+  config:
+    type: nacos
+    nacos:
+      server-addr: ${nacos.host}:${nacos.port}
+      group: ${spring.profiles.active}
+      namespace: ${nacos.namespace}
+      dataId: seataServer.properties
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${nacos.host}:${nacos.port}
+      group : ${spring.profiles.active}
+      namespace: ${nacos.namespace}
+  tx-service-group: default_tx_group
+  service:
+    vgroup-mapping:
+      default_tx_group: default

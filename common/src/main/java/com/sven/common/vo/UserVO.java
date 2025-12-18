@@ -1,5 +1,6 @@
 package com.sven.common.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserVO {
+public class UserVO implements Serializable {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;

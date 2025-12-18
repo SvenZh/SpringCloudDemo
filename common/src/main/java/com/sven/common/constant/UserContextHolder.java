@@ -8,7 +8,7 @@ import com.sven.common.security.UserInfo;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class UserApplicationContext {
+public class UserContextHolder {
 
     public UserInfo getUser() {
         Authentication authentication = getAuthentication();

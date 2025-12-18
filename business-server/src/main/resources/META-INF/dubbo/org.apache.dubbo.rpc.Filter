@@ -1,0 +1,1 @@
+providerFilter=com.sven.common.dubbo.filter.DubboProviderFilter

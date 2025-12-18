@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -29,29 +30,29 @@ import com.sven.common.domain.message.ResponseMessage;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    public IBaseResponseMessage<?> defalut(Exception ex) {
+    public ResponseEntity<IBaseResponseMessage<?>>  defalut(Exception ex) {
         ErrorDetails error = new ErrorDetails(500, ex.getMessage());
 
         ResponseMessage<String> response = new ResponseMessage<>(error);
-        return response;
+        return ResponseEntity.internalServerError().body(response);
     }
 
     @ExceptionHandler(value = BaseException.class)
-    public IBaseResponseMessage<?> resolvebaseException(BaseException ex) {
+    public ResponseEntity<IBaseResponseMessage<?>> resolvebaseException(BaseException ex) {
         ErrorDetails error = new ErrorDetails(ex.getResponseEnum().getCode(), ex.getMessage());
 
         ResponseMessage<String> response = new ResponseMessage<>(error);
-        return response;
+        return ResponseEntity.internalServerError().body(response);
     }
 
     @ExceptionHandler({ BindException.class, MethodArgumentNotValidException.class,
             ConstraintViolationException.class })
-    public IBaseResponseMessage<?> resolveMethodArgumentNotValidException(Exception ex) {
+    public ResponseEntity<IBaseResponseMessage<?>> resolveMethodArgumentNotValidException(Exception ex) {
 
         ErrorDetails error = new ErrorDetails(BusinessExceptionEnum.valid_exception.getCode(), handlerNotValidException(ex));
         ResponseMessage<String> response = new ResponseMessage<>(error);
 
-        return response;
+        return ResponseEntity.internalServerError().body(response);
     }
 
     private String handlerNotValidException(Exception e) {

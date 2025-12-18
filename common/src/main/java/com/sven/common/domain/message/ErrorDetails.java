@@ -1,5 +1,7 @@
 package com.sven.common.domain.message;
 
+import java.io.Serializable;
+
 import com.sven.common.exception.BusinessExceptionEnum;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorDetails {
+public class ErrorDetails implements Serializable {
     private int errorCode;
     private String errorMessage;
 

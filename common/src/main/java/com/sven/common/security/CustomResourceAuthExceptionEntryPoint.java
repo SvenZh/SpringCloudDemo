@@ -39,7 +39,7 @@ public class CustomResourceAuthExceptionEntryPoint implements AuthenticationEntr
         // 令牌过期处理
         if (authException instanceof InvalidBearerTokenException
                 || authException instanceof InsufficientAuthenticationException) {
-            response.setStatus(org.springframework.http.HttpStatus.FAILED_DEPENDENCY.value());
+            response.setStatus(HttpStatus.FAILED_DEPENDENCY.value());
             result.setError(new ErrorDetails(BusinessExceptionEnum.bearer_token_expire));
         }
         PrintWriter printWriter = response.getWriter();

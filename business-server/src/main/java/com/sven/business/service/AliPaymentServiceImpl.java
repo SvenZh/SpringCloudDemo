@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sven.business.event.PaymentEvent;
 import com.sven.common.annotation.PayStrategyAnnotation;
 
-@Service
+@Service("aliPay")
 @PayStrategyAnnotation("aliPay")
 public class AliPaymentServiceImpl extends PaymentAbstract {
 
