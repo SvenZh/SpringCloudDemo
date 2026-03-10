@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,9 @@ public class UserServiceImpl implements IUserService {
     
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {
@@ -130,8 +134,10 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseMessage<Boolean> createUser(final List<UserDTO> dto) {
         List<UserEntity> userInfoEntities = dto.stream().map(item -> {
+
             UserEntity userInfoEntity = new UserEntity();
             BeanUtils.copyProperties(item, userInfoEntity);
+            userInfoEntity.setPassword(passwordEncoder.encode(item.getPassword()));
 
             return userInfoEntity;
         }).collect(Collectors.toList());

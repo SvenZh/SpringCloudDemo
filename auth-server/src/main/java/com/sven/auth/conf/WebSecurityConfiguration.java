@@ -18,7 +18,7 @@ public class WebSecurityConfiguration {
         httpSecurity
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // 白名单
-                        .antMatchers("/test/captcha", "/test/reg").permitAll()
+                        .antMatchers("/test/captcha").permitAll()
                         // 其它请求都需要认证
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())

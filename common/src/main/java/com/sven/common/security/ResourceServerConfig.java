@@ -1,10 +1,8 @@
 package com.sven.common.security;
 
-
-import java.util.Map;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(value = {OAuth2ServerProperties.class})
 public class ResourceServerConfig {
 
     @Autowired
@@ -36,7 +35,7 @@ public class ResourceServerConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, PermitAllUrlConfig permitAllUrl,
-            ObjectMapper objectMapper) throws Exception {
+            ObjectMapper objectMapper, OAuth2ServerProperties oAuth2ServerProperties) throws Exception {
         httpSecurity
                 .sessionManagement(session -> session
                         // .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -58,7 +57,7 @@ public class ResourceServerConfig {
                         // 认证成功, 权限不足处理
                         .accessDeniedHandler(new CustomResourceAccessDeniedHandler(objectMapper))
                         // OpaqueToken自省
-                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector("http://127.0.0.1:10030/oauth2/introspect", "admin", "admin", redisTemplate)))
+                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector(oAuth2ServerProperties.getIntrospectionUri(), "admin", "admin", redisTemplate)))
                 .headers(header -> header
                         .frameOptions().disable()
                         // 禁用浏览器或代理headers缓存
@@ -109,11 +108,11 @@ public class ResourceServerConfig {
     // }
 
     @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(myClientRegistration());
+    public ClientRegistrationRepository clientRegistrationRepository(OAuth2ServerProperties oAuth2ServerPropertie) {
+        return new InMemoryClientRegistrationRepository(myClientRegistration(oAuth2ServerPropertie));
     }
 
-    private ClientRegistration myClientRegistration() {
+    private ClientRegistration myClientRegistration(OAuth2ServerProperties oAuth2ServerPropertie) {
         return ClientRegistration.withRegistrationId("myResourceServer")
             .clientId("openIdClient")
             .clientSecret("openIdClient")
@@ -121,11 +120,11 @@ public class ResourceServerConfig {
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .redirectUri("http://localhost:10050/login/oauth2/code/myResourceServer")
             .scope("openid", "image", "name", "phone")
-            .authorizationUri("http://127.0.0.1:10030/oauth2/authorize")
-            .tokenUri("http://127.0.0.1:10030/oauth2/token")
-            .userInfoUri("http://127.0.0.1:10030/userinfo")
+            .authorizationUri(oAuth2ServerPropertie.getAuthorizationUri())
+            .tokenUri(oAuth2ServerPropertie.getTokenUri())
+            .userInfoUri(oAuth2ServerPropertie.getUserInfoUri())
             .userNameAttributeName(IdTokenClaimNames.SUB)
-            .jwkSetUri("http://127.0.0.1:10030/oauth2/jwks")
+            .jwkSetUri(oAuth2ServerPropertie.getJwkSetUri())
             .clientName("Sven")
             .build();
     }

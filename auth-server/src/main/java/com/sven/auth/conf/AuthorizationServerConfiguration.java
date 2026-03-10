@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2Token;
@@ -65,9 +65,11 @@ import com.sven.auth.token.CustomeOAuth2TokenCustomizer;
 import com.sven.auth.token.generator.CustomOAuth2AuthorizationCodeGenerator;
 import com.sven.auth.token.generator.CustomeOAuth2AccessTokenGenerator;
 import com.sven.common.constant.SecurityConstants;
+import com.sven.common.security.OAuth2ServerProperties;
 import com.sven.common.security.UserInfo;
 
 @Configuration
+@EnableConfigurationProperties(value = {OAuth2ServerProperties.class})
 public class AuthorizationServerConfiguration {
 
     @Bean
@@ -168,11 +170,6 @@ public class AuthorizationServerConfiguration {
         // 短信授权模式验证器提供者, 组装成UsernamePasswordAuthenticationToken给CustomDaoAuthenticationProvider进行校验, 成功后返回accessToken和refreshToken
         httpSecurity.authenticationProvider(customOAuth2SmsAuthorizationProvider);
     }
-    
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     // 使用jdbc存储客户端信息
     @Bean
@@ -211,9 +208,9 @@ public class AuthorizationServerConfiguration {
     
     // 改变所有默认端点的请求路径
     @Bean 
-    public AuthorizationServerSettings authorizationServerSettings() {
+    public AuthorizationServerSettings authorizationServerSettings(OAuth2ServerProperties oAuth2ServerProperties) {
         return AuthorizationServerSettings.builder()
-            .issuer("http://127.0.0.1:10030")      // 授权服务者的签发标识
+            .issuer(oAuth2ServerProperties.getIssuerUri())      // 授权服务者的签发标识
             .build();
     }
 
