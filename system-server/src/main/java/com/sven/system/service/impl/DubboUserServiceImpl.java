@@ -16,12 +16,12 @@ import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.dubbo.server.IUserService;
 import com.sven.common.exception.BusinessExceptionEnum;
-import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.PermissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
 import com.sven.system.entity.UserEntity;
-import com.sven.system.service.IRolePerimissionService;
+import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IUserRoleService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class DubboUserServiceImpl implements IUserService {
     private IUserRoleService userRoleService;
 
     @Autowired
-    private IRolePerimissionService rolePerimissionService;
+    private IRolePermissionService rolePermissionService;
 
     @Override
     @SentinelResource(value = "retrieveUserInfoByName")
@@ -60,15 +60,15 @@ public class DubboUserServiceImpl implements IUserService {
             return response;
         }
        
-        List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-            ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                    .retrieveRolePerimissionInfoByRoleId(role.getId());
+        List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+            ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                    .retrieveRolePermissionInfoByRoleId(role.getId());
             
-            return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
         }).collect(Collectors.toList());
 
         response.setUserRole(roleInfo.getData());
-        response.setUserPerimission(userPerimission);
+        response.setUserPermission(userPermission);
 
         return response;
     }

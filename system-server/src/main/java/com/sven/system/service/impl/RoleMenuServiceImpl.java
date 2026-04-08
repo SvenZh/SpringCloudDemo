@@ -27,7 +27,7 @@ public class RoleMenuServiceImpl implements IRoleMenuService{
     @Override
     public ResponseMessage<List<MenuVO>> retrieveRoleMenuInfoByRoleId(Long roleId) {
         
-        List<RoleMenuEntity> RoleMenuEntities = roleMenuServiceDAO.retrieveRolePerimissionInfoByRoleId(roleId);
+        List<RoleMenuEntity> RoleMenuEntities = roleMenuServiceDAO.retrieveRolePermissionInfoByRoleId(roleId);
         
         List<MenuVO> response = RoleMenuEntities.stream().map(entity -> {
             ResponseMessage<MenuVO> result = menuService
@@ -48,7 +48,7 @@ public class RoleMenuServiceImpl implements IRoleMenuService{
     }
 
     @Override
-    public ResponseMessage<Boolean> hasPerimission(Set<String> authority, String requestPath) {
+    public ResponseMessage<Boolean> hasPermission(Set<String> authority, String requestPath) {
         return null;
     }
 

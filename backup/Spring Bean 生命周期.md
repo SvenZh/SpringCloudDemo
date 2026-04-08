@@ -22,7 +22,7 @@
 - BeanFactoryPostProcessor：读取BeanDefiniion数据，并且可以根据需要进行修改
 - PropertySourcesPlaceholderConfigurer：解析配置文件中的 ${...} 占位符，并注册解析器，由PropertyPlaceholderAutoConfiguration自动配置
 - BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry：读取BeanDefiniion数据，并且可以根据需要进行修改，手动注册Bean
-  - ConfigurationClassPostProcessor：解析 @Configuration
+  - ConfigurationClassPostProcessor：解析 @Configuration、@ComponentScan、@Import、@ImportResource、@PropertySource
 
 ## BeanDefinition 存储
 - BeanDefinitionRegistry (接口)
@@ -66,8 +66,8 @@
   - BeanNameAware：注入当前bean对应beanName
   - BeanClassLoaderAware：注入加载当前bean的ClassLoader
   - BeanFactoryAware：注入当前BeanFactory容器的引用
-- `initializeBean.applyBeanPostProcessorsBeforeInitialization(初始化前)`
-  - BeanPostProcessor.postProcessBeforeInitialization
+- `initializeBean.applyBeanPostProcessorsBeforeInitialization`
+  - BeanPostProcessor.postProcessBeforeInitialization(初始化前)
     - ApplicationContextAwareProcessor：处理容器相关的Aware接口
         - ApplicationContextAware：获取 ApplicationContext
         - EnvironmentAware：获取Environment

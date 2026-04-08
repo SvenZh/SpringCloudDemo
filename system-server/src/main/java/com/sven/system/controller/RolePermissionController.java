@@ -14,35 +14,37 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sven.common.domain.message.IBaseResponseMessage;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.dto.MenuDTO;
-import com.sven.common.vo.MenuVO;
-import com.sven.system.service.IRoleMenuService;
+import com.sven.common.dto.RolePermissionDTO;
+import com.sven.common.vo.PermissionVO;
+import com.sven.system.service.IRolePermissionService;
 
 @RestController
-@RequestMapping("/roleMenu")
-public class RoleMenuController {
+@RequestMapping("/rolePermission")
+public class RolePermissionController {
 
     @Autowired
-    private IRoleMenuService roleMenuService;
-    
-    @PostMapping("/retrieveRolePermissionInfoByRoleId")
-    public IBaseResponseMessage<List<MenuVO>> retrieveRolePermissionInfoByRoleId(@RequestParam("roleId") final Long roleId) {
-        ResponseMessage<List<MenuVO>> response = roleMenuService.retrieveRoleMenuInfoByRoleId(roleId);
+    private IRolePermissionService rolePermissionService;
+
+    @GetMapping("/retrieveRolePermissionInfoByRoleId")
+    public IBaseResponseMessage<List<PermissionVO>> retrieveRolePermissionInfoByRoleId(
+            @RequestParam("roleId") final Long roleId) {
+        ResponseMessage<List<PermissionVO>> response = rolePermissionService
+                .retrieveRolePermissionInfoByRoleId(roleId);
 
         return response;
     }
-    
+
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createPermission(@RequestBody @Validated final MenuDTO dto) {
-        ResponseMessage<Boolean> response = roleMenuService.createMenu(dto);
-        
+    public IBaseResponseMessage<Boolean> createrolePermission(@RequestBody @Validated final RolePermissionDTO dto) {
+        ResponseMessage<Boolean> response = rolePermissionService.createRolePermission(dto);
+
         return response;
     }
     
     @GetMapping("/hasPermission")
     public IBaseResponseMessage<Boolean> hasPermission(@RequestParam("authority") final Set<String> authority,
             @RequestParam("requestPath") final String requestPath) {
-        ResponseMessage<Boolean> response = roleMenuService.hasPermission(authority, requestPath);
+        ResponseMessage<Boolean> response = rolePermissionService.hasPermission(authority, requestPath);
 
         return response;
     }

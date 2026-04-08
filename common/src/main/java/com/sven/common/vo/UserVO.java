@@ -30,5 +30,5 @@ public class UserVO implements Serializable {
     
     private List<RoleVO> userRole;
     
-    private List<PerimissionVO> userPerimission;
+    private List<PermissionVO> userPermission;
 }

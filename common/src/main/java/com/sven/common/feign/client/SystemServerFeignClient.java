@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.security.NoToken;
-import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.PermissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 
@@ -21,18 +21,18 @@ public interface SystemServerFeignClient {
     public ResponseMessage<UserVO> retrieveUserInfoByName(@RequestParam("userName") String userName);
     
     @NoToken
-    @GetMapping("/internal/retrieveUserInfoByphone")
+    @GetMapping("/internal/retrieveUserInfoByPhone")
     public ResponseMessage<UserVO> retrieveUserInfoByPhone(@RequestParam("phone") String phone);
 
     @GetMapping("/role/retrieveRoleInfoByRoleName")
     public ResponseMessage<RoleVO> retrieveRoleInfoByRoleName(@RequestParam("roleName") String roleName);
 
-    @GetMapping("/rolePerimission/retrieveRolePerimissionInfoByRoleId")
-    public ResponseMessage<List<PerimissionVO>> retrieveRolePerimissionInfoByRoleId(
+    @GetMapping("/rolePermission/retrieveRolePermissionInfoByRoleId")
+    public ResponseMessage<List<PermissionVO>> retrieveRolePermissionInfoByRoleId(
             @RequestParam("roleId") Long roleId);
 
-    @GetMapping("/rolePerimission/hasPerimission")
-    public ResponseMessage<Boolean> hasPerimission(@RequestParam("authority") Set<String> authority,
+    @GetMapping("/rolePermission/hasPermission")
+    public ResponseMessage<Boolean> hasPermission(@RequestParam("authority") Set<String> authority,
             @RequestParam("requestPath") String requestPath);
 
 }

@@ -19,12 +19,12 @@ import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.exception.BusinessExceptionEnum;
-import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.PermissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
 import com.sven.system.entity.UserEntity;
-import com.sven.system.service.IRolePerimissionService;
+import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
@@ -40,7 +40,7 @@ public class UserServiceImpl implements IUserService {
     private IUserRoleService userRoleService;
 
     @Autowired
-    private IRolePerimissionService rolePerimissionService;
+    private IRolePermissionService rolePermissionService;
     
     @Autowired
     private UserServiceDAO userServiceDAO;
@@ -65,15 +65,15 @@ public class UserServiceImpl implements IUserService {
                 return vo;
             }
            
-            List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-                ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                        .retrieveRolePerimissionInfoByRoleId(role.getId());
+            List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+                ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                        .retrieveRolePermissionInfoByRoleId(role.getId());
                 
-                return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+                return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
             }).collect(Collectors.toList());
 
             vo.setUserRole(roleInfo.getData());
-            vo.setUserPerimission(userPerimission);
+            vo.setUserPermission(userPermission);
             
             return vo;
         }).collect(Collectors.toList());
@@ -108,15 +108,15 @@ public class UserServiceImpl implements IUserService {
             return response;
         }
        
-        List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-            ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                    .retrieveRolePerimissionInfoByRoleId(role.getId());
+        List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+            ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                    .retrieveRolePermissionInfoByRoleId(role.getId());
             
-            return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
         }).collect(Collectors.toList());
 
         response.setUserRole(roleInfo.getData());
-        response.setUserPerimission(userPerimission);
+        response.setUserPermission(userPermission);
 
         return response;
     }

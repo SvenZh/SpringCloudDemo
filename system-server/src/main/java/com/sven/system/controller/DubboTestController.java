@@ -19,7 +19,7 @@ public class DubboTestController {
     private IPaymentService paymentService;
 
     @GetMapping("/list")
-    public IBaseResponseMessage<Boolean> retrievePerimissionList() {
+    public IBaseResponseMessage<Boolean> retrievePermissionList() {
         boolean response = paymentService.payment(new BigDecimal(11));
 
         return ResponseMessage.ok(response);
