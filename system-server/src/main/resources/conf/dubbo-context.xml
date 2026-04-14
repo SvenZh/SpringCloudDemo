@@ -11,6 +11,6 @@
     <dubbo:consumer timeout="25000" retries="0" filter="consumerFilter" check="false"></dubbo:consumer>
 
     <import resource="classpath*:conf/dubbo-consumer.xml" />
-    <import resource="classpath*:conf/dubbo-register.xml" />
+    <import resource="classpath*:conf/dubbo-provider.xml" />
 
 </beans>

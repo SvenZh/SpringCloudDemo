@@ -8,7 +8,7 @@
             "projectName": "business-server",
             "vmArgs": [
                 "-Dsentinel.transport.port=8719",
-                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.host=127.0.0.1",
                 "-Dsentinel.dashboard.port=8858",
                 "-Dspring.profiles.active=dev",
                 "-Dfile.encoding=UTF-8",
@@ -28,7 +28,7 @@
             "projectName": "auth-server",
             "vmArgs": [
                 "-Dsentinel.transport.port=8719",
-                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.host=127.0.0.1",
                 "-Dsentinel.dashboard.port=8858",
                 "-Dspring.profiles.active=dev",
                 "-Dfile.encoding=UTF-8",
@@ -48,7 +48,7 @@
             "projectName": "system-server",
             "vmArgs": [
                 "-Dsentinel.transport.port=8719",
-                "-Dsentinel.dashboard.host=127.0.0.01",
+                "-Dsentinel.dashboard.host=127.0.0.1",
                 "-Dsentinel.dashboard.port=8858",
                 "-Dspring.profiles.active=dev",
                 "-Dfile.encoding=UTF-8",

@@ -34,7 +34,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sven.common.constant.SecurityConstants;
 
 public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
@@ -56,12 +55,11 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector{
      * @param clientId The client id authorized to introspect
      * @param clientSecret The client's secret
      */
-    public CustomOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret, RedisTemplate<String, Object> redisTemplate) {
+    public CustomOpaqueTokenIntrospector(String introspectionUri, String clientId, String clientSecret, RedisTemplate<String, Object> redisTemplate, RestTemplate restTemplate) {
         Assert.notNull(introspectionUri, "introspectionUri cannot be null");
         Assert.notNull(clientId, "clientId cannot be null");
         Assert.notNull(clientSecret, "clientSecret cannot be null");
         this.requestEntityConverter = this.defaultRequestEntityConverter(URI.create(introspectionUri));
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor(clientId, clientSecret));
         this.restOperations = restTemplate;
         this.redisTemplate = redisTemplate;

@@ -3,6 +3,7 @@ package com.sven.common.security;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,8 +36,14 @@ public class ResourceServerConfig {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Bean
+    @LoadBalanced
+    public RestTemplate loadBalancedRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, PermitAllUrlConfig permitAllUrl,
-            ObjectMapper objectMapper, OAuth2ServerProperties oAuth2ServerProperties) throws Exception {
+            ObjectMapper objectMapper, OAuth2ServerProperties oAuth2ServerProperties, RestTemplate restTemplate) throws Exception {
         httpSecurity
                 .sessionManagement(session -> session
                         // .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -57,7 +65,7 @@ public class ResourceServerConfig {
                         // 认证成功, 权限不足处理
                         .accessDeniedHandler(new CustomResourceAccessDeniedHandler(objectMapper))
                         // OpaqueToken自省
-                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector(oAuth2ServerProperties.getIntrospectionUri(), "admin", "admin", redisTemplate)))
+                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector(oAuth2ServerProperties.getIntrospectionUri(), "admin", "admin", redisTemplate, restTemplate)))
                 .headers(header -> header
                         .frameOptions().disable()
                         // 禁用浏览器或代理headers缓存
@@ -88,7 +96,7 @@ public class ResourceServerConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 )
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/error")));
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/error")))
                 ;
 
         return httpSecurity.build();
