@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sven.common.domain.message.ResponseMessage;
@@ -17,17 +16,15 @@ import com.sven.system.service.IPermissionService;
 import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IRoleService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class RolePermissionService implements IRolePermissionService {
 
-    @Autowired
-    private IPermissionService permissionService;
-
-    @Autowired
-    private RolePermissionServiceDAO rolePermissionServiceDAO;
-
-    @Autowired
-    private IRoleService roleService;
+    private final IPermissionService permissionService;
+    private final RolePermissionServiceDAO rolePermissionServiceDAO;
+    private final IRoleService roleService;
 
     @Override
     public ResponseMessage<List<PermissionVO>> retrieveRolePermissionInfoByRoleId(final Long roleId) {

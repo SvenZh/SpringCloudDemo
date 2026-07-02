@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sven.common.domain.message.ResponseMessage;
@@ -15,14 +14,14 @@ import com.sven.system.entity.RoleMenuEntity;
 import com.sven.system.service.IMenuService;
 import com.sven.system.service.IRoleMenuService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class RoleMenuServiceImpl implements IRoleMenuService{
 
-    @Autowired
-    private RoleMenuServiceDAO roleMenuServiceDAO;
-    
-    @Autowired
-    private IMenuService menuService;
+    private final RoleMenuServiceDAO roleMenuServiceDAO;
+    private final IMenuService menuService;
     
     @Override
     public ResponseMessage<List<MenuVO>> retrieveRoleMenuInfoByRoleId(Long roleId) {

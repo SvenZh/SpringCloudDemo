@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
@@ -24,21 +23,18 @@ import com.sven.system.entity.UserEntity;
 import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IUserRoleService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service("dubboUserService")
 @DS("master")
 @Slf4j
+@AllArgsConstructor
 public class DubboUserServiceImpl implements IUserService {
 
-    @Autowired
-    private UserServiceDAO userServiceDAO;
-
-    @Autowired
-    private IUserRoleService userRoleService;
-
-    @Autowired
-    private IRolePermissionService rolePermissionService;
+    private final UserServiceDAO userServiceDAO;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
 
     @Override
     @SentinelResource(value = "retrieveUserInfoByName")

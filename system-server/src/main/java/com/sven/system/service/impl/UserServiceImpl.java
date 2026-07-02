@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,27 +28,20 @@ import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
 import cn.hutool.json.JSONUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @DS("master")
 @Slf4j
+@AllArgsConstructor
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private IUserRoleService userRoleService;
-
-    @Autowired
-    private IRolePermissionService rolePermissionService;
-    
-    @Autowired
-    private UserServiceDAO userServiceDAO;
-    
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
+    private final UserServiceDAO userServiceDAO;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {

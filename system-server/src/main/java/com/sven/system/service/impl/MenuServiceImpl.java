@@ -3,7 +3,6 @@ package com.sven.system.service.impl;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sven.common.domain.message.ResponseMessage;
@@ -13,11 +12,13 @@ import com.sven.system.dao.MenuServiceDAO;
 import com.sven.system.entity.MenuEntity;
 import com.sven.system.service.IMenuService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class MenuServiceImpl implements IMenuService{
 
-    @Autowired
-    private MenuServiceDAO menuServiceDAO;
+    private final MenuServiceDAO menuServiceDAO;
     
     @Override
     public ResponseMessage<List<MenuVO>> retrieveMenuList(MenuDTO dto) {

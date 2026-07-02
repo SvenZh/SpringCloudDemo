@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,11 +14,13 @@ import com.sven.system.dao.PermissionServiceDAO;
 import com.sven.system.entity.PermissionEntity;
 import com.sven.system.service.IPermissionService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class PermissionServiceImpl implements IPermissionService {
     
-    @Autowired
-    private PermissionServiceDAO permissionServiceDAO;
+    private final PermissionServiceDAO permissionServiceDAO;
     
     @Override
     public ResponseMessage<List<PermissionVO>> retrievePermissionList(final PermissionDTO dto) {

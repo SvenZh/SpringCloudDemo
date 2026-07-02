@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,11 +15,13 @@ import com.sven.system.dao.RoleServiceDAO;
 import com.sven.system.entity.RoleEntity;
 import com.sven.system.service.IRoleService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class RoleServiceImpl implements IRoleService {
 
-    @Autowired
-    private RoleServiceDAO roleServiceDAO;
+    private final RoleServiceDAO roleServiceDAO;
     
     @Override
     public ResponseMessage<List<RoleVO>> retrieveRoleList(final RoleDTO dto) {
