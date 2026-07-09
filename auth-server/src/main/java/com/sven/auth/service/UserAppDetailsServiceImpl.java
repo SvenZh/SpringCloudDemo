@@ -1,24 +1,25 @@
 package com.sven.auth.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.sven.common.constant.SecurityConstants;
 import com.sven.common.domain.message.ResponseMessage;
-import com.sven.common.feign.client.SystemServerFeignClient;
+import com.sven.common.dubbo.server.IUserService;
 import com.sven.common.security.UserInfo;
 import com.sven.common.vo.UserVO;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserAppDetailsServiceImpl implements CustomUserDetailsService {
 
-    @Autowired
-    private SystemServerFeignClient systemServerFeignClient;
+    private final IUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String phone) {
-        ResponseMessage<UserVO> remoteResponse = systemServerFeignClient.retrieveUserInfoByPhone(phone);
+        ResponseMessage<UserVO> remoteResponse = userService.retrieveUserInfoByPhone(phone);
 
         return getUserDetails(remoteResponse);
     }

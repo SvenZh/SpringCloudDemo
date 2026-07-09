@@ -35,6 +35,15 @@ spring:
             rule-type: flow
             username: ${nacos.username}
             password: ${nacos.password}
+        param-flow:  # 热点规则
+          nacos:
+            data-id: ${spring.application.name}-param-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: param-flow
+            username: ${nacos.username}
+            password: ${nacos.password}
   config:
     import:
       - nacos:${spring.application.name}

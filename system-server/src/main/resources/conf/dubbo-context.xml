@@ -7,8 +7,8 @@
     <context:property-placeholder/>
 
     <dubbo:registry protocol="nacos" group= "${spring.profiles.active}" address="${dubbo.registry.nacos.address}" register-mode="instance"/>
-    <dubbo:provider timeout="30000" retries="0" filter="providerFilter"></dubbo:provider>
-    <dubbo:consumer timeout="25000" retries="0" filter="consumerFilter" check="false"></dubbo:consumer>
+    <dubbo:provider timeout="30000" retries="0" filter="providerFilter" />
+    <dubbo:consumer timeout="25000" retries="0" filter="consumerFilter" check="false" />
 
     <import resource="classpath*:conf/dubbo-consumer.xml" />
     <import resource="classpath*:conf/dubbo-provider.xml" />

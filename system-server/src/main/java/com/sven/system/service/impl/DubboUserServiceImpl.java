@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.google.common.collect.Lists;
 import com.sven.common.domain.message.ResponseMessage;
@@ -37,7 +36,6 @@ public class DubboUserServiceImpl implements IUserService {
     private final IRolePermissionService rolePermissionService;
 
     @Override
-    @SentinelResource(value = "retrieveUserInfoByName")
     public ResponseMessage<UserVO> retrieveUserInfoByName(String userName) {
         UserDTO dto = new UserDTO();
         dto.setName(userName);
@@ -70,7 +68,6 @@ public class DubboUserServiceImpl implements IUserService {
     }
 
     @Override
-    @SentinelResource(value = "addUser")
     public ResponseMessage<Void> addUser(String userName) {
 
         UserEntity userEntity = new UserEntity();
@@ -80,5 +77,11 @@ public class DubboUserServiceImpl implements IUserService {
         return ResponseMessage.ok(null);
     }
 
+    @Override
+    public ResponseMessage<UserVO> retrieveUserInfoByPhone(String phone) {
+        UserDTO dto = new UserDTO();
+        dto.setPhone(phone);
 
+        return ResponseMessage.ok(retrieveUserInfo(dto));
+    }
 }
