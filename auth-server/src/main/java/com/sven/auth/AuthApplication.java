@@ -16,7 +16,12 @@ import com.sven.common.exception.GlobalExceptionHandler;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = { "com.sven.common.feign.client" }, defaultConfiguration = FeignConfig.class)
-@Import(value = {GlobalExceptionHandler.class, RedisTemplateConfig.class, SentinelConfig.class, PasswordEncoderConfig.class })
+@Import(value = {
+    GlobalExceptionHandler.class, 
+    RedisTemplateConfig.class, 
+    SentinelConfig.class, 
+    PasswordEncoderConfig.class
+})
 @ImportResource(value = {"classpath:conf/dubbo-context.xml"})
 public class AuthApplication {
     public static void main(String[] args) {

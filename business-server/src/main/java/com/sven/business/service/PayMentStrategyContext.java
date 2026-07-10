@@ -38,17 +38,14 @@ public class PayMentStrategyContext {
     //     return strategy.payment(price);
     // }
 
-   public Boolean toPay(String payCode, BigDecimal price) {
+    public Boolean toPay(String payCode, BigDecimal price) {
 
-       Optional<IPaymentService> paymentService = paymentServiceList.stream()
-               .filter(payService -> payService.isSupport(payCode))
-               .max(Comparator.comparingInt(Ordered::getOrder));
+        IPaymentService instance = paymentServiceList.stream()
+                .filter(payService -> payService.isSupport(payCode))
+                .max(Comparator.comparingInt(Ordered::getOrder))
+                .orElseThrow(() -> new IllegalArgumentException("不支持的支付方式: " + payCode));
 
-       IPaymentService strategy = paymentService.get();
-       if (strategy == null) {
-           throw new IllegalArgumentException("不支持的支付方式: " + payCode);
-       }
-       return strategy.payment(price);
-   }
+        return instance.payment(price);
+    }
     
 }

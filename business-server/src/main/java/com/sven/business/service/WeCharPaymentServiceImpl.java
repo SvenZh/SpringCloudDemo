@@ -2,19 +2,20 @@ package com.sven.business.service;
 
 import java.math.BigDecimal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.sven.business.event.PaymentEvent;
 import com.sven.common.annotation.PayStrategyAnnotation;
 
+import lombok.AllArgsConstructor;
+
 @Service
 @PayStrategyAnnotation("weCharPay")
+@AllArgsConstructor
 public class WeCharPaymentServiceImpl extends PaymentAbstract {
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
     
     @Override
     public boolean pay(BigDecimal price) {
