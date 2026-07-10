@@ -25,24 +25,24 @@ public class RoleMenuController {
     @Autowired
     private IRoleMenuService roleMenuService;
     
-    @PostMapping("/retrieveRolePerimissionInfoByRoleId")
-    public IBaseResponseMessage<List<MenuVO>> retrieveRolePerimissionInfoByRoleId(@RequestParam("roleId") final Long roleId) {
+    @PostMapping("/retrieveRolePermissionInfoByRoleId")
+    public IBaseResponseMessage<List<MenuVO>> retrieveRolePermissionInfoByRoleId(@RequestParam("roleId") final Long roleId) {
         ResponseMessage<List<MenuVO>> response = roleMenuService.retrieveRoleMenuInfoByRoleId(roleId);
 
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final MenuDTO dto) {
+    public IBaseResponseMessage<Boolean> createPermission(@RequestBody @Validated final MenuDTO dto) {
         ResponseMessage<Boolean> response = roleMenuService.createMenu(dto);
         
         return response;
     }
     
-    @GetMapping("/hasPerimission")
-    public IBaseResponseMessage<Boolean> hasPerimission(@RequestParam("authority") final Set<String> authority,
+    @GetMapping("/hasPermission")
+    public IBaseResponseMessage<Boolean> hasPermission(@RequestParam("authority") final Set<String> authority,
             @RequestParam("requestPath") final String requestPath) {
-        ResponseMessage<Boolean> response = roleMenuService.hasPerimission(authority, requestPath);
+        ResponseMessage<Boolean> response = roleMenuService.hasPermission(authority, requestPath);
 
         return response;
     }

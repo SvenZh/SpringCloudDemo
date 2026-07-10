@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PerimissionDTO extends PageMessage {
+public class PermissionDTO extends PageMessage {
 
     @NotEmpty(message = "不能为空")
     private String name;

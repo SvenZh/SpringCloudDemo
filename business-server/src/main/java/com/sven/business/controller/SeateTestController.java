@@ -1,25 +1,19 @@
 package com.sven.business.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sven.business.service.TestServiceImpl;
-import com.sven.common.security.NoToken;
+
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/test")
-public class TestController {
+@AllArgsConstructor
+public class SeateTestController {
 
-    @Autowired
-    private TestServiceImpl testServiceImpl;
-
-    @NoToken
-    @GetMapping("/hello")
-    public String test() {
-        return "hello oauth2";
-    }
+    private final TestServiceImpl testServiceImpl;
 
     @GetMapping("/seata-commit")
     public void seataTestConnmit() {

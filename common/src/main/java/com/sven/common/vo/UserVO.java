@@ -3,6 +3,7 @@ package com.sven.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -22,11 +23,12 @@ public class UserVO implements Serializable {
 
     private String email;
 
+    @JsonIgnore
     private String password;
     
     private String phone;
     
     private List<RoleVO> userRole;
     
-    private List<PerimissionVO> userPerimission;
+    private List<PermissionVO> userPermission;
 }

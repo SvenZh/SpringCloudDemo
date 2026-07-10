@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("sys_permission")
-public class PerimissionEntity extends BaseEntityMessage {
+public class PermissionEntity extends BaseEntityMessage {
     private String name;
 
     private String code;

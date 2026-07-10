@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PerimissionVO implements Serializable {
+public class PermissionVO implements Serializable {
 
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;

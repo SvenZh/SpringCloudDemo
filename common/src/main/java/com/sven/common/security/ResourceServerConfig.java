@@ -1,10 +1,9 @@
 package com.sven.common.security;
 
-
-import java.util.Map;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,19 +23,27 @@ import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
+@EnableConfigurationProperties(value = {OAuth2ServerProperties.class})
 public class ResourceServerConfig {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
     @Bean
+    @LoadBalanced
+    public RestTemplate loadBalancedRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, PermitAllUrlConfig permitAllUrl,
-            ObjectMapper objectMapper) throws Exception {
+            ObjectMapper objectMapper, OAuth2ServerProperties oAuth2ServerProperties, RestTemplate restTemplate) throws Exception {
         httpSecurity
                 .sessionManagement(session -> session
                         // .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -58,7 +65,7 @@ public class ResourceServerConfig {
                         // 认证成功, 权限不足处理
                         .accessDeniedHandler(new CustomResourceAccessDeniedHandler(objectMapper))
                         // OpaqueToken自省
-                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector("http://127.0.0.1:10030/oauth2/introspect", "admin", "admin", redisTemplate)))
+                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector(oAuth2ServerProperties.getIntrospectionUri(), "admin", "admin", redisTemplate, restTemplate)))
                 .headers(header -> header
                         .frameOptions().disable()
                         // 禁用浏览器或代理headers缓存
@@ -89,7 +96,7 @@ public class ResourceServerConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 )
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/error")));
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/error")))
                 ;
 
         return httpSecurity.build();
@@ -109,11 +116,11 @@ public class ResourceServerConfig {
     // }
 
     @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        return new InMemoryClientRegistrationRepository(myClientRegistration());
+    public ClientRegistrationRepository clientRegistrationRepository(OAuth2ServerProperties oAuth2ServerPropertie) {
+        return new InMemoryClientRegistrationRepository(myClientRegistration(oAuth2ServerPropertie));
     }
 
-    private ClientRegistration myClientRegistration() {
+    private ClientRegistration myClientRegistration(OAuth2ServerProperties oAuth2ServerPropertie) {
         return ClientRegistration.withRegistrationId("myResourceServer")
             .clientId("openIdClient")
             .clientSecret("openIdClient")
@@ -121,11 +128,11 @@ public class ResourceServerConfig {
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .redirectUri("http://localhost:10050/login/oauth2/code/myResourceServer")
             .scope("openid", "image", "name", "phone")
-            .authorizationUri("http://127.0.0.1:10030/oauth2/authorize")
-            .tokenUri("http://127.0.0.1:10030/oauth2/token")
-            .userInfoUri("http://127.0.0.1:10030/userinfo")
+            .authorizationUri(oAuth2ServerPropertie.getAuthorizationUri())
+            .tokenUri(oAuth2ServerPropertie.getTokenUri())
+            .userInfoUri(oAuth2ServerPropertie.getUserInfoUri())
             .userNameAttributeName(IdTokenClaimNames.SUB)
-            .jwkSetUri("http://127.0.0.1:10030/oauth2/jwks")
+            .jwkSetUri(oAuth2ServerPropertie.getJwkSetUri())
             .clientName("Sven")
             .build();
     }

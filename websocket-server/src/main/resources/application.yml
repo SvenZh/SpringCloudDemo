@@ -11,11 +11,15 @@ spring:
         namespace: ${nacos.namespace}
         group: ${spring.profiles.active}
         service: ${spring.application.name}
+        username: ${nacos.username}
+        password: ${nacos.password}
       config:
         server-addr: ${nacos.host}:${nacos.port}
         namespace: ${nacos.namespace}
         file-extension: yml
         group: ${spring.profiles.active}
+        username: ${nacos.username}
+        password: ${nacos.password}
   config:
     import:
       - nacos:${spring.application.name}

@@ -6,42 +6,36 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.google.common.collect.Lists;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.dubbo.server.IUserService;
 import com.sven.common.exception.BusinessExceptionEnum;
-import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.PermissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
 import com.sven.system.entity.UserEntity;
-import com.sven.system.service.IRolePerimissionService;
+import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IUserRoleService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service("dubboUserService")
 @DS("master")
 @Slf4j
+@AllArgsConstructor
 public class DubboUserServiceImpl implements IUserService {
 
-    @Autowired
-    private UserServiceDAO userServiceDAO;
-
-    @Autowired
-    private IUserRoleService userRoleService;
-
-    @Autowired
-    private IRolePerimissionService rolePerimissionService;
+    private final UserServiceDAO userServiceDAO;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
 
     @Override
-    @SentinelResource(value = "retrieveUserInfoByName")
     public ResponseMessage<UserVO> retrieveUserInfoByName(String userName) {
         UserDTO dto = new UserDTO();
         dto.setName(userName);
@@ -60,21 +54,20 @@ public class DubboUserServiceImpl implements IUserService {
             return response;
         }
        
-        List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-            ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                    .retrieveRolePerimissionInfoByRoleId(role.getId());
+        List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+            ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                    .retrieveRolePermissionInfoByRoleId(role.getId());
             
-            return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
         }).collect(Collectors.toList());
 
         response.setUserRole(roleInfo.getData());
-        response.setUserPerimission(userPerimission);
+        response.setUserPermission(userPermission);
 
         return response;
     }
 
     @Override
-    @SentinelResource(value = "addUser")
     public ResponseMessage<Void> addUser(String userName) {
 
         UserEntity userEntity = new UserEntity();
@@ -84,5 +77,11 @@ public class DubboUserServiceImpl implements IUserService {
         return ResponseMessage.ok(null);
     }
 
+    @Override
+    public ResponseMessage<UserVO> retrieveUserInfoByPhone(String phone) {
+        UserDTO dto = new UserDTO();
+        dto.setPhone(phone);
 
+        return ResponseMessage.ok(retrieveUserInfo(dto));
+    }
 }

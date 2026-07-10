@@ -1,0 +1,64 @@
+## Spring bean的循环依赖解决过程
+### 三级缓存
+   - 1级：成品 Bean，供外部使用
+   - 2级：半成品 Bean，循环依赖时使用，保证单例
+   - 3级：工厂，延迟创建代理对象，避免创建不必要的代理对象   
+
+### A 依赖 B，B 依赖 A
+- 步骤1: 开始创建 A
+   - getBean("a")   
+   - getSingleton("a")     ``` 检查缓存 ```
+     - singletonObjects 无 
+     - earlySingletonObjects 无  
+     - singletonFactories 无
+   - beforeSingletonCreation("a")  ```标记 A 正在创建```
+     - singletonsCurrentlyInCreation.add("a")
+   - 实例化 A (调用无参构造器)      ``` A 对象创建完成，但属性都是 null```
+   - addSingletonFactory("a", factory)  ``` 关键！放入3级缓存 ```
+     - singletonFactories.put("a", () -> getEarlyBeanReference(A)) 
+   - populateBean("a")  ```属性赋值：发现需要注入 B```
+ - 步骤2: 开始创建 B
+   - getBean("b")   
+   - getSingleton("b")     ``` 检查缓存 ```
+     - singletonObjects 无 
+     - earlySingletonObjects 无  
+     - singletonFactories 无
+   - beforeSingletonCreation("b")  ```标记 B 正在创建```
+     - singletonsCurrentlyInCreation.add("b")
+   - 实例化 B (调用无参构造器)      ``` B 对象创建完成，但属性都是 null```
+   - addSingletonFactory("b", factory)  ``` 关键！放入3级缓存 ```
+     - singletonFactories.put("b", () -> getEarlyBeanReference(B)) 
+   - populateBean("b")  ```属性赋值：发现需要注入A, 循环依赖出现```
+ - 步骤3: 获取 A 的早期引用（解决循环依赖） 
+   - getBean("a")  ``` B 属性赋值时需要 A  ```
+   - getSingleton("a", true)
+     - singletonObjects.get("a") ```1级缓存无 ```
+     - earlySingletonObjects.get("a") ```2级缓存无  ```
+     - 检查 A 是否正在创建 → true
+     - singletonFactories.get("a") ``` 3级缓存有 ```
+       - factory = singletonFactories.get("a")  
+       - earlyBean = factory.getObject()  ``` 调用工厂获取早期引用```
+       - getEarlyBeanReference(A)   ``` 如果有 AOP，返回代理对象, 如果没有 AOP，返回原始 A 对象 ```
+     - earlySingletonObjects.put("a", earlyBean)  ``` 放入2级缓存```
+     - singletonFactories.remove("a") ``` 从3级缓存移除```
+   - b.setA(earlyBean)  ``` B 的属性注入完成: B 获得了 A 的早期引用 ```
+ - 步骤4: B 完成初始化
+   - addSingleton("b", b)  ``` B 完全初始化完成 ```
+     - singletonObjects.put("b", b) ``` 放入1级缓存```
+     - earlySingletonObjects.remove("b")  ``` 清除2级缓存```
+     - singletonFactories.remove("b")   ```清除3级缓存```
+   - singletonsCurrentlyInCreation.remove("b")   ```移除创建标记 ```
+ - 步骤5: A 继续完成初始化
+   - populateBean("a")
+     - getBean("b")
+       - singletonObjects   ```1级缓存有 ```
+     - a.setB(completeB)    ```A 获得完整的 B```
+   - addSingleton("a", a)   ``` A 完全初始化完成 ```
+     - singletonObjects.put("a", a)   ```放入1级缓存```
+     - earlySingletonObjects.remove("a")    ``` 清除2级缓存```
+     - singletonFactories.remove("a")   ```清除3级缓存```
+   - singletonsCurrentlyInCreation.remove("a")  ```移除创建标记 ```
+
+## 循环依赖条件
+- 无法解决构造器注入：构造器注入用于强制依赖，必须在实例化时提供所有依赖，但此时 Bean 还没创建完成
+- 无法解决原型Bean循环依赖：原型Bean没有存入缓存

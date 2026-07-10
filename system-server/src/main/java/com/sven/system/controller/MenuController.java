@@ -23,14 +23,14 @@ public class MenuController {
     private IMenuService menuService;
     
     @PostMapping("/list")
-    public IBaseResponseMessage<List<MenuVO>> retrievePerimissionList(@RequestBody final MenuDTO dto) {
+    public IBaseResponseMessage<List<MenuVO>> retrievePermissionList(@RequestBody final MenuDTO dto) {
         ResponseMessage<List<MenuVO>> response = menuService.retrieveMenuList(dto);
 
         return response;
     }
     
     @PostMapping("/creation")
-    public IBaseResponseMessage<Boolean> createPerimission(@RequestBody @Validated final MenuDTO dto) {
+    public IBaseResponseMessage<Boolean> createPermission(@RequestBody @Validated final MenuDTO dto) {
         ResponseMessage<Boolean> response = menuService.createMenu(dto);
         
         return response;

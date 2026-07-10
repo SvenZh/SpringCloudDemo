@@ -7,8 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,34 +18,30 @@ import com.sven.common.constant.AppConstant;
 import com.sven.common.domain.message.ResponseMessage;
 import com.sven.common.dto.UserDTO;
 import com.sven.common.exception.BusinessExceptionEnum;
-import com.sven.common.vo.PerimissionVO;
+import com.sven.common.vo.PermissionVO;
 import com.sven.common.vo.RoleVO;
 import com.sven.common.vo.UserVO;
 import com.sven.system.dao.UserServiceDAO;
 import com.sven.system.entity.UserEntity;
-import com.sven.system.service.IRolePerimissionService;
+import com.sven.system.service.IRolePermissionService;
 import com.sven.system.service.IUserRoleService;
 import com.sven.system.service.IUserService;
 
 import cn.hutool.json.JSONUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @DS("master")
 @Slf4j
+@AllArgsConstructor
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private IUserRoleService userRoleService;
-
-    @Autowired
-    private IRolePerimissionService rolePerimissionService;
-    
-    @Autowired
-    private UserServiceDAO userServiceDAO;
-    
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final IUserRoleService userRoleService;
+    private final IRolePermissionService rolePermissionService;
+    private final UserServiceDAO userServiceDAO;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseMessage<List<UserVO>> retrieveUserList(final UserDTO dto) {
@@ -61,15 +57,15 @@ public class UserServiceImpl implements IUserService {
                 return vo;
             }
            
-            List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-                ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                        .retrieveRolePerimissionInfoByRoleId(role.getId());
+            List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+                ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                        .retrieveRolePermissionInfoByRoleId(role.getId());
                 
-                return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+                return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
             }).collect(Collectors.toList());
 
             vo.setUserRole(roleInfo.getData());
-            vo.setUserPerimission(userPerimission);
+            vo.setUserPermission(userPermission);
             
             return vo;
         }).collect(Collectors.toList());
@@ -104,15 +100,15 @@ public class UserServiceImpl implements IUserService {
             return response;
         }
        
-        List<PerimissionVO> userPerimission = roleInfo.getData().stream().flatMap(role -> {
-            ResponseMessage<List<PerimissionVO>> perimissionVO = rolePerimissionService
-                    .retrieveRolePerimissionInfoByRoleId(role.getId());
+        List<PermissionVO> userPermission = roleInfo.getData().stream().flatMap(role -> {
+            ResponseMessage<List<PermissionVO>> permissionVO = rolePermissionService
+                    .retrieveRolePermissionInfoByRoleId(role.getId());
             
-            return Optional.ofNullable(perimissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
+            return Optional.ofNullable(permissionVO.getData()).orElseGet(() -> new ArrayList<>()).stream();
         }).collect(Collectors.toList());
 
         response.setUserRole(roleInfo.getData());
-        response.setUserPerimission(userPerimission);
+        response.setUserPermission(userPermission);
 
         return response;
     }
@@ -130,8 +126,10 @@ public class UserServiceImpl implements IUserService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseMessage<Boolean> createUser(final List<UserDTO> dto) {
         List<UserEntity> userInfoEntities = dto.stream().map(item -> {
+
             UserEntity userInfoEntity = new UserEntity();
             BeanUtils.copyProperties(item, userInfoEntity);
+            userInfoEntity.setPassword(passwordEncoder.encode(item.getPassword()));
 
             return userInfoEntity;
         }).collect(Collectors.toList());

@@ -11,7 +11,7 @@ public interface IRoleMenuService {
 
     ResponseMessage<Boolean> createMenu(MenuDTO dto);
 
-    ResponseMessage<Boolean> hasPerimission(Set<String> authority, String requestPath);
+    ResponseMessage<Boolean> hasPermission(Set<String> authority, String requestPath);
 
     ResponseMessage<List<MenuVO>> retrieveRoleMenuInfoByRoleId(Long roleId);
 

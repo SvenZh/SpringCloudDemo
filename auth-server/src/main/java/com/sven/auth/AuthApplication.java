@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
 import com.sven.common.config.FeignConfig;
+import com.sven.common.config.PasswordEncoderConfig;
 import com.sven.common.config.RedisTemplateConfig;
 import com.sven.common.config.SentinelConfig;
 import com.sven.common.exception.GlobalExceptionHandler;
@@ -15,7 +16,12 @@ import com.sven.common.exception.GlobalExceptionHandler;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = { "com.sven.common.feign.client" }, defaultConfiguration = FeignConfig.class)
-@Import(value = {GlobalExceptionHandler.class, RedisTemplateConfig.class, SentinelConfig.class })
+@Import(value = {
+    GlobalExceptionHandler.class, 
+    RedisTemplateConfig.class, 
+    SentinelConfig.class, 
+    PasswordEncoderConfig.class
+})
 @ImportResource(value = {"classpath:conf/dubbo-context.xml"})
 public class AuthApplication {
     public static void main(String[] args) {

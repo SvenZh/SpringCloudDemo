@@ -11,9 +11,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RolePerimissionDTO extends PageMessage {
+public class RolePermissionDTO extends PageMessage {
     @NotNull(message = "不能为空")
-    private List<Long> perimissionIds;
+    private List<Long> permissionIds;
 
     @NotNull(message = "不能为空")
     private Long roleId;

@@ -27,8 +27,8 @@ public class SysInternalController {
     }
 
     @NoToken
-    @GetMapping("/retrieveUserInfoByphone")
-    public IBaseResponseMessage<UserVO> retrieveUserInfoByphone(@RequestParam("phone") final String phone) {
+    @GetMapping("/retrieveUserInfoByPhone")
+    public IBaseResponseMessage<UserVO> retrieveUserInfoByPhone(@RequestParam("phone") final String phone) {
         ResponseMessage<UserVO> response = userService.retrieveUserInfoByPhone(phone);
 
         return response;

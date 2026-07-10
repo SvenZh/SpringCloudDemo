@@ -11,11 +11,15 @@ spring:
         namespace: ${nacos.namespace}
         group: ${spring.profiles.active}
         service: ${spring.application.name}
+        username: ${nacos.username}
+        password: ${nacos.password}
       config:
         server-addr: ${nacos.host}:${nacos.port}
         namespace: ${nacos.namespace}
         file-extension: yml
         group: ${spring.profiles.active}
+        username: ${nacos.username}
+        password: ${nacos.password}
     sentinel:
       eager: true
       transport:
@@ -29,6 +33,17 @@ spring:
             namespace: ${nacos.namespace}
             group-id: SENTINEL_GROUP
             rule-type: flow
+            username: ${nacos.username}
+            password: ${nacos.password}
+        param-flow:  # 热点规则
+          nacos:
+            data-id: ${spring.application.name}-param-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: param-flow
+            username: ${nacos.username}
+            password: ${nacos.password}
   config:
     import:
       - nacos:${spring.application.name}
@@ -43,6 +58,8 @@ seata:
       server-addr: ${nacos.host}:${nacos.port}
       group: ${spring.profiles.active}
       namespace: ${nacos.namespace}
+      username: ${nacos.username}
+      password: ${nacos.password}
       dataId: seataServer.properties
   registry:
     type: nacos
@@ -51,6 +68,8 @@ seata:
       server-addr: ${nacos.host}:${nacos.port}
       group : ${spring.profiles.active}
       namespace: ${nacos.namespace}
+      username: ${nacos.username}
+      password: ${nacos.password}
   tx-service-group: default_tx_group
   service:
     vgroup-mapping:

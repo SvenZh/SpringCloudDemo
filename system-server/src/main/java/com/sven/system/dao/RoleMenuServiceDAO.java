@@ -12,7 +12,7 @@ import com.sven.system.mapper.RoleMenuServiceMapper;
 @Component
 public class RoleMenuServiceDAO extends ServiceImpl<RoleMenuServiceMapper, RoleMenuEntity>{
 
-    public List<RoleMenuEntity> retrieveRolePerimissionInfoByRoleId(Long roleId) {
+    public List<RoleMenuEntity> retrieveRolePermissionInfoByRoleId(Long roleId) {
         LambdaQueryWrapper<RoleMenuEntity> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(RoleMenuEntity::getRoleId, roleId);
 

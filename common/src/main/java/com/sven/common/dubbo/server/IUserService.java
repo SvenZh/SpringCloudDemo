@@ -6,5 +6,7 @@ import com.sven.common.vo.UserVO;
 public interface IUserService {
     public ResponseMessage<UserVO> retrieveUserInfoByName(final String userName);
 
-     public ResponseMessage<Void> addUser(final String userName);
+    public ResponseMessage<UserVO> retrieveUserInfoByPhone(final String phone);
+
+    public ResponseMessage<Void> addUser(final String userName);
 }

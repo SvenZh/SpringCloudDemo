@@ -3,7 +3,6 @@ package com.sven.system.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +14,14 @@ import com.sven.system.entity.UserRoleEntity;
 import com.sven.system.service.IRoleService;
 import com.sven.system.service.IUserRoleService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class UserRoleServiceImpl implements IUserRoleService {
 
-    @Autowired
-    private IRoleService roleService;
-
-    @Autowired
-    private UserRoleServiceDAO userRoleServiceDAO;
+    private final IRoleService roleService;
+    private final UserRoleServiceDAO userRoleServiceDAO;
 
     @Override
     public ResponseMessage<List<RoleVO>> retrieveUserRoleInfoByUserId(final Long userId) {
