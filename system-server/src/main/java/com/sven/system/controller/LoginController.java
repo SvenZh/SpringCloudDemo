@@ -18,7 +18,6 @@ import com.sven.common.security.NoToken;
 
 @Controller
 public class LoginController {
-    @NoToken
     @GetMapping("/home")
     public String homePage(Model model,
             @AuthenticationPrincipal Object principal,

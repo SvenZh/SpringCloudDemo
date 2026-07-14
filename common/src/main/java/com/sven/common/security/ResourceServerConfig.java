@@ -83,7 +83,7 @@ public class ResourceServerConfig {
                         // 登录成功后跳转页
                         .defaultSuccessUrl("/home", true)
                         // 登录失败后跳转页
-                        .failureUrl("/error")
+                        .failureUrl("/login")
                         .userInfoEndpoint(userInfo -> userInfo
                                 // .userService(oauth2UserService())
                                 .oidcUserService(oidcUserService())

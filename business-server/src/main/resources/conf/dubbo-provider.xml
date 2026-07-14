@@ -7,7 +7,7 @@
     <context:property-placeholder/>
 
     <dubbo:service interface="com.sven.common.dubbo.server.IPaymentService" 
-                   ref="aliPay" 
+                   ref="paymentRouterService" 
                    group="business-server" 
                    version="1.0.0" />
 

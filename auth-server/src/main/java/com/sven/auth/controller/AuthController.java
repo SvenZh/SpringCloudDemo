@@ -1,6 +1,7 @@
 package com.sven.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,5 @@ public class AuthController {
     public IBaseResponseMessage<Boolean> registeredClient(@RequestBody @Validated RegClientDTO dto) {
         authService.registeredClient(dto);  
         return ResponseMessage.ok(true);
-         
     }
 }

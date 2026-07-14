@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
+import com.sven.business.service.api.IPaymentService;
 import com.sven.common.annotation.PayStrategyAnnotation;
-import com.sven.common.dubbo.server.IPaymentService;
 
 @Component
 public class PayMentStrategyContext {

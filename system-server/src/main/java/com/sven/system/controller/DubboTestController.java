@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sven.common.domain.message.IBaseResponseMessage;
@@ -18,9 +19,16 @@ public class DubboTestController {
     @Autowired
     private IPaymentService paymentService;
 
-    @GetMapping("/list")
-    public IBaseResponseMessage<Boolean> retrievePermissionList() {
-        boolean response = paymentService.payment(new BigDecimal(11));
+    @GetMapping("/payment")
+    public IBaseResponseMessage<Boolean> payment() {
+        boolean response = paymentService.payment("aliPay", new BigDecimal(111));
+
+        return ResponseMessage.ok(response);
+    }
+
+    @GetMapping("/isSupport")
+    public IBaseResponseMessage<Boolean> isSupport(@RequestParam("payCode") String payCode) {
+        boolean response = paymentService.isSupport("payCode");
 
         return ResponseMessage.ok(response);
     }

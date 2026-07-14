@@ -138,15 +138,14 @@ public class AuthorizationServerConfiguration {
                     authorizeRequests.anyRequest().authenticated();
              })
             .csrf(csrf -> csrf.disable())
-            .formLogin(Customizer.withDefaults())
-            .sessionManagement(sm -> sm.disable())
-            .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
+            // .formLogin(Customizer.withDefaults())
+            // .sessionManagement(sm -> sm.disable())
+            // .headers(headers -> headers.cacheControl(cacheControl -> cacheControl.disable()))
             .exceptionHandling(exception -> 
                 exception
                     .authenticationEntryPoint(new GlobalAuthenticationEntryPoint(objectMapper))     // 认证失败异常处理
                     // .accessDeniedHandler(null)                     // 认证成功后，授权检查失败
                 )     
-                         
             .build();
 
         // 自定义授权模式验证器
