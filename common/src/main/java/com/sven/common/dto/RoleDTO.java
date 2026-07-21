@@ -1,6 +1,6 @@
 package com.sven.common.dto;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.sven.common.domain.message.PageMessage;
 

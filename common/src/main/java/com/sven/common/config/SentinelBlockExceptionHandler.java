@@ -1,13 +1,13 @@
 package com.sven.common.config;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
+import com.alibaba.csp.sentinel.adapter.spring.webmvc_v6x.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityException;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeException;
@@ -31,7 +31,8 @@ public class SentinelBlockExceptionHandler implements BlockExceptionHandler {
      * HTTP限流异常处理
      */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, BlockException e) throws Exception {
+    public void handle(HttpServletRequest request, HttpServletResponse response, String resourceName, BlockException e)
+            throws Exception {
         // 记录日志
         log.warn("Sentinel BlockException: {} {}", request.getRequestURI(), e.getClass().getSimpleName());
 

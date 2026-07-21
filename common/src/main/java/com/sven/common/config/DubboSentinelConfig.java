@@ -1,6 +1,6 @@
 package com.sven.common.config;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.dubbo.rpc.AsyncRpcResult;
 import org.springframework.context.annotation.Configuration;
