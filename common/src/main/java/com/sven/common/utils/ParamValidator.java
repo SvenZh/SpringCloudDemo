@@ -5,14 +5,20 @@ import java.util.Set;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public class ParamValidator {
 
-    private static Validator validator;
+    private static final Validator validator;
+
+	static {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+	}
 
     public static String validateSingleRetrunKey(final Object object) throws Exception {
         StringBuffer resultStr = new StringBuffer();
-        Set<ConstraintViolation<Object>> constraintViolations = getInstance().validate(object);
+        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
         if (constraintViolations.size() > 0) {
             for (ConstraintViolation<Object> violation : constraintViolations) {
                 final String columnName = violation.getPropertyPath().toString();
@@ -28,7 +34,7 @@ public class ParamValidator {
 
     public static String validateSingleRetrunKey(final Object object, Class<?>... groups) throws Exception {
         StringBuffer resultStr = new StringBuffer();
-        Set<ConstraintViolation<Object>> constraintViolations = getInstance().validate(object, groups);
+        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object, groups);
         if (constraintViolations.size() > 0) {
             for (ConstraintViolation<Object> violation : constraintViolations) {
                 final String columnName = violation.getPropertyPath().toString();
@@ -41,13 +47,5 @@ public class ParamValidator {
         }
 
         return resultStr.toString();
-    }
-
-    private static synchronized Validator getInstance() {
-        if (validator == null) {
-            validator = Validation.buildDefaultValidatorFactory().getValidator();
-        }
-
-        return validator;
     }
 }

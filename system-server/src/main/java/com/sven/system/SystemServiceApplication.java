@@ -17,6 +17,7 @@ import com.sven.common.config.SentinelConfig;
 import com.sven.common.config.ValidatorConfiguration;
 import com.sven.common.exception.GlobalExceptionHandler;
 import com.sven.common.security.EnableResourceServer;
+import com.sven.common.utils.SpringUtil;
 
 @EnableResourceServer
 @SpringBootApplication
@@ -30,7 +31,8 @@ import com.sven.common.security.EnableResourceServer;
     RedisTemplateConfig.class, 
     SentinelConfig.class, 
     PasswordEncoderConfig.class,
-    DubboSentinelConfig.class
+    DubboSentinelConfig.class,
+    SpringUtil.class
 })
 @ImportResource(value = {"classpath:conf/dubbo-context.xml"})
 public class SystemServiceApplication {
