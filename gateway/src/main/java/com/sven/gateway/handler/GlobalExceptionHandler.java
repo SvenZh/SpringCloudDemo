@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends DefaultErrorWebExceptionHandler {
         }
 
         if (error instanceof ResponseStatusException) {
-            code = ((ResponseStatusException) error).getStatus().value();
+            code = ((ResponseStatusException) error).getStatusCode().value();
         }
 
 //        if (error instanceof FlowException) {

@@ -11,8 +11,8 @@
 
 	<dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
         </dependency>	
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -45,8 +45,12 @@
 		</dependency>
 		<dependency>
 			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<artifactId>mybatis-plus-spring-boot3-starter</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -66,7 +70,7 @@
 		<dependency>
 			<groupId>com.pig4cloud.excel</groupId>
 			<artifactId>excel-spring-boot-starter</artifactId>
-			<version>1.2.7</version>
+			<version>3.4.3</version>
 		</dependency>
 		<dependency>
 		    <groupId>cn.afterturn</groupId>

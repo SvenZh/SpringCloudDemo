@@ -3,7 +3,7 @@ package com.sven.common.security;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;

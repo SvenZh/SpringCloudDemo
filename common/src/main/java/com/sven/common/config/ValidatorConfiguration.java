@@ -1,8 +1,8 @@
 package com.sven.common.config;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.annotation.Bean;

@@ -54,7 +54,7 @@ public class ResourceServerConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         // 白名单
-                        .antMatchers(ArrayUtils.toStringArray(permitAllUrl.getUrls().toArray())).permitAll()
+                        .requestMatchers(ArrayUtils.toStringArray(permitAllUrl.getUrls().toArray())).permitAll()
                         // 其他所有的请求都需要鉴权
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer

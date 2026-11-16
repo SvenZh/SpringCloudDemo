@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.sven.common.dto.RoleDTO;
 import com.sven.system.entity.RoleEntity;
 import com.sven.system.mapper.RoleServiceMapper;

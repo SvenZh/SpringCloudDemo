@@ -44,6 +44,33 @@ spring:
             rule-type: param-flow
             username: ${nacos.username}
             password: ${nacos.password}
+        degrade:  # 熔断规则
+          nacos:
+            data-id: ${spring.application.name}-degrade-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: param-flow
+            username: ${nacos.username}
+            password: ${nacos.password}
+        system:  # 系统规则
+          nacos:
+            data-id: ${spring.application.name}-system-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: param-flow
+            username: ${nacos.username}
+            password: ${nacos.password}
+        authority:  # 授权规则
+          nacos:
+            data-id: ${spring.application.name}-authority-rules
+            server-addr: ${nacos.host}:${nacos.port}
+            namespace: ${nacos.namespace}
+            group-id: SENTINEL_GROUP
+            rule-type: param-flow
+            username: ${nacos.username}
+            password: ${nacos.password}
   config:
     import:
       - nacos:${spring.application.name}

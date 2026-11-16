@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.CloseStatus;

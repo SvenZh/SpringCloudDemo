@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.springframework.http.ResponseEntity;
