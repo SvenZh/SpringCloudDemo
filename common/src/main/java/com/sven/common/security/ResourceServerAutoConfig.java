@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenResolv
 import feign.RequestInterceptor;
 
 @Configuration
-@EnableConfigurationProperties(value = {PermitAllUrlConfig.class})
+@EnableConfigurationProperties(value = {PermitAllUrlConfig.class, OAuth2ServerProperties.class})
 public class ResourceServerAutoConfig {
     
     // 定义一个解析器，提取出HTTP请求中的TOKEN

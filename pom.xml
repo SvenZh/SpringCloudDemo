@@ -33,6 +33,7 @@
 		<seata.version>2.5.0</seata.version>
 		<spring.cloud.seata.version>2025.0.0.0</spring.cloud.seata.version>
 		<csp.version>1.8.9</csp.version>
+		<jasypt.version>3.0.5</jasypt.version>
 	</properties>
 
 	<modules>
@@ -215,6 +216,11 @@
                         <artifactId>seata-spring-boot-starter</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
             </dependency>
 		</dependencies>
 	</dependencyManagement>

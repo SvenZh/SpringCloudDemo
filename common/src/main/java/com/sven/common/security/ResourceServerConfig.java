@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.ClientRegistrations;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -29,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSecurity
-@EnableConfigurationProperties(value = {OAuth2ServerProperties.class})
 public class ResourceServerConfig {
 
     @Autowired
@@ -57,6 +57,7 @@ public class ResourceServerConfig {
                         .requestMatchers(ArrayUtils.toStringArray(permitAllUrl.getUrls().toArray())).permitAll()
                         // 其他所有的请求都需要鉴权
                         .anyRequest().authenticated())
+                // 资源服务器API请求鉴权
                 .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
                         // TOKEN解析器，提取请求中的TOKEN
                         .bearerTokenResolver(new CustomBearerTokenExtractor(permitAllUrl))
@@ -65,12 +66,15 @@ public class ResourceServerConfig {
                         // 认证成功, 权限不足处理
                         .accessDeniedHandler(new CustomResourceAccessDeniedHandler(objectMapper))
                         // OpaqueToken自省
-                        .opaqueToken().introspector(new CustomOpaqueTokenIntrospector(oAuth2ServerProperties.getIntrospectionUri(), "admin", "admin", redisTemplate, restTemplate)))
+                        .opaqueToken(opaqueToken -> opaqueToken.introspector(new CustomOpaqueTokenIntrospector(
+                                oAuth2ServerProperties.getIntrospectionUri(), oAuth2ServerProperties.getClientId(),
+                                oAuth2ServerProperties.getClientSecret(), redisTemplate, restTemplate))))
                 .headers(header -> header
-                        .frameOptions().disable()
+                        .frameOptions(frameOptions -> frameOptions.disable())
                         // 禁用浏览器或代理headers缓存
                         .cacheControl(HeadersConfigurer.CacheControlConfig::disable))
                 .csrf(csrf -> csrf.disable())
+                // OAuth2客户端, 通过IdP登录
                 // 发起授权请求/oauth2/authorization/{registrationId}
                 // 授权回调请求/login/oauth2/code/{registrationId}
                 .oauth2Login(oauth2 -> oauth2
@@ -136,5 +140,4 @@ public class ResourceServerConfig {
             .clientName("Sven")
             .build();
     }
-
 }

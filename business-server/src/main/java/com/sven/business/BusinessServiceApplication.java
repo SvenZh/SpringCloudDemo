@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 
-import com.sven.common.config.AsyncConfig;
+import com.sven.common.config.AsyncThreadConfig;
 import com.sven.common.config.DubboSentinelConfig;
 import com.sven.common.config.FeignConfig;
 import com.sven.common.config.MyMetaObjectHandler;
@@ -28,7 +28,7 @@ import com.sven.common.security.EnableResourceServer;
     MybatisPlusConfig.class,
     MyMetaObjectHandler.class, 
     RedisTemplateConfig.class, 
-    AsyncConfig.class, 
+    AsyncThreadConfig.class, 
     SentinelConfig.class, 
     DubboSentinelConfig.class
 })

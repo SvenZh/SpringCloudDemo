@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableAsync
 @Slf4j
-public class AsyncConfig implements AsyncConfigurer {
+public class AsyncThreadConfig implements AsyncConfigurer {
 
     @Override
     @Nullable

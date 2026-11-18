@@ -17,4 +17,6 @@ public class OAuth2ServerProperties {
     private String tokenUri;
     private String authorizationUri;
     private String userInfoUri;
+    private String clientId;
+    private String clientSecret;
 }
