@@ -75,8 +75,8 @@ spring:
     import:
       - nacos:${spring.application.name}
       - nacos:common
-      - nacos:${spring.application.name}-dubbo 
-
+      - nacos:localization.properties
+      - nacos:${spring.application.name}-dubbo
 seata:
   enabled: true
   config:

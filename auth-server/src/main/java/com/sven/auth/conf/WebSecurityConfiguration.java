@@ -90,7 +90,7 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    @Order(1)
+    @Order(2)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
@@ -111,7 +111,7 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    @Order(2)
+    @Order(1)
     public SecurityFilterChain configure(HttpSecurity httpSecurity, OAuth2AuthorizationService authorizationService,
             RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) throws Exception {
         // 短信登录验证码过滤器
